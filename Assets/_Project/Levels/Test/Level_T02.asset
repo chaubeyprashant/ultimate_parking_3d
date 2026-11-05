@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_T02
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: T02
+  displayName: Test 2 - Chicane
+  levelNumber: 1
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 4844508892152788575, guid: 01c4b96202935406eac3467d6c768733, type: 3}
+  spawnPosition: {x: 31, y: 0, z: 0}
+  spawnYaw: 270
+  targetPosition: {x: -4.2, y: 0, z: -9.25}
+  targetYaw: 180
+  targetSize: {x: 2.8, y: 5.5}
+  timeLimitSeconds: 75
+  collisionLimit: 2
+  overrideParkingRules: 1
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 7
+    allowEitherDirection: 1
+    maxSpeedKmh: 1.5
+    holdDuration: 2
+  threeStarTime: 45
+  threeStarMaxCollisions: 0
+  twoStarTime: 60
+  twoStarMaxCollisions: 1
+  baseCoins: 150
+  coinsPerStar: 60

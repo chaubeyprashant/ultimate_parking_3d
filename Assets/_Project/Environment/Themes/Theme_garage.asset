@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40adc13f0b9f84a6b8cf50bb4a30ecf1, type: 3}
+  m_Name: Theme_garage
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Environment.EnvironmentTheme
+  themeId: garage
+  displayName: Sky Garage
+  uiColor: {r: 0.35, g: 0.85, b: 1, a: 1}
+  lotSize: {x: 60, y: 48}
+  groundMaterial: {fileID: 2100000, guid: 37dc1b059ecf4450c9d28f22c5dead83, type: 2}
+  outerGroundMaterial: {fileID: 2100000, guid: d2ff62a830837457b907cacbd09dbdab, type: 2}
+  perimeterWallPrefab: {fileID: 5350007630371998511, guid: c8764bb7b2f8541f985886dc8fba3f23, type: 3}
+  wallSegmentLength: 4
+  decoration:
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: -21}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: -14}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: -7}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: 0}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: 7}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: 14}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  - prefab: {fileID: 523723291991723916, guid: 3d3c51d6f43404ed399844a507e6721c, type: 3}
+    position: {x: 0, y: 0, z: 21}
+    yaw: 0
+    scale: {x: 60, y: 1, z: 1}
+    variant: 0
+  sunColor: {r: 1, g: 0.86, b: 0.66, a: 1}
+  sunIntensity: 0.75
+  sunEuler: {x: 68, y: -20, z: 0}
+  ambientSky: {r: 0.52, g: 0.5, b: 0.46, a: 1}
+  ambientEquator: {r: 0.42, g: 0.4, b: 0.37, a: 1}
+  ambientGround: {r: 0.2, g: 0.19, b: 0.18, a: 1}
+  fog: 1
+  fogColor: {r: 0.42, g: 0.44, b: 0.47, a: 1}
+  fogDensity: 0.012

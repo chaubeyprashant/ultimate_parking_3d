@@ -1,0 +1,13 @@
+<!--
+  Keeps engine types that are only created from code at runtime. IL2CPP "Strip Engine Code" removes classes that no
+  shipped scene/prefab references; GameObject.CreatePrimitive then fails on device only ("class 'MeshCollider'
+  doesn't exist"). The editor never shows this, so the list is explicit.
+-->
+<linker>
+  <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.MeshCollider" preserve="all" />
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+    <type fullname="UnityEngine.SphereCollider" preserve="all" />
+    <type fullname="UnityEngine.CapsuleCollider" preserve="all" />
+  </assembly>
+</linker>

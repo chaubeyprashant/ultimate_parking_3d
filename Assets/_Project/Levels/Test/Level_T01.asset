@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_T01
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: T01
+  displayName: Test 1 - First Bay
+  levelNumber: 1
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 4844508892152788575, guid: 01c4b96202935406eac3467d6c768733, type: 3}
+  spawnPosition: {x: -20, y: 0, z: 0}
+  spawnYaw: 90
+  targetPosition: {x: 4.2, y: 0, z: 9.25}
+  targetYaw: 0
+  targetSize: {x: 2.8, y: 5.5}
+  timeLimitSeconds: 90
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 40
+  threeStarMaxCollisions: 0
+  twoStarTime: 65
+  twoStarMaxCollisions: 1
+  baseCoins: 100
+  coinsPerStar: 50

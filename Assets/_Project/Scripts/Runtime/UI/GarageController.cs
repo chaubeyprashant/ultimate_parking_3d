@@ -1,0 +1,168 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using UltimateCarParking.Audio;
+using UltimateCarParking.Cars;
+using UltimateCarParking.Core;
+
+namespace UltimateCarParking.UI
+{
+    /// <summary>
+    /// Garage screen: browse cars on the turntable, see stats and price, buy with coins, select an owned car.
+    /// The action button reads SELECT / SELECTED / BUY {price} (dimmed with the shortfall when unaffordable).
+    /// </summary>
+    public sealed class GarageController : MonoBehaviour
+    {
+        [SerializeField] private GarageManager garage;
+        [SerializeField] private CarShowroom showroom;
+
+        [Header("Info")]
+        [SerializeField] private TMP_Text carName;
+        [SerializeField] private TMP_Text tagline;
+        [SerializeField] private TMP_Text indexLabel;
+        [SerializeField] private StatBar topSpeed;
+        [SerializeField] private StatBar acceleration;
+        [SerializeField] private StatBar handling;
+        [SerializeField] private StatBar braking;
+        [SerializeField] private CanvasGroup infoGroup;
+
+        [Header("Action")]
+        [SerializeField] private Button actionButton;
+        [SerializeField] private Image actionBackground;
+        [SerializeField] private TMP_Text actionLabel;
+        [SerializeField] private GameObject actionLockIcon;
+        [SerializeField] private TMP_Text statusLabel;
+
+        [Header("Navigation")]
+        [SerializeField] private Button previousButton;
+        [SerializeField] private Button nextButton;
+        [SerializeField] private Button backButton;
+        [SerializeField] private RectTransform dotsParent;
+        [SerializeField] private Image dotTemplate;
+        [SerializeField] private CoinCounter coins;
+
+        private readonly List<Image> dots = new List<Image>();
+        private int index;
+
+        public int Index => index;
+        public CarData Shown => garage != null && garage.Catalog != null ? garage.Catalog.Get(index) : null;
+        public string ActionText => actionLabel != null ? actionLabel.text : "";
+
+        private void Awake()
+        {
+            if (previousButton != null) previousButton.onClick.AddListener(() => Step(-1));
+            if (nextButton != null) nextButton.onClick.AddListener(() => Step(1));
+            if (backButton != null) backButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.MainMenu));
+            if (actionButton != null) actionButton.onClick.AddListener(OnAction);
+        }
+
+        private void Start()
+        {
+            if (garage == null || garage.Catalog == null || garage.Catalog.Count == 0)
+            {
+                Debug.LogError("[Garage] GarageManager / CarCatalog missing or empty.", this);
+                return;
+            }
+            AudioManager.Instance.PlayMusic(ducked: false);
+            garage.Changed += Refresh;
+            BuildDots();
+            index = Mathf.Max(0, garage.Catalog.IndexOf(garage.SelectedCar));
+            ShowCar(0);
+        }
+
+        private void OnDestroy()
+        {
+            if (garage != null) garage.Changed -= Refresh;
+        }
+
+        public void Step(int delta)
+        {
+            int count = garage.Catalog.Count;
+            if (count <= 1) return;
+            index = (index + delta + count) % count;
+            ShowCar(delta);
+        }
+
+        private void ShowCar(int direction)
+        {
+            CarData car = Shown;
+            if (car == null) return;
+            if (showroom != null) showroom.Show(car, direction);
+            if (carName != null) carName.text = car.DisplayName.ToUpperInvariant();
+            if (tagline != null) tagline.text = car.Tagline;
+            if (indexLabel != null) indexLabel.text = $"{index + 1:00} / {garage.Catalog.Count:00}";
+            CarStats s = CarStats.From(car.Handling);
+            topSpeed?.SetValue(s.TopSpeed);
+            acceleration?.SetValue(s.Acceleration);
+            handling?.SetValue(s.Handling);
+            braking?.SetValue(s.Braking);
+            if (infoGroup != null && direction != 0 && isActiveAndEnabled) StartCoroutine(UiMotion.Fade(infoGroup, 0.2f, 1f, 0.3f));
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            CarData car = Shown;
+            if (car == null) return;
+            bool owned = garage.IsOwned(car);
+            bool selected = garage.IsSelected(car);
+            bool affordable = garage.CanAfford(car);
+
+            string text = selected ? "SELECTED" : owned ? "SELECT" : $"BUY  {car.Price:N0}";
+            if (actionLabel != null)
+            {
+                actionLabel.text = text;
+                actionLabel.color = selected ? UiPalette.Lime : owned || affordable ? UiPalette.TextOnLime : UiPalette.TextSecondary;
+            }
+            if (actionBackground != null)
+                actionBackground.color = selected ? UiPalette.LimeDim : owned || affordable ? UiPalette.Lime : UiPalette.SurfaceRaised;
+            if (actionLockIcon != null) actionLockIcon.SetActive(!owned);
+            if (actionButton != null) actionButton.interactable = !selected;
+            if (statusLabel != null)
+            {
+                statusLabel.text = selected ? "IN USE" : owned ? "OWNED" : affordable ? "AVAILABLE" : $"NEED {car.Price - garage.Coins:N0} MORE";
+                statusLabel.color = owned ? UiPalette.Lime : affordable ? UiPalette.TextPrimary : UiPalette.Danger;
+            }
+            for (int i = 0; i < dots.Count; i++)
+                dots[i].color = i == index ? UiPalette.Lime : UiPalette.Outline;
+            coins?.Refresh();
+        }
+
+        private void OnAction()
+        {
+            CarData car = Shown;
+            if (car == null) return;
+            if (garage.IsOwned(car))
+            {
+                garage.Select(car);
+                return;
+            }
+            PurchaseResult r = garage.Buy(car);
+            if (r == PurchaseResult.Purchased)
+            {
+                garage.Select(car);
+                AudioManager.Instance.Play(Sfx.Coin, 0.9f);
+                if (actionButton != null) StartCoroutine(UiMotion.Scale(actionButton.transform, 1.12f, 1f, 0.35f, back: true));
+            }
+            else if (r == PurchaseResult.NotEnoughCoins && actionButton != null)
+            {
+                StartCoroutine(UiMotion.Shake((RectTransform)actionButton.transform));
+            }
+        }
+
+        private void BuildDots()
+        {
+            if (dotsParent == null || dotTemplate == null) return;
+            dotTemplate.gameObject.SetActive(false);
+            for (int i = 0; i < garage.Catalog.Count; i++)
+            {
+                Image d = Instantiate(dotTemplate, dotsParent);
+                d.gameObject.SetActive(true);
+                d.name = $"Dot{i}";
+                dots.Add(d);
+            }
+        }
+    }
+}

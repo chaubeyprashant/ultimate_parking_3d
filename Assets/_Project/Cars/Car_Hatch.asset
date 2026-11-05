@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfe4bf57df814eed91637af9fa26c73, type: 3}
+  m_Name: Car_Hatch
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Cars.CarData
+  carId: hatch
+  displayName: Volt Hatch
+  tagline: Short, light and nimble. Squeezes in anywhere.
+  modelPrefab: {fileID: 147014908078678716, guid: ae809dcc4d3774d8c9d580c5d35e2d6e, type: 3}
+  paintMaterial: {fileID: 2100000, guid: 9981470c313844c52bdab707be7a249c, type: 2}
+  price: 750
+  ownedByDefault: 0
+  handling:
+    driveType: 0
+    mass: 1050
+    centerOfMass: {x: 0, y: 0.28, z: 0.05}
+    motorTorque: 1450
+    reverseTorque: 1000
+    maxForwardSpeedKmh: 55
+    maxReverseSpeedKmh: 20
+    brakeTorque: 2200
+    handbrakeTorque: 3500
+    maxSteerAngle: 38
+    highSpeedSteerAngle: 14
+    steerSpeed: 130
