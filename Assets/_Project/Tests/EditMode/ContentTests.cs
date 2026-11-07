@@ -16,6 +16,8 @@ namespace UltimateCarParking.Tests
         private static LevelCatalog Levels => AssetDatabase.LoadAssetAtPath<LevelCatalog>("Assets/_Project/Levels/LevelCatalog.asset");
         private static CarCatalog Cars => AssetDatabase.LoadAssetAtPath<CarCatalog>("Assets/_Project/Cars/CarCatalog.asset");
         private static IEnumerable<LevelData> All => Enumerable.Range(0, Levels.Count).Select(i => Levels.Get(i));
+        /// <summary>Levels still produced by the Phase 3 generator (mission levels use the real-prop environments).</summary>
+        private static IEnumerable<LevelData> Generated => All.Where(l => !l.HasObjectives);
 
         [Test]
         public void Thirty_Levels_In_Three_Themes_Of_Ten()
@@ -25,7 +27,8 @@ namespace UltimateCarParking.Tests
             {
                 LevelData l = Levels.Get(i);
                 string expected = i < 10 ? "city" : i < 20 ? "garage" : "yard";
-                Assert.AreEqual(expected, l.Theme.ThemeId, $"level {i + 1} theme");
+                if (l.HasObjectives) Assert.IsNotNull(l.EnvironmentPrefab, $"mission level {i + 1} environment");
+                else Assert.AreEqual(expected, l.Theme.ThemeId, $"level {i + 1} theme");
                 Assert.AreEqual(i + 1, l.LevelNumber);
                 Assert.AreEqual($"L{i + 1:00}", l.LevelId);
             }
@@ -36,7 +39,7 @@ namespace UltimateCarParking.Tests
         public void Levels_Use_The_Reusable_Module_Prefabs()
         {
             var used = new HashSet<string>();
-            foreach (LevelData l in All)
+            foreach (LevelData l in Generated)
                 foreach (PropPlacement p in l.Props)
                 {
                     Assert.IsNotNull(p.prefab, $"{l.LevelId}: placement without prefab");
@@ -57,11 +60,11 @@ namespace UltimateCarParking.Tests
         [Test]
         public void Difficulty_Ramps_Up()
         {
-            LevelData first = Levels.Get(0), last = Levels.Get(29);
+            LevelData first = Generated.First(), last = Levels.Get(29);
             Assert.Greater(first.TargetSize.x, last.TargetSize.x - 0.001f + 0.2f, "bays narrow");
             Assert.Greater(first.ParkingRulesOverride.angleTolerance, last.ParkingRulesOverride.angleTolerance, "angle tightens");
             Assert.Greater(first.CollisionLimit, last.CollisionLimit, "fewer collisions allowed");
-            int propsEarly = Levels.Get(2).Props.Count(p => p.prefab.name == "Mod_ParkedCar");
+            int propsEarly = Generated.First().Props.Count(p => p.prefab.name == "Mod_ParkedCar");
             int propsLate = Levels.Get(27).Props.Count(p => p.prefab.name == "Mod_ParkedCar");
             Assert.Greater(propsLate, propsEarly, "busier lots later");
             Assert.Greater(last.BaseCoins, first.BaseCoins, "bigger rewards later");
@@ -92,7 +95,7 @@ namespace UltimateCarParking.Tests
                 }
             foreach (LevelData l in All)
             {
-                float m = l.ParkingRulesOverride.edgeMargin;
+                float m = l.ParkingRulesOverride?.edgeMargin ?? 0.05f;   // mission levels keep rules on the objective
                 Assert.Greater(l.TargetSize.x - 2f * m, widest + 0.4f, $"{l.LevelId} width");
                 Assert.Greater(l.TargetSize.y - 2f * m, longest + 0.3f, $"{l.LevelId} length");
             }
@@ -104,13 +107,15 @@ namespace UltimateCarParking.Tests
             Assert.AreEqual(5, Cars.Count);
             var cars = Enumerable.Range(0, 5).Select(i => Cars.Get(i)).ToList();
             Assert.AreEqual(5, cars.Select(c => c.CarId).Distinct().Count());
-            Assert.AreEqual(5, cars.Select(c => c.PaintMaterial).Distinct().Count());
+            // Real bodies keep their own paint (PaintMaterial empty); every drivable car must be a real model.
+            foreach (CarData c in cars) StringAssert.StartsWith("Car_Real", c.ModelPrefab.name, $"{c.CarId} uses a real body, not a primitive box");
             Assert.AreEqual(1, cars.Count(c => c.OwnedByDefault));
             for (int i = 1; i < cars.Count; i++) Assert.Greater(cars[i].Price, cars[i - 1].Price, "prices ascend");
             foreach (CarData c in cars)
             {
                 Assert.IsNotNull(c.ModelPrefab.GetComponent<VehicleController>(), c.CarId);
-                Assert.Greater(c.ModelPrefab.GetComponent<CarPaint>().RendererCount, 0, c.CarId);
+                Assert.IsNotNull(c.ModelPrefab.GetComponent<CarPaint>(), c.CarId);
+                if (c.PaintMaterial != null) Assert.Greater(c.ModelPrefab.GetComponent<CarPaint>().RendererCount, 0, c.CarId);
                 CarStats s = CarStats.From(c.Handling);
                 foreach (float v in new[] { s.TopSpeed, s.Acceleration, s.Handling, s.Braking }) Assert.That(v, Is.InRange(0f, 1f));
             }
@@ -122,7 +127,7 @@ namespace UltimateCarParking.Tests
         public void Starter_Car_Matches_The_Phase_1_Defaults()
         {
             VehicleHandling d = new VehicleHandling(), s = Cars.Default.Handling;
-            Assert.AreEqual("PlayerCar", Cars.Default.ModelPrefab.name);
+            Assert.AreEqual("Car_RealSedan", Cars.Default.ModelPrefab.name);
             Assert.AreEqual(d.mass, s.mass);
             Assert.AreEqual(d.motorTorque, s.motorTorque);
             Assert.AreEqual(d.maxForwardSpeedKmh, s.maxForwardSpeedKmh);

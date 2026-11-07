@@ -27,5 +27,18 @@ namespace UltimateCarParking.Tests
             Assert.AreEqual(50f, t.TwoStarTime);
             Assert.AreEqual(2, t.TwoStarMaxCollisions);
         }
+    
+        [Test]
+        public void Quality_Mode_Uses_The_Mission_Score_Not_The_Time()
+        {
+            var t = new StarThresholds(10f, 0, 20f, 1, ScoreMode.Quality, 0.85f, 0.6f);
+            Assert.AreEqual(3, StarRating.Calculate(500f, 0, t, 0.9f), "slow but accurate = 3 stars");
+            Assert.AreEqual(2, StarRating.Calculate(5f, 0, t, 0.7f));
+            Assert.AreEqual(1, StarRating.Calculate(5f, 0, t, 0.3f));
+            Assert.AreEqual(2, StarRating.Calculate(5f, 1, t, 0.95f), "hits still cap the stars");
+            Assert.AreEqual(1, StarRating.Calculate(5f, 2, t, 0.95f));
+            var classic = new StarThresholds(10f, 0, 20f, 1);
+            Assert.AreEqual(3, StarRating.Calculate(5f, 0, classic, 0.1f), "classic levels ignore quality");
+        }
     }
 }

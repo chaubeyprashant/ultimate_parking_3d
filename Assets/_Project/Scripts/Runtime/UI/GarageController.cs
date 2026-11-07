@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using UltimateCarParking.Audio;
 using UltimateCarParking.Cars;
 using UltimateCarParking.Core;
+using UltimateCarParking.Save;
+using UltimateCarParking.Vehicle;
 
 namespace UltimateCarParking.UI
 {
@@ -42,6 +44,9 @@ namespace UltimateCarParking.UI
         [SerializeField] private RectTransform dotsParent;
         [SerializeField] private Image dotTemplate;
         [SerializeField] private CoinCounter coins;
+        [Header("Upgrades (Engine, Brakes, Steering)")]
+        [SerializeField] private Button[] upgradeButtons = new Button[3];
+        [SerializeField] private TMP_Text[] upgradeLabels = new TMP_Text[3];
 
         private readonly List<Image> dots = new List<Image>();
         private int index;
@@ -56,6 +61,11 @@ namespace UltimateCarParking.UI
             if (nextButton != null) nextButton.onClick.AddListener(() => Step(1));
             if (backButton != null) backButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.MainMenu));
             if (actionButton != null) actionButton.onClick.AddListener(OnAction);
+            for (int i = 0; i < upgradeButtons.Length; i++)
+            {
+                var kind = (UpgradeKind)i;
+                if (upgradeButtons[i] != null) upgradeButtons[i].onClick.AddListener(() => OnUpgrade(kind));
+            }
         }
 
         private void Start()
@@ -93,7 +103,7 @@ namespace UltimateCarParking.UI
             if (carName != null) carName.text = car.DisplayName.ToUpperInvariant();
             if (tagline != null) tagline.text = car.Tagline;
             if (indexLabel != null) indexLabel.text = $"{index + 1:00} / {garage.Catalog.Count:00}";
-            CarStats s = CarStats.From(car.Handling);
+            CarStats s = CarStats.From(Upgraded(car));
             topSpeed?.SetValue(s.TopSpeed);
             acceleration?.SetValue(s.Acceleration);
             handling?.SetValue(s.Handling);
@@ -127,6 +137,18 @@ namespace UltimateCarParking.UI
             }
             for (int i = 0; i < dots.Count; i++)
                 dots[i].color = i == index ? UiPalette.Lime : UiPalette.Outline;
+            for (int i = 0; i < upgradeButtons.Length && i < upgradeLabels.Length; i++)
+            {
+                var kind = (UpgradeKind)i;
+                int level = garage.UpgradeLevel(car, kind), price = garage.UpgradePrice(car, kind);
+                string pips = $"LV {level}/{CarUpgrades.MaxLevel}";
+                if (upgradeLabels[i] != null)
+                {
+                    upgradeLabels[i].text = $"{CarUpgrades.Name(kind)}\n<size=80%>{pips}  {(level >= CarUpgrades.MaxLevel ? "MAX" : owned ? price.ToString("N0") : "BUY CAR")}</size>";
+                    upgradeLabels[i].color = garage.CanUpgrade(car, kind) ? UiPalette.TextPrimary : UiPalette.TextSecondary;
+                }
+                if (upgradeButtons[i] != null) upgradeButtons[i].interactable = owned && level < CarUpgrades.MaxLevel;
+            }
             coins?.Refresh();
         }
 
@@ -150,6 +172,26 @@ namespace UltimateCarParking.UI
             {
                 StartCoroutine(UiMotion.Shake((RectTransform)actionButton.transform));
             }
+        }
+
+        private VehicleHandling Upgraded(CarData car) =>
+            SaveManager.Current != null ? CarUpgrades.Upgraded(SaveManager.Current.Data, car) : car.Handling;
+
+        public string UpgradeText(int i) => i < upgradeLabels.Length && upgradeLabels[i] != null ? upgradeLabels[i].text : "";
+
+        public void OnUpgrade(UpgradeKind kind)
+        {
+            CarData car = Shown;
+            if (car == null) return;
+            if (garage.Upgrade(car, kind))
+            {
+                AudioManager.Instance.Play(Sfx.Coin, 0.9f);
+                ShowCar(0);
+                Button b = upgradeButtons[(int)kind];
+                if (b != null) StartCoroutine(UiMotion.Scale(b.transform, 1.12f, 1f, 0.35f, back: true));
+            }
+            else if (upgradeButtons[(int)kind] != null)
+                StartCoroutine(UiMotion.Shake((RectTransform)upgradeButtons[(int)kind].transform));
         }
 
         private void BuildDots()

@@ -71,6 +71,13 @@ namespace UltimateCarParking.Environment
             }
         }
 
+        /// <summary>Places a level's props under a new child of <paramref name="root"/> (prefab-based levels).</summary>
+        public static void PlaceProps(IReadOnlyList<PropPlacement> props, Transform root, string groupName)
+        {
+            if (props == null || props.Count == 0) return;
+            Place(props, Child(root, groupName));
+        }
+
         private static void Place(IReadOnlyList<PropPlacement> props, Transform parent)
         {
             if (props == null) return;
@@ -83,11 +90,25 @@ namespace UltimateCarParking.Environment
             if (missing > 0) Debug.LogWarning($"[EnvironmentBuilder] {missing} placement(s) under '{parent.name}' have no prefab and were skipped.");
         }
 
+        private static ParkedFleet parkedFleet;
+
         private static void Spawn(GameObject prefab, Transform parent, Vector3 pos, float yaw, Vector3 scale, int variant)
         {
+            prefab = ResolveParked(prefab, pos, variant);
             GameObject go = Object.Instantiate(prefab, pos, Quaternion.Euler(0f, yaw, 0f), parent);
             go.transform.localScale = Vector3.Scale(prefab.transform.localScale, scale);
             if (go.TryGetComponent(out PaintVariant paint)) paint.Apply(variant);
+        }
+
+        /// <summary>Level data still points at the block module. Swap it for a real body, varied by bay.</summary>
+        private static GameObject ResolveParked(GameObject prefab, Vector3 pos, int variant)
+        {
+            if (prefab == null || prefab.name != "Mod_ParkedCar") return prefab;
+            parkedFleet ??= Resources.Load<ParkedFleet>("ParkedFleet");
+            if (parkedFleet == null || parkedFleet.Count == 0) return prefab;
+            int index = variant * 13 + Mathf.RoundToInt(pos.x * 4f) + Mathf.RoundToInt(pos.z);
+            GameObject real = parkedFleet.Pick(index);
+            return real != null ? real : prefab;
         }
 
         /// <summary>

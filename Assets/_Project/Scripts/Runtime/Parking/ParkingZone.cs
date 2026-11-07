@@ -76,7 +76,7 @@ namespace UltimateCarParking.Parking
             {
                 ParkingStatus.Parked => parkedColor,
                 ParkingStatus.Holding => holdingColor,
-                ParkingStatus.PartiallyInside or ParkingStatus.Misaligned or ParkingStatus.TooFast => occupiedColor,
+                ParkingStatus.PartiallyInside or ParkingStatus.Misaligned or ParkingStatus.Unpositioned or ParkingStatus.TooFast => occupiedColor,
                 _ => idleColor,
             };
             block ??= new MaterialPropertyBlock();

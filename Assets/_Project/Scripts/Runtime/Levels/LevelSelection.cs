@@ -13,6 +13,16 @@ namespace UltimateCarParking.Levels
 
         public static bool HasRequest => requested != null;
 
+        /// <summary>
+        /// Scene the gameplay "levels / menu" exit returns to: the screen the level was started from
+        /// (level select by default, World Tour when started there). Kept across restarts and next-level loads.
+        /// </summary>
+        public static string ReturnScene { get; set; } = Core.SceneNames.LevelSelect;
+
+        /// <summary>World Tour country the level was started from (country rewards); null from the campaign.
+        /// Sticky across restarts and next-level loads; a stale value is harmless (the level is not in it).</summary>
+        public static WorldTour.CountryData Country { get; set; }
+
         /// <summary>The catalog the requested level belongs to (for Next Level); null = the loader's own.</summary>
         public static LevelCatalog RequestedCatalog => requestedCatalog;
 
@@ -36,6 +46,8 @@ namespace UltimateCarParking.Levels
         {
             requested = null;
             requestedCatalog = null;
+            ReturnScene = Core.SceneNames.LevelSelect;
+            Country = null;
         }
 
         /// <summary>Returns the requested catalog (or null) and clears it.</summary>

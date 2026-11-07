@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UltimateCarParking.Missions;
 using UltimateCarParking.Parking;
 using UltimateCarParking.Vehicle;
 
@@ -17,6 +18,8 @@ namespace UltimateCarParking.Levels
     public sealed class LevelManager : MonoBehaviour
     {
         [SerializeField] private ParkingValidator validator;
+        [Tooltip("Runs the level's objective sequence; the level completes when it does.")]
+        [SerializeField] private MissionRunner mission;
         [Tooltip("Needed for Next Level (catalog order). Optional otherwise.")]
         [SerializeField] private LevelLoader loader;
         [Tooltip("Seconds with the controls held after spawning, so the car settles on its suspension.")]
@@ -34,6 +37,10 @@ namespace UltimateCarParking.Levels
         public LevelData Level { get; private set; }
         public VehicleController Vehicle { get; private set; }
         public ParkingValidator Validator => validator;
+        public MissionRunner Mission => mission;
+
+        /// <summary>The failed objective's explanation when the last failure was <see cref="FailReason.ObjectiveFailed"/>.</summary>
+        public string FailDetail { get; private set; } = "";
         public float ElapsedSeconds { get; private set; }
         public int Collisions => collisionHandler != null ? collisionHandler.CollisionCount : 0;
         public LevelResult? LastResult { get; private set; }
@@ -59,6 +66,11 @@ namespace UltimateCarParking.Levels
             Instance = this;
             if (validator == null && !TryGetComponent(out validator))
                 Debug.LogError("[LevelManager] No ParkingValidator assigned; levels cannot be completed.", this);
+            if (mission == null && !TryGetComponent(out mission))
+            {
+                mission = gameObject.AddComponent<MissionRunner>();
+                mission.Configure(validator, null);
+            }
         }
 
         private void OnDestroy()
@@ -67,8 +79,11 @@ namespace UltimateCarParking.Levels
             if (Instance == this) Instance = null;
         }
 
-        /// <summary>Starts an attempt. Called by the LevelLoader once the world, car and bay exist.</summary>
-        public void BeginLevel(LevelData level, VehicleController vehicle, CollisionHandler collisions, ParkingZone zone)
+        /// <summary>
+        /// Starts an attempt. Called by the LevelLoader once the world and car exist. The mission runner creates the
+        /// bays; <paramref name="zone"/> is unused and kept for older callers.
+        /// </summary>
+        public void BeginLevel(LevelData level, VehicleController vehicle, CollisionHandler collisions, ParkingZone zone = null)
         {
             if (level == null || vehicle == null)
             {
@@ -82,6 +97,7 @@ namespace UltimateCarParking.Levels
             collisionHandler = collisions;
             ElapsedSeconds = 0f;
             LastResult = null;
+            FailDetail = "";
 
             if (collisionHandler != null)
             {
@@ -94,11 +110,9 @@ namespace UltimateCarParking.Levels
                 Debug.LogWarning("[LevelManager] No CollisionHandler on the car; collisions will not be counted.", this);
             }
 
-            if (validator != null)
-            {
-                validator.Bind(zone, vehicle, level.ParkingRulesOverride);
-                validator.Parked += OnParked;
-            }
+            mission.Prepare(level, vehicle);
+            mission.Completed += OnMissionCompleted;
+            mission.Failed += OnMissionFailed;
 
             Vehicle.ControlsEnabled = false;
             startTimer = startDelay;
@@ -110,8 +124,10 @@ namespace UltimateCarParking.Levels
         {
             if (Vehicle != null) Vehicle.ControlsEnabled = true;
             if (collisionHandler != null) collisionHandler.Counting = true;
-            if (validator != null) validator.SetArmed(true);
             SetState(LevelState.Playing);
+            mission.Run();
+            if (Level.RoadDirection == WorldTour.RoadDirection.LeftHand)
+                mission.RaiseNotice(UltimateCarParking.Environment.TrafficSide.KeepPrompt(Level.RoadDirection), false);
             LevelStarted?.Invoke(Level);
             Debug.Log($"[Level] Started {Level.LevelId} ({Level.DisplayName})");
         }
@@ -142,17 +158,26 @@ namespace UltimateCarParking.Levels
                 FailLevel(FailReason.TooManyCollisions);
         }
 
-        private void OnParked()
+        private void OnMissionCompleted()
         {
             if (State == LevelState.Playing) CompleteLevel();
+        }
+
+        private void OnMissionFailed(string detail)
+        {
+            if (State != LevelState.Playing) return;
+            FailDetail = detail;
+            FailLevel(FailReason.ObjectiveFailed);
         }
 
         /// <summary>Ends the attempt as a success and scores it.</summary>
         public void CompleteLevel()
         {
             if (State != LevelState.Playing) return;
-            int stars = StarRating.Calculate(ElapsedSeconds, Collisions, Level.Stars);
-            var result = new LevelResult(Level.LevelId, true, FailReason.None, stars, ElapsedSeconds, Collisions, Level.CoinsFor(stars));
+            float quality = mission != null ? mission.Quality : 1f;
+            int stars = StarRating.Calculate(ElapsedSeconds, Collisions, Level.Stars, quality);
+            var result = new LevelResult(Level.LevelId, true, FailReason.None, stars, ElapsedSeconds, Collisions, Level.CoinsFor(stars),
+                quality, mission != null ? mission.ScoreLabel : "");
             Finish(LevelState.Completed, result);
             LevelCompleted?.Invoke(result);
         }
@@ -171,6 +196,7 @@ namespace UltimateCarParking.Levels
             LastResult = result;
             if (Vehicle != null) Vehicle.ControlsEnabled = false;
             if (collisionHandler != null) collisionHandler.Counting = false;
+            mission.Stop();
             if (validator != null && validator.Status != ParkingStatus.Parked) validator.SetArmed(false);
             SetState(state);
             Debug.Log($"[Level] {result}");
@@ -212,7 +238,11 @@ namespace UltimateCarParking.Levels
         private void Unsubscribe()
         {
             if (collisionHandler != null) collisionHandler.PenaltyRegistered -= OnPenalty;
-            if (validator != null) validator.Parked -= OnParked;
+            if (mission != null)
+            {
+                mission.Completed -= OnMissionCompleted;
+                mission.Failed -= OnMissionFailed;
+            }
         }
     }
 }

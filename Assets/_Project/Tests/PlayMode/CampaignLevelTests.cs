@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UltimateCarParking.Core;
 using UltimateCarParking.Levels;
+using UltimateCarParking.Missions;
 using UltimateCarParking.Parking;
 using UltimateCarParking.Vehicle;
 #if UNITY_EDITOR
@@ -66,20 +67,31 @@ namespace UltimateCarParking.Tests
 
             // Reachability for a 2.0 m-wide footprint (widest car 1.95 m) on a 0.5 m grid.
             int explored;
-            bool reachable = Reachable(car.transform.position, level.TargetPosition, level.Theme.LotSize, 1.0f, car.Body, out explored);
+            // Prefab-based mission levels (Driving School yard, 88 x 40 m) have no theme: search a fixed area.
+            Vector2 searchArea = level.Theme != null ? level.Theme.LotSize : new Vector2(90f, 42f);
+            bool reachable = Reachable(car.transform.position, level.TargetPosition, searchArea, 1.0f, car.Body, out explored);
             Assert.IsTrue(reachable, $"bay reachable from spawn ({explored} cells explored)");
 
             // Park it: placed square in the bay (facing the required way) the level completes.
             float placed = LevelManager.Instance.ElapsedSeconds;
-            car.ResetVehicle(level.TargetPosition + Vector3.up * 0.05f, level.TargetRotation);
+            Vector3 parkAt = level.TargetPosition;
+            if (level.HasObjectives && level.CreateObjectives()[0] is ReverseParkObjective)
+            {
+                // Reverse bays also need the rear bumper near the back line: back the car up to 0.3 m from it.
+                float min = float.MaxValue, max = float.MinValue;
+                foreach (Vector3 c in LevelManager.Instance.Validator.LocalFootprint) { min = Mathf.Min(min, c.z); max = Mathf.Max(max, c.z); }
+                float back = level.TargetSize.y * 0.5f - (max - min) * 0.5f - 0.3f;
+                parkAt -= level.TargetRotation * Vector3.forward * back;
+            }
+            car.ResetVehicle(parkAt + Vector3.up * 0.05f, level.TargetRotation);
             t = 0f;
             while (LevelManager.Instance.State == LevelState.Playing && t < 8f) { t += Time.deltaTime; yield return null; }
-            Debug.Log($"[Test] {level.LevelId} {level.DisplayName} ({level.Theme.ThemeId}): props {level.Props.Length}, bay {level.TargetSize.x:F2}x{level.TargetSize.y:F2}, " +
+            Debug.Log($"[Test] {level.LevelId} {level.DisplayName} ({(level.Theme != null ? level.Theme.ThemeId : level.EnvironmentPrefab.name)}): props {level.Props.Length}, bay {level.TargetSize.x:F2}x{level.TargetSize.y:F2}, " +
                       $"limit {level.TimeLimitSeconds}s/{level.CollisionLimit} hits, reachable ({explored} cells), {LevelManager.Instance.State}");
             Assert.AreEqual(LevelState.Completed, LevelManager.Instance.State, $"parking completes (validator: {LevelManager.Instance.Validator.Status})");
         }
 
-        private static List<string> Blockers(Vector3 center, Quaternion rot, Vector3 halfExtents, Rigidbody self)
+        internal static List<string> Blockers(Vector3 center, Quaternion rot, Vector3 halfExtents, Rigidbody self)
         {
             var list = new List<string>();
             foreach (Collider c in Physics.OverlapBox(center + Vector3.up * 0.95f, halfExtents, rot, ~0, QueryTriggerInteraction.Ignore))
@@ -88,7 +100,7 @@ namespace UltimateCarParking.Tests
         }
 
         /// <summary>4-connected BFS over cells whose car-sized box (0.35–1.55 m high) hits nothing but the car.</summary>
-        private static bool Reachable(Vector3 from, Vector3 to, Vector2 lot, float halfWidth, Rigidbody self, out int explored)
+        internal static bool Reachable(Vector3 from, Vector3 to, Vector2 lot, float halfWidth, Rigidbody self, out int explored)
         {
             const float cell = 0.5f;
             int nx = Mathf.CeilToInt(lot.x / cell), nz = Mathf.CeilToInt(lot.y / cell);

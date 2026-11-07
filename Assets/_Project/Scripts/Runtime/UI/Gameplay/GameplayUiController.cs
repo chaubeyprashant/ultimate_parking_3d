@@ -129,6 +129,9 @@ namespace UltimateCarParking.UI
 
         // ---------------------------------------------------------------- results
 
+        private static string CountryName() =>
+            LevelSelection.Country != null ? LevelSelection.Country.DisplayName.ToUpperInvariant() : "COUNTRY";
+
         private void OnCompleted(LevelResult r) => StartCoroutine(ShowComplete(r));
 
         private IEnumerator ShowComplete(LevelResult r)
@@ -139,12 +142,16 @@ namespace UltimateCarParking.UI
             if (hudRoot != null) hudRoot.SetActive(false);
 
             int coins = progression != null && progression.LastReward is LevelReward reward ? reward.Coins : r.Coins;
+            WorldTour.CountryReward? countryBonus = progression != null ? progression.LastCountryReward : null;
+            if (countryBonus.HasValue) coins += countryBonus.Value.Coins;
             bool newBest = progression != null && progression.LastReward is LevelReward rw && rw.NewBest && !rw.FirstCompletion;
             if (completeTitle != null) completeTitle.text = "PARKED";
             if (completeTime != null) completeTime.text = $"{r.ElapsedSeconds:0.0}s";
             if (completeCollisions != null) completeCollisions.text = r.Collisions.ToString();
             if (completeCoins != null) completeCoins.text = "+0";
-            if (completeBadge != null) completeBadge.text = newBest ? "NEW BEST" : "";
+            if (completeBadge != null) completeBadge.text = countryBonus.HasValue
+                ? (countryBonus.Value.PerfectCoins > 0 ? $"{CountryName()} ALL STARS +{countryBonus.Value.Coins}" : $"{CountryName()} COMPLETE +{countryBonus.Value.Coins}")
+                : newBest ? "NEW BEST" : r.ScoreLabel;
             if (nextButton != null) nextButton.gameObject.SetActive(levelManager.HasNextLevel);
             foreach (Image s in completeStars) if (s != null) { s.color = UiPalette.Outline; s.transform.localScale = Vector3.one; }
             Show(completePanel);
@@ -183,10 +190,18 @@ namespace UltimateCarParking.UI
             yield return new WaitForSecondsRealtime(resultDelay);
             if (hudRoot != null) hudRoot.SetActive(false);
             if (failReason != null)
-                failReason.text = r.FailReason == FailReason.TimeUp ? "TIME'S UP" : r.FailReason == FailReason.TooManyCollisions ? "TOO MANY COLLISIONS" : "FAILED";
+                failReason.text = FailText(r.FailReason, levelManager.FailDetail);
             Show(failPanel);
             if (failPanel != null) StartCoroutine(UiMotion.Shake((RectTransform)failPanel.transform, 10f, 0.3f));
         }
+
+        private static string FailText(FailReason reason, string detail) => reason switch
+        {
+            FailReason.TimeUp => "TIME'S UP",
+            FailReason.TooManyCollisions => "TOO MANY COLLISIONS",
+            FailReason.ObjectiveFailed when !string.IsNullOrEmpty(detail) => detail,
+            _ => "FAILED",
+        };
 
         // ---------------------------------------------------------------- navigation
 
@@ -205,7 +220,7 @@ namespace UltimateCarParking.UI
         public void ToLevels()
         {
             SetPaused(false);
-            ScreenTransition.LoadScene(SceneNames.LevelSelect);
+            ScreenTransition.LoadScene(string.IsNullOrEmpty(LevelSelection.ReturnScene) ? SceneNames.LevelSelect : LevelSelection.ReturnScene);
         }
 
         // ---------------------------------------------------------------- helpers

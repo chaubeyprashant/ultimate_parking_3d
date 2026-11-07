@@ -139,7 +139,7 @@ facing +X down the aisle.
 
 ## Project settings applied by the bootstrapper
 
-- Company `Ergebins`, product `Ultimate Car Parking 3D`, package `com.ergebins.ultimatecarparking3d`, version 0.1.0 (1).
+- Company `Ultimate Parking`, product `Ultimate Car Parking 3D`, package `com.ultimateparking.carparking3d`, version 0.1.0 (1).
 - Orientation: auto-rotate between Landscape Left / Right only.
 - Android: IL2CPP, ARM64, min API 26, target = highest installed, Vulkan + OpenGLES3, ASTC, stripping Low.
 - Linear colour space; Active Input Handling = Input System package (new).

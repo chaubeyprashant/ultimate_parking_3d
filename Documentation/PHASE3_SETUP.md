@@ -78,7 +78,7 @@ card entrance, tab slide, garage car slide and stat-bar easing, shake on locked/
    themes, fonts, sprites and every serialized reference in the three menu controllers.
 2. Press Play in `Bootstrap.unity` → Main Menu.
 3. To reset progress delete `ucp_save.json` from `Application.persistentDataPath`
-   (macOS editor: `~/Library/Application Support/Ergebins/Ultimate Car Parking 3D/`).
+   (macOS editor: `~/Library/Application Support/Ultimate Parking/Ultimate Car Parking 3D/`).
 4. To add a level: create Level Data, choose a Theme, add Props (any `Mod_*` prefab, position, yaw, scale,
    colour variant), set spawn/target, add it to `LevelCatalog`. To add a car: build a prefab like the generated
    ones (Rigidbody, VehicleController, VehicleInput, WheelVisuals, CollisionHandler, CarPaint), create Car Data,

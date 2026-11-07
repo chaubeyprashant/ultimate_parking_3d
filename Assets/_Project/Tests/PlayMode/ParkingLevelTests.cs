@@ -368,6 +368,7 @@ namespace UltimateCarParking.Tests
         /// <summary>Points SaveManager at a fresh temp file so tests never touch (or depend on) real progress.</summary>
         public static string UseTemporarySave()
         {
+            UltimateCarParking.Core.TestingUnlocks.UnlockAll = false;   // tests check real progression
             string path = System.IO.Path.Combine(Application.temporaryCachePath, $"ucp_test_{System.Guid.NewGuid():N}.json");
             UltimateCarParking.Save.SaveManager.Initialize(path);
             return path;
@@ -382,6 +383,8 @@ namespace UltimateCarParking.Tests
         public static IEnumerator ResetToEmpty()
         {
             yield return WaitForTransition();
+            UltimateCarParking.Levels.LevelSelection.ReturnScene = UltimateCarParking.Core.SceneNames.LevelSelect;
+            UltimateCarParking.UI.WorldTourController.ForgetSelection();
             Time.timeScale = 1f;
             AudioListener.pause = false;
             // The persistent AudioManager would keep playing into the next test's (listener-less) scene.

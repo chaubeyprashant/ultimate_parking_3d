@@ -90,9 +90,19 @@ namespace UltimateCarParking.UI
             {
                 LevelData l = catalog.Get(i);
                 EnvironmentTheme t = l != null ? l.Theme : null;
+                // Mission levels on prefab environments have no theme: keep them in the neighbouring tab
+                // (interim until Phase F's chapter tabs).
+                if (t == null) t = sections.Count > 0 ? sections[^1].theme : FirstTheme();
                 if (sections.Count == 0 || sections[^1].theme != t) sections.Add((t, i, 1));
                 else sections[^1] = (sections[^1].theme, sections[^1].first, sections[^1].count + 1);
             }
+        }
+
+        private EnvironmentTheme FirstTheme()
+        {
+            for (int i = 0; i < catalog.Count; i++)
+                if (catalog.Get(i) != null && catalog.Get(i).Theme != null) return catalog.Get(i).Theme;
+            return null;
         }
 
         private int SectionOf(int levelIndex)
@@ -160,7 +170,9 @@ namespace UltimateCarParking.UI
         public void Play(LevelData level)
         {
             if (level == null || !ProgressionService.IsUnlocked(SaveManager.Current.Data, catalog, level)) return;
+            LevelSelection.Country = null;
             LevelSelection.Request(level, catalog);
+            LevelSelection.ReturnScene = SceneNames.LevelSelect;
             ScreenTransition.LoadScene(SceneNames.Gameplay);
         }
     }

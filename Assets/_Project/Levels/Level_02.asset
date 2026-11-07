@@ -13,463 +13,85 @@ MonoBehaviour:
   m_Name: Level_02
   m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
   levelId: L02
-  displayName: Level 2
+  displayName: Back It In
   levelNumber: 2
-  theme: {fileID: 11400000, guid: 7d855eaeec7df4624b2eeccc6639817c, type: 2}
+  missionType: 1
+  roadDirection: 0
+  briefing: 'Lesson 2. Drive past bay R3, stop, then reverse in between the two cars.
+    Use the rear sensor: finish within 0.7 m of the back line.'
+  objectives:
+  - rid: 2518987905178533889
+  theme: {fileID: 0}
   props:
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -24, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
+  - prefab: {fileID: 5275800946364013835, guid: b742458b93436454d9d0a20a65f925e1, type: 3}
+    position: {x: 12.5, y: 0, z: 7.85}
+    yaw: 180
+    scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -21, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
+  - prefab: {fileID: 8178506789514452328, guid: 844af8d21f2bc4047aa44b903ff4ce50, type: 3}
+    position: {x: 18.5, y: 0, z: 7.85}
+    yaw: 180
+    scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -18, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
+  - prefab: {fileID: 987174629181627055, guid: 1b5642abcbbd54bfa8dbe4d31d9e266f, type: 3}
+    position: {x: 24.5, y: 0, z: 7.85}
+    yaw: 180
+    scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -15, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -12, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -9, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -6, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -3, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 3, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 6, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 9, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 12, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 15, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 18, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 21, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 24, y: 0, z: 9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: 12.3}
-    yaw: 90
-    scale: {x: 1, y: 1, z: 48}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -22.5, y: 0, z: 11.85}
+  - prefab: {fileID: 3480892484429789619, guid: 34a98dc21a6a94ade9df2387d60b909c, type: 3}
+    position: {x: -18.5, y: 0, z: 7.6}
     yaw: 0
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -22.523624, y: 0, z: 9.3184}
-    yaw: 1.3487182
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -19.5, y: 0, z: 11.85}
+  - prefab: {fileID: 6016950864663556760, guid: 781a2061277fa42509cc487ec96c1e1c, type: 3}
+    position: {x: -12.5, y: 0, z: 7.7}
     yaw: 0
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -19.51237, y: 0, z: 9.394758}
-    yaw: 180.52003
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -16.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -16.49285, y: 0, z: 9.375387}
-    yaw: 0.037292242
-    scale: {x: 0, y: 0, z: 0}
-    variant: 6
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -13.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -13.424374, y: 0, z: 9.524329}
-    yaw: 0.7730248
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -10.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -7.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -7.5441284, y: 0, z: 9.3371725}
-    yaw: -0.53476965
-    scale: {x: 0, y: 0, z: 0}
-    variant: 1
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -4.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -4.5117273, y: 0, z: 9.537785}
-    yaw: 178.60188
-    scale: {x: 0, y: 0, z: 0}
-    variant: 5
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -1.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 1.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 1.5103832, y: 0, z: 9.331153}
-    yaw: 181.11348
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 4.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 7.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 10.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 10.566003, y: 0, z: 9.25167}
-    yaw: 179.83553
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 13.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 13.4787445, y: 0, z: 9.295858}
-    yaw: -0.8474617
-    scale: {x: 0, y: 0, z: 0}
-    variant: 4
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 16.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 16.425816, y: 0, z: 9.348817}
-    yaw: 1.6460142
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 19.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 19.577774, y: 0, z: 9.479685}
-    yaw: -0.64508474
-    scale: {x: 0, y: 0, z: 0}
-    variant: 4
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 22.5, y: 0, z: 11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -24, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -21, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -18, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -15, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -12, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -9, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -6, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -3, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 3, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 6, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 9, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 12, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 15, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 18, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 21, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 24, y: 0, z: -9.4}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: -12.3}
-    yaw: 90
-    scale: {x: 1, y: 1, z: 48}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -22.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -19.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -16.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -16.467655, y: 0, z: -9.386693}
-    yaw: 358.51346
-    scale: {x: 0, y: 0, z: 0}
-    variant: 3
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -13.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -13.434812, y: 0, z: -9.456496}
-    yaw: 360.75372
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -10.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -10.442026, y: 0, z: -9.532134}
-    yaw: 360.10416
-    scale: {x: 0, y: 0, z: 0}
-    variant: 6
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -7.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -7.4234548, y: 0, z: -9.327392}
-    yaw: 178.336
-    scale: {x: 0, y: 0, z: 0}
-    variant: 1
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -4.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -1.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -1.5106076, y: 0, z: -9.323741}
-    yaw: 178.9397
-    scale: {x: 0, y: 0, z: 0}
-    variant: 7
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 1.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 4.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 7.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 7.531265, y: 0, z: -9.502068}
-    yaw: 358.40695
-    scale: {x: 0, y: 0, z: 0}
-    variant: 5
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 10.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 13.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 13.455691, y: 0, z: -9.511324}
-    yaw: 180.2833
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 16.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 16.550032, y: 0, z: -9.512874}
-    yaw: 181.20276
-    scale: {x: 0, y: 0, z: 0}
-    variant: 5
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 19.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 22.5, y: 0, z: -11.85}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  environmentPrefab: {fileID: 0}
-  spawnPosition: {x: 22.5, y: 0, z: 0}
-  spawnYaw: 270
-  targetPosition: {x: 1.5, y: 0, z: -9.4}
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -30, y: 0, z: -1.6}
+  spawnYaw: 90
+  targetPosition: {x: 15.5, y: 0, z: 7.5}
   targetYaw: 180
-  targetSize: {x: 3, y: 5.8}
-  timeLimitSeconds: 80
-  collisionLimit: 3
-  overrideParkingRules: 1
+  targetSize: {x: 3, y: 6}
+  timeLimitSeconds: 120
+  collisionLimit: 2
+  overrideParkingRules: 0
   parkingRules:
     edgeMargin: 0.049999997
     angleTolerance: 12
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.2
-  threeStarTime: 40
+  threeStarTime: 55
   threeStarMaxCollisions: 0
-  twoStarTime: 60
+  twoStarTime: 85
   twoStarMaxCollisions: 1
-  baseCoins: 100
-  coinsPerStar: 24
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 140
+  coinsPerStar: 35
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518987905178533889
+      type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into bay R3
+        position: {x: 15.5, y: 0, z: 7.5}
+        bayYaw: 0
+        size: {x: 3, y: 6}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 10
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxRearGap: 0.7

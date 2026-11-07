@@ -48,7 +48,7 @@ namespace UltimateCarParking.Tests
             var input = car.GetComponent<VehicleInput>();
             input.KeyboardEnabled = false;
             Assert.AreEqual(data.Handling.mass, c.Body.mass, 0.01f, "handling applied");
-            Assert.AreSame(data.PaintMaterial, car.GetComponent<CarPaint>().CurrentPaint, "paint applied");
+            if (data.PaintMaterial != null) Assert.AreSame(data.PaintMaterial, car.GetComponent<CarPaint>().CurrentPaint, "paint applied");
 
             float minUp = 1f, peak = 0f;
             IEnumerator Run(float throttle, float steer, float seconds)

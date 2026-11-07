@@ -26,6 +26,7 @@ namespace UltimateCarParking.Parking
         private VehicleController vehicle;
         private Rigidbody body;
         private ParkingRules rules;
+        private IParkingCondition condition;
         private float holdTimer;
         private bool armed;
 
@@ -39,6 +40,14 @@ namespace UltimateCarParking.Parking
         public float HeadingErrorDegrees { get; private set; }
         public float SpeedKmh { get; private set; }
         public bool IsArmed => armed;
+        public ParkingZone Zone => zone;
+        public VehicleController Vehicle => vehicle;
+
+        /// <summary>The car's footprint corners in world space, as of the last evaluation.</summary>
+        public Vector3[] WorldFootprint => worldCorners;
+
+        /// <summary>Why the extra condition is unmet (status <see cref="ParkingStatus.Unpositioned"/>), else empty.</summary>
+        public string ConditionHint { get; private set; } = "";
 
         /// <summary>0..1 progress of the hold timer (1 once parked).</summary>
         public float HoldProgress =>
@@ -48,9 +57,14 @@ namespace UltimateCarParking.Parking
         /// <summary>The car's footprint corners in its local space (ground plane), measured at bind time.</summary>
         public Vector3[] LocalFootprint => localCorners;
 
-        /// <summary>Connects the validator to a bay and a car. Pass null rules to use the Inspector defaults.</summary>
-        public void Bind(ParkingZone parkingZone, VehicleController car, ParkingRules levelRules = null)
+        /// <summary>
+        /// Connects the validator to a bay and a car. Pass null rules to use the Inspector defaults. An optional
+        /// <paramref name="extraCondition"/> (rear depth, kerb gap…) must also hold before the hold timer runs.
+        /// </summary>
+        public void Bind(ParkingZone parkingZone, VehicleController car, ParkingRules levelRules = null, IParkingCondition extraCondition = null)
         {
+            condition = extraCondition;
+            ConditionHint = "";
             zone = parkingZone;
             vehicle = car;
             body = car != null ? car.Body != null ? car.Body : car.GetComponent<Rigidbody>() : null;
@@ -63,6 +77,12 @@ namespace UltimateCarParking.Parking
             if (zone != null && body != null) zone.Track(body);
             if (vehicle != null) MeasureFootprint(vehicle.transform);
             SetStatus(ParkingStatus.Inactive);
+        }
+
+        /// <summary>Measures the car's footprint without binding a bay (side sensors on route objectives).</summary>
+        public void EnsureFootprint(VehicleController car)
+        {
+            if (car != null && (localCorners[0] == Vector3.zero || vehicle != car)) MeasureFootprint(car.transform);
         }
 
         /// <summary>Armed = the level is running and parking can succeed.</summary>
@@ -112,6 +132,8 @@ namespace UltimateCarParking.Parking
             if (!zone.IsOccupied && CornersInside == 0) return ParkingStatus.Outside;
             if (CornersInside < 4) return CornersInside == 0 ? ParkingStatus.Outside : ParkingStatus.PartiallyInside;
             if (HeadingErrorDegrees > r.angleTolerance) return ParkingStatus.Misaligned;
+            if (condition != null && !condition.IsMet(this, out string hint)) { ConditionHint = hint ?? ""; return ParkingStatus.Unpositioned; }
+            ConditionHint = "";
             if (SpeedKmh > r.maxSpeedKmh) return ParkingStatus.TooFast;
             return ParkingStatus.Holding;
         }

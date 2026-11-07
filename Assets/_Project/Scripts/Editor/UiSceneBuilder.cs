@@ -15,7 +15,7 @@ using UltimateCarParking.UI;
 namespace UltimateCarParking.EditorTools
 {
     /// <summary>
-    /// Builds the menu scenes (MainMenu, LevelSelect, Garage) and the LevelCard prefab with uGUI + TextMeshPro.
+    /// Builds the menu scenes (MainMenu, LevelSelect, Garage, WorldTour) and the LevelCard prefab with uGUI + TextMeshPro.
     /// Landscape reference 1920x1080, matched on height, every element anchored to an edge or the centre so wider
     /// phones (20:9) and tablets (4:3) keep the layout. Content sits inside a SafeAreaFitter.
     /// </summary>
@@ -31,6 +31,7 @@ namespace UltimateCarParking.EditorTools
             BuildMainMenu();
             BuildLevelSelect();
             BuildGarage();
+            BuildWorldTourScene();
         }
 
         // ------------------------------------------------------------------ MainMenu
@@ -38,36 +39,66 @@ namespace UltimateCarParking.EditorTools
         private static void BuildMainMenu()
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            CarShowroom showroom = Showroom(new Vector3(-3.7f, 2.3f, -9.4f), new Vector3(-2.15f, 0.5f, 0f));
+            // Low three-quarter. The look target sits left of the car so the body lands in the open right side.
+            CarShowroom showroom = Showroom(new Vector3(-4.9f, 0.86f, -5.7f), new Vector3(-1.35f, 0.48f, 0.2f));
 
             RectTransform root = MakeCanvas("MainMenuCanvas", out _);
-            Image fade = Img(root, "SideFade", "SideFade", UiPalette.Background);
+            Image vignette = Img(root, "Vignette", "Vignette", new Color(0f, 0f, 0f, 0.78f), sliced: false);
+            Fill(vignette.rectTransform, 0, 0, 0, 0);
+            Image fade = Img(root, "SideFade", "SideFade", new Color(0.027f, 0.029f, 0.033f, 1f));
             Place(fade.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), Vector2.zero, Vector2.zero);
             fade.rectTransform.anchorMax = new Vector2(0f, 1f);
-            fade.rectTransform.sizeDelta = new Vector2(1250f, 0f);
+            fade.rectTransform.sizeDelta = new Vector2(1560f, 0f);
             RectTransform safe = SafeArea(root);
 
-            // Title block
-            RectTransform title = Group(safe, "TitleGroup", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(120f, -110f), new Vector2(1100f, 260f));
-            Label(title, "Kicker", "ULTIMATE", true, 40f, UiPalette.Lime, TextAlignmentOptions.TopLeft, 18f).rectTransform.Also(r => Fill(r, 0, 0, 0, 210));
-            Label(title, "Title", "CAR PARKING <color=#B6FF2E>3D</color>", true, 124f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 2f).rectTransform.Also(r => Fill(r, 0, 0, 46, 120));
-            Image bar = Img(title, "AccentBar", "RoundRect", UiPalette.Lime);
-            Place(bar.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(4f, 6f), new Vector2(150f, 8f));
-            TMP_Text progress = Label(safe, "Progress", "0/30 LEVELS", false, 30f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 3f);
-            Place(progress.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(124f, -392f), new Vector2(900f, 44f));
+            RectTransform title = Group(safe, "TitleGroup", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(96f, -78f), new Vector2(980f, 250f));
+            Label(title, "Kicker", "ULTIMATE", false, 20f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 14f).rectTransform.Also(r => Fill(r, 2, 0, 4, 214));
+            Label(title, "Title", "CAR PARKING<size=62%><color=#9AA3AD>  3D</color></size>", true, 78f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 0.5f).rectTransform.Also(r => Fill(r, 0, 0, 36, 108));
+            Image bar = Img(title, "AccentBar", "RoundRect", UiPalette.TextPrimary.WithAlpha(0.85f));
+            Place(bar.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(2f, 18f), new Vector2(56f, 3f));
+            TMP_Text progress = Label(safe, "Progress", "0 / 30   LEVELS      ·      0 / 90   STARS", false, 20f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 1.6f);
+            Place(progress.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(98f, -318f), new Vector2(860f, 32f));
 
-            // Buttons
-            RectTransform buttons = Group(safe, "ButtonGroup", new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(120f, 110f), new Vector2(560f, 330f));
-            Button play = PillButton(buttons, "PlayButton", "PLAY", filled: true, new Vector2(0f, 190f), new Vector2(560f, 116f), 60f);
-            Button garage = PillButton(buttons, "GarageButton", "GARAGE", filled: false, new Vector2(0f, 64f), new Vector2(560f, 100f), 44f);
-            TMP_Text car = Label(buttons, "CarLabel", "CITY SEDAN", false, 26f, UiPalette.TextSecondary, TextAlignmentOptions.BottomLeft, 4f);
-            Place(car.rectTransform, Vector2.zero, Vector2.zero, new Vector2(6f, 0f), new Vector2(560f, 40f));
+            RectTransform buttons = Group(safe, "ButtonGroup", new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(96f, 40f), new Vector2(620f, 520f));
+            Label(buttons, "VehicleKicker", "SHOWROOM", false, 18f, UiPalette.TextSecondary, TextAlignmentOptions.BottomLeft, 6f);
+            TMP_Text car = Label(buttons, "CarLabel", "SPORT", true, 32f, UiPalette.TextPrimary, TextAlignmentOptions.BottomLeft, 2.2f);
+            Place(car.rectTransform, Vector2.zero, Vector2.zero, new Vector2(0f, 400f), new Vector2(600f, 48f));
+            var kickerRt = buttons.Find("VehicleKicker").GetComponent<RectTransform>();
+            Place(kickerRt, Vector2.zero, Vector2.zero, new Vector2(2f, 456f), new Vector2(600f, 28f));
 
-            CoinPill(safe);
-            Button settingsButton = CircleButton(safe, "SettingsButton", "Gear", new Vector2(1f, 1f), new Vector2(-404f, -100f));
+            // Play continues the next level; the 2x2 grid opens the other screens.
+            Button play = PillButton(buttons, "PlayButton", "PLAY", filled: true, new Vector2(0f, 270f), new Vector2(560f, 108f), 40f);
+            play.GetComponent<Image>().color = UiPalette.TextPrimary;
+            TMP_Text playLabel = play.GetComponentInChildren<TMP_Text>();
+            playLabel.color = UiPalette.Background;
+            playLabel.characterSpacing = 5f;
+            Button MenuButton(string name, string text, Vector2 pos, bool accent)
+            {
+                Button b = PillButton(buttons, name, text, filled: false, pos, new Vector2(272f, 88f), 26f);
+                b.GetComponent<Image>().color = accent ? UiPalette.Lime : UiPalette.TextPrimary.WithAlpha(0.55f);
+                TMP_Text t = b.GetComponentInChildren<TMP_Text>();
+                t.color = accent ? UiPalette.Lime : UiPalette.TextPrimary;
+                t.characterSpacing = 4f;
+                return b;
+            }
+            Button worldTour = MenuButton("WorldTourButton", "WORLD TOUR", new Vector2(0f, 166f), accent: true);
+            Button garage = MenuButton("GarageButton", "GARAGE", new Vector2(288f, 166f), accent: false);
+            Button missions = MenuButton("MissionsButton", "MISSIONS", new Vector2(0f, 64f), accent: false);
+            Button settingsMenu = MenuButton("SettingsMenuButton", "SETTINGS", new Vector2(288f, 64f), accent: false);
+            Button featured = PillButton(buttons, "FeaturedButton", "GARAGE B1", filled: false, new Vector2(0f, 4f), new Vector2(280f, 48f), 22f);
+            featured.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0f);
+            TMP_Text featuredLabel = featured.GetComponentInChildren<TMP_Text>();
+            featuredLabel.color = UiPalette.TextSecondary;
+            featuredLabel.alignment = TextAlignmentOptions.MidlineLeft;
+            featuredLabel.characterSpacing = 3f;
+
+            CoinPill(safe, new Vector2(-40f, -72f), new Vector2(230f, 68f), 30f, 40f);
+            Button settingsButton = CircleButton(safe, "SettingsButton", "Gear", new Vector2(1f, 1f), new Vector2(-292f, -72f), UiPalette.TextPrimary, 72f);
+            settingsButton.GetComponent<Image>().color = new Color(0.07f, 0.08f, 0.09f, 0.55f);
             SettingsPanel settingsPanel = BuildSettingsPanel(safe);
-            TMP_Text version = Label(safe, "Version", "v0.4", false, 20f, UiPalette.TextSecondary.WithAlpha(0.5f), TextAlignmentOptions.BottomRight, 2f);
-            Place(version.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-48f, 32f), new Vector2(400f, 30f));
+            BuildAccount(safe);
+            TMP_Text version = Label(safe, "Version", "v0.4", false, 16f, UiPalette.TextSecondary.WithAlpha(0.4f), TextAlignmentOptions.BottomRight, 1.5f);
+            Place(version.rectTransform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-40f, 28f), new Vector2(400f, 24f));
             MakeEventSystem();
 
             var host = new GameObject("MainMenu");
@@ -75,9 +106,16 @@ namespace UltimateCarParking.EditorTools
             Wire(ctrl, "cars", AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath));
             Wire(ctrl, "levels", AssetDatabase.LoadAssetAtPath<LevelCatalog>(ProjectBootstrapper.CatalogPath));
             Wire(ctrl, "showroom", showroom);
+            Wire(ctrl, "heroPrefab", AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.PrefabPath("Parked_sport")));
+            Wire(ctrl, "heroName", "Sport");
             Wire(ctrl, "playButton", play);
             Wire(ctrl, "garageButton", garage);
             Wire(ctrl, "settingsButton", settingsButton);
+            Wire(ctrl, "worldTourButton", worldTour);
+            Wire(ctrl, "missionsButton", missions);
+            Wire(ctrl, "settingsMenuButton", settingsMenu);
+            Wire(ctrl, "featuredButton", featured);
+            Wire(ctrl, "featuredCatalog", AssetDatabase.LoadAssetAtPath<LevelCatalog>(RealGarageBuilder.CatalogPath));
             Wire(ctrl, "settingsPanel", settingsPanel);
             Wire(ctrl, "carLabel", car);
             Wire(ctrl, "progressLabel", progress);
@@ -236,7 +274,7 @@ namespace UltimateCarParking.EditorTools
             Place(index.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(190f, -120f), new Vector2(400f, 34f));
             CoinPill(safe);
 
-            RectTransform info = Group(safe, "Info", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(120f, 10f), new Vector2(600f, 660f));
+            RectTransform info = Group(safe, "Info", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(120f, 10f), new Vector2(600f, 780f));
             var infoGroup = info.gameObject.AddComponent<CanvasGroup>();
             TMP_Text name = Label(info, "CarName", "CITY SEDAN", true, 88f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 2f);
             Place(name.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(800f, 100f));
@@ -248,7 +286,17 @@ namespace UltimateCarParking.EditorTools
             StatBar handling = MakeStatBar(info, "HANDLING", -352f);
             StatBar braking = MakeStatBar(info, "BRAKING", -428f);
             TMP_Text status = Label(info, "Status", "OWNED", false, 26f, UiPalette.Lime, TextAlignmentOptions.BottomLeft, 6f);
-            Place(status.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(4f, 124f), new Vector2(560f, 36f));
+            Place(status.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(4f, 222f), new Vector2(560f, 36f));
+            var upgradeButtons = new Button[3];
+            var upgradeLabels = new TMP_Text[3];
+            string[] upgradeNames = { "ENGINE", "BRAKES", "STEERING" };
+            for (int i = 0; i < 3; i++)
+            {
+                upgradeButtons[i] = PillButton(info, "Upgrade" + upgradeNames[i], upgradeNames[i] + "\nLV 0/3  250", filled: false,
+                    new Vector2(i * 190f, 118f), new Vector2(180f, 90f), 22f);
+                upgradeLabels[i] = upgradeButtons[i].GetComponentInChildren<TMP_Text>();
+                upgradeLabels[i].lineSpacing = -10f;
+            }
 
             Button action = PillButton(info, "ActionButton", "SELECT", filled: true, new Vector2(0f, 0f), new Vector2(560f, 104f), 46f);
             Image lockIcon = Img(action.transform, "Lock", "Lock", UiPalette.TextOnLime, sliced: false);
@@ -288,6 +336,8 @@ namespace UltimateCarParking.EditorTools
             Wire(ctrl, "dotsParent", dots);
             Wire(ctrl, "dotTemplate", dot);
             Wire(ctrl, "coins", Object.FindAnyObjectByType<CoinCounter>());
+            WireArray(ctrl, "upgradeButtons", upgradeButtons);
+            WireArray(ctrl, "upgradeLabels", upgradeLabels);
             Wire(garageGo.AddComponent<BackNavigation>(), "targetScene", SceneNames.MainMenu);
 
             EditorSceneManager.SaveScene(scene, ProjectBootstrapper.ScenePathOf(SceneNames.Garage));
@@ -331,9 +381,9 @@ namespace UltimateCarParking.EditorTools
                 if (emit.maxColorComponent > 0f) { m.EnableKeyword("_EMISSION"); m.SetColor("_EmissionColor", emit); }
                 EditorUtility.SetDirty(m);
             }
-            Make("ShowroomFloor", new Color(0.06f, 0.07f, 0.08f), 0.85f, Color.black);
-            Make("ShowroomRing", UiPalette.Lime, 0.5f, UiPalette.Lime * 0.9f);
-            Make("ShowroomWall", new Color(0.035f, 0.04f, 0.05f), 0.2f, Color.black);
+            Make("ShowroomFloor", new Color(0.035f, 0.037f, 0.04f), 0.94f, Color.black);
+            Make("ShowroomRing", new Color(0.09f, 0.095f, 0.1f), 0.8f, new Color(0.02f, 0.022f, 0.024f));
+            Make("ShowroomWall", new Color(0.012f, 0.013f, 0.015f), 0.08f, Color.black);
         }
 
         /// <summary>Dark studio: glossy floor disc, lime light ring, backdrop, key light and a framing camera.</summary>
@@ -341,9 +391,9 @@ namespace UltimateCarParking.EditorTools
         {
             RenderSettings.skybox = null;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.42f, 0.46f, 0.52f);
-            RenderSettings.ambientEquatorColor = new Color(0.16f, 0.17f, 0.19f);
-            RenderSettings.ambientGroundColor = new Color(0.05f, 0.05f, 0.06f);
+            RenderSettings.ambientSkyColor = new Color(0.16f, 0.17f, 0.19f);
+            RenderSettings.ambientEquatorColor = new Color(0.07f, 0.075f, 0.08f);
+            RenderSettings.ambientGroundColor = new Color(0.02f, 0.02f, 0.022f);
 
             var cam = new GameObject("Main Camera") { tag = "MainCamera" }.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
@@ -360,17 +410,15 @@ namespace UltimateCarParking.EditorTools
 
             var sun = new GameObject("Key Light").AddComponent<Light>();
             sun.type = LightType.Directional;
-            sun.intensity = 1.6f;
-            sun.color = new Color(1f, 0.97f, 0.93f);
+            sun.intensity = 1.25f;
+            sun.color = new Color(1f, 0.96f, 0.92f);
             sun.shadows = LightShadows.Soft;
-            sun.transform.rotation = Quaternion.Euler(42f, -40f, 0f);
+            sun.transform.rotation = Quaternion.Euler(24f, -62f, 0f);
             RenderSettings.sun = sun;
 
             var studio = new GameObject("Showroom").transform;
-            ProjectBootstrapper.Primitive(PrimitiveType.Cylinder, studio, "Floor", new Vector3(0f, -0.03f, 0f), Quaternion.identity, new Vector3(8.5f, 0.03f, 8.5f), "ShowroomFloor", false);
-            ProjectBootstrapper.Primitive(PrimitiveType.Cylinder, studio, "Ring", new Vector3(0f, -0.05f, 0f), Quaternion.identity, new Vector3(8.62f, 0.02f, 8.62f), "ShowroomRing", false);
-            ProjectBootstrapper.Primitive(PrimitiveType.Plane, studio, "Ground", new Vector3(0f, -0.07f, 0f), Quaternion.identity, new Vector3(8f, 1f, 8f), "ShowroomWall", false);
-            ProjectBootstrapper.Primitive(PrimitiveType.Cube, studio, "Backdrop", new Vector3(0f, 6f, 14f), Quaternion.identity, new Vector3(60f, 14f, 0.2f), "ShowroomWall", false);
+            ProjectBootstrapper.Primitive(PrimitiveType.Plane, studio, "Ground", new Vector3(0f, -0.02f, 0f), Quaternion.identity, new Vector3(14f, 1f, 14f), "ShowroomWall", false);
+            ProjectBootstrapper.Primitive(PrimitiveType.Cube, studio, "Backdrop", new Vector3(0f, 8f, 18f), Quaternion.identity, new Vector3(80f, 20f, 0.2f), "ShowroomWall", false);
             Transform turntable = ProjectBootstrapper.Child(studio, "Turntable");
             turntable.localRotation = Quaternion.Euler(0f, 210f, 0f);
             var showroom = studio.gameObject.AddComponent<CarShowroom>();
@@ -417,14 +465,55 @@ namespace UltimateCarParking.EditorTools
             go.AddComponent<InputSystemUIInputModule>();
         }
 
-        private static void CoinPill(RectTransform parent)
+        /// <summary>Account pill left of the gear + the account modal (Google / guest sign-in).</summary>
+        private static void BuildAccount(RectTransform safe)
         {
-            Image pill = Img(parent, "CoinPill", "Pill", UiPalette.SurfaceRaised);
-            Place(pill.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-64f, -100f), new Vector2(280f, 76f));
+            Image pill = Img(safe, "AccountButton", "Pill", new Color(0.07f, 0.078f, 0.088f, 0.72f), raycast: true);
+            Place(pill.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 0.5f), new Vector2(-344f, -72f), new Vector2(330f, 68f));
+            var pillButton = pill.gameObject.AddComponent<Button>();
+            pillButton.transition = Selectable.Transition.None;
+            pill.gameObject.AddComponent<UIButtonFX>();
+            Image dot = Img(pill.rectTransform, "Dot", "Circle", UiPalette.Lime, sliced: false);
+            Place(dot.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(24f, 0f), new Vector2(14f, 14f));
+            TMP_Text pillLabel = Label(pill.rectTransform, "Label", "GUEST  ·  SIGN IN", true, 22f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineLeft, 3f);
+            Fill(pillLabel.rectTransform, 50, 18, 0, 0);
+
+            CanvasGroup modal = Modal(safe, "AccountModal", new Vector2(760f, 600f), "ACCOUNT", null, out RectTransform body);
+            TMP_Text status = Label(body, "Status", "PLAYING AS GUEST", true, 26f, UiPalette.Lime, TextAlignmentOptions.Center, 6f);
+            Place(status.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -150f), new Vector2(660f, 36f));
+            TMP_Text detail = Label(body, "Detail", "", false, 24f, UiPalette.TextPrimary, TextAlignmentOptions.Top, 0f);
+            detail.textWrappingMode = TextWrappingModes.Normal;
+            Place(detail.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -186f), new Vector2(640f, 110f));
+            TMP_Text error = Label(body, "Error", "", false, 20f, UiPalette.Danger, TextAlignmentOptions.Center, 1f);
+            Place(error.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -318f), new Vector2(660f, 30f));
+            Button google = PillButton(body, "GoogleButton", "SIGN IN WITH GOOGLE", filled: true, new Vector2(100f, 150f), new Vector2(560f, 92f), 30f);
+            Button signOut = PillButton(body, "SignOutButton", "SIGN OUT", filled: false, new Vector2(100f, 150f), new Vector2(560f, 92f), 30f);
+            Button close = PillButton(body, "CloseButton", "CLOSE", filled: false, new Vector2(230f, 40f), new Vector2(300f, 76f), 26f);
+
+            var account = pill.gameObject.AddComponent<AccountPanel>();
+            Wire(account, "accountButton", pillButton);
+            Wire(account, "accountLabel", pillLabel);
+            Wire(account, "panel", modal);
+            Wire(account, "statusLabel", status);
+            Wire(account, "detailLabel", detail);
+            Wire(account, "errorLabel", error);
+            Wire(account, "googleButton", google);
+            Wire(account, "googleLabel", google.GetComponentInChildren<TMP_Text>());
+            Wire(account, "signOutButton", signOut);
+            Wire(account, "closeButton", close);
+        }
+
+        private static void CoinPill(RectTransform parent) =>
+            CoinPill(parent, new Vector2(-64f, -100f), new Vector2(280f, 76f), 40f, 52f);
+
+        private static void CoinPill(RectTransform parent, Vector2 pos, Vector2 size, float fontSize, float icon)
+        {
+            Image pill = Img(parent, "CoinPill", "Pill", new Color(0.07f, 0.078f, 0.088f, 0.72f));
+            Place(pill.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 0.5f), pos, size);
             Image coin = Img(pill.rectTransform, "CoinIcon", "Coin", Color.white, sliced: false);
-            Place(coin.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(14f, 0f), new Vector2(52f, 52f));
-            TMP_Text amount = Label(pill.rectTransform, "Amount", "0", true, 40f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineRight);
-            Fill(amount.rectTransform, 74, 28, 0, 0);
+            Place(coin.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(icon * 0.22f, 0f), new Vector2(icon, icon));
+            TMP_Text amount = Label(pill.rectTransform, "Amount", "0", true, fontSize, UiPalette.TextPrimary, TextAlignmentOptions.MidlineRight);
+            Fill(amount.rectTransform, icon + 16f, 18f, 0, 0);
             Wire(pill.gameObject.AddComponent<CoinCounter>(), "label", amount);
         }
 
@@ -452,14 +541,18 @@ namespace UltimateCarParking.EditorTools
         }
 
         private static Button CircleButton(RectTransform parent, string name, string icon, Vector2 anchor, Vector2 pos)
+            => CircleButton(parent, name, icon, anchor, pos, UiPalette.Lime, 92f);
+
+        private static Button CircleButton(RectTransform parent, string name, string icon, Vector2 anchor, Vector2 pos, Color iconColor, float size)
         {
             Image bg = Img(parent, name, "Circle", UiPalette.SurfaceRaised, sliced: false, raycast: true);
-            Place(bg.rectTransform, anchor, new Vector2(0.5f, 0.5f), pos, new Vector2(92f, 92f));
+            Place(bg.rectTransform, anchor, new Vector2(0.5f, 0.5f), pos, new Vector2(size, size));
             var b = bg.gameObject.AddComponent<Button>();
             b.transition = Selectable.Transition.None;
             bg.gameObject.AddComponent<UIButtonFX>();
-            Image ic = Img(bg.rectTransform, "Icon", icon, UiPalette.Lime, sliced: false);
-            Place(ic.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(44f, 44f));
+            Image ic = Img(bg.rectTransform, "Icon", icon, iconColor, sliced: false);
+            float iconSize = size * 0.48f;
+            Place(ic.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(iconSize, iconSize));
             return b;
         }
 

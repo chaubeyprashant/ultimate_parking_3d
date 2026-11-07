@@ -75,10 +75,94 @@ namespace UltimateCarParking.EditorTools
             TMP_Text hits = Label(hitsPill.rectTransform, "Count", "0/3", true, 44f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineRight);
             Fill(hits.rectTransform, 90, 30, 0, 0);
 
+            // VIEW toggle (chase / top-down) under the hits pill.
+            Image viewPill = Img(hud, "ViewButton", "Pill", UiPalette.Surface.WithAlpha(0.88f), raycast: true);
+            Place(viewPill.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-40f, -134f), new Vector2(210f, 64f));
+            var viewButton = viewPill.gameObject.AddComponent<Button>();
+            viewButton.transition = Selectable.Transition.None;
+            viewPill.gameObject.AddComponent<UIButtonFX>();
+            TMP_Text viewLabel = Label(viewPill.rectTransform, "Label", "VIEW: CHASE", true, 22f, UiPalette.TextPrimary, TextAlignmentOptions.Center, 3f);
+            Fill(viewLabel.rectTransform, 8, 8, 0, 0);
+
+            // Backup camera panel (top centre, under the guide pill), shown while reversing.
+            Image rearFrame = Img(hud, "RearCamera", null, new Color(0.03f, 0.035f, 0.04f, 0.92f));
+            Place(rearFrame.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -214f), new Vector2(540f, 318f));
+            var rearGroup = rearFrame.gameObject.AddComponent<CanvasGroup>();
+            rearFrame.gameObject.AddComponent<RectMask2D>();   // guide lines that run off the image are clipped to the frame
+            var rearImage = NewRect(rearFrame.rectTransform, "Image").gameObject.AddComponent<RawImage>();
+            Fill(rearImage.rectTransform, 6, 6, 6, 6);
+            rearImage.raycastTarget = false;
+            RectTransform guidesRect = NewRect(rearFrame.rectTransform, "Guides");
+            guidesRect.gameObject.AddComponent<CanvasRenderer>();
+            var rearGuides = guidesRect.gameObject.AddComponent<RearGuideLines>();
+            Fill(rearGuides.rectTransform, 6, 6, 6, 6);
+            rearGuides.raycastTarget = false;
+            TMP_Text rearKicker = Label(rearFrame.rectTransform, "Kicker", "REAR CAMERA", true, 18f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 4f);
+            Place(rearKicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(16f, -12f), new Vector2(300f, 28f));
+            Image distPill = Img(rearFrame.rectTransform, "DistancePill", "Pill", UiPalette.Lime);
+            Place(distPill.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(150f, 44f));
+            TMP_Text distLabel = Label(distPill.rectTransform, "Distance", "CLEAR", true, 26f, UiPalette.TextOnLime, TextAlignmentOptions.Center, 2f);
+            Fill(distLabel.rectTransform, 0, 0, 0, 0);
+            var rearCam = rearFrame.gameObject.AddComponent<UltimateCarParking.CameraSystem.RearViewCamera>();
+            var rearView = rearFrame.gameObject.AddComponent<RearCameraView>();
+            Wire(rearView, "rearCamera", rearCam);
+            Wire(rearView, "group", rearGroup);
+            Wire(rearView, "image", rearImage);
+            Wire(rearView, "guides", rearGuides);
+            Wire(rearView, "distanceLabel", distLabel);
+            Wire(rearView, "distancePill", distPill);
+
             Image gearPill = Img(hud, "GearPill", "Circle", UiPalette.Surface.WithAlpha(0.88f), sliced: false);
             Place(gearPill.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-270f, -36f), new Vector2(84f, 84f));
             TMP_Text gear = Label(gearPill.rectTransform, "Gear", "D", true, 46f, UiPalette.Lime, TextAlignmentOptions.Center);
             Fill(gear.rectTransform, 0, 0, 0, 0);
+
+            // ---------------- mission widgets: objective checklist, gauge, toast, start banner
+            RectTransform objList = Group(hud, "Objectives", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(44f, -140f), new Vector2(560f, 200f));
+            Image rowBg = Img(objList, "RowTemplate", "Pill", UiPalette.Surface.WithAlpha(0.72f));
+            RectTransform rowT = rowBg.rectTransform;
+            Place(rowT, new Vector2(0f, 1f), new Vector2(0f, 1f), Vector2.zero, new Vector2(540f, 46f));
+            Image rowDot = Img(rowT, "Dot", "Circle", UiPalette.TextSecondary, sliced: false);
+            Place(rowDot.rectTransform, new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(26f, 0f), new Vector2(14f, 14f));
+            TMP_Text rowText = Label(rowT, "Text", "PARK IN THE BAY", false, 22f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineLeft, 3f);
+            Fill(rowText.rectTransform, 46, 14, 0, 0);
+            rowT.gameObject.SetActive(false);
+
+            Image gaugeBg = Img(hud, "MissionGauge", "Pill", UiPalette.Surface.WithAlpha(0.85f));
+            Place(gaugeBg.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -208f), new Vector2(520f, 66f));
+            var gaugeGroup = gaugeBg.gameObject.AddComponent<CanvasGroup>();
+            gaugeGroup.alpha = 0f;
+            TMP_Text gaugeCaption = Label(gaugeBg.rectTransform, "Caption", "REAR SENSOR", false, 18f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 4f);
+            Fill(gaugeCaption.rectTransform, 28, 160, 4, 16);
+            TMP_Text gaugeValue = Label(gaugeBg.rectTransform, "Value", "1.2 m", true, 32f, UiPalette.Lime, TextAlignmentOptions.MidlineRight, 1f);
+            Fill(gaugeValue.rectTransform, 300, 28, 2, 14);
+            Image gaugeTrack = Img(gaugeBg.rectTransform, "Track", "Pill", UiPalette.Outline);
+            Place(gaugeTrack.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 9f), new Vector2(464f, 6f));
+            Image gaugeFill = Img(gaugeTrack.rectTransform, "Fill", "Pill", UiPalette.Lime);
+            gaugeFill.rectTransform.anchorMin = Vector2.zero;
+            gaugeFill.rectTransform.anchorMax = new Vector2(0f, 1f);
+            gaugeFill.rectTransform.offsetMin = gaugeFill.rectTransform.offsetMax = Vector2.zero;
+
+            Image toastBg = Img(hud, "Toast", "Pill", UiPalette.Surface.WithAlpha(0.9f));
+            Place(toastBg.rectTransform, new Vector2(0.5f, 0.62f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(720f, 84f));
+            var toastGroup = toastBg.gameObject.AddComponent<CanvasGroup>();
+            toastGroup.alpha = 0f;
+            toastGroup.blocksRaycasts = false;
+            TMP_Text toastText = Label(toastBg.rectTransform, "Text", "KERB STRIKE", true, 40f, UiPalette.Danger, TextAlignmentOptions.Center, 3f);
+            Fill(toastText.rectTransform, 20, 20, 0, 0);
+
+            Image bannerBg = Img(hud, "Banner", "RoundRect", UiPalette.Surface.WithAlpha(0.92f));
+            Place(bannerBg.rectTransform, new Vector2(0.5f, 0.55f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(980f, 230f));
+            var bannerGroup = bannerBg.gameObject.AddComponent<CanvasGroup>();
+            bannerGroup.alpha = 0f;
+            bannerGroup.blocksRaycasts = false;
+            Image bannerBar = Img(bannerBg.rectTransform, "Accent", "Pill", UiPalette.Lime);
+            Place(bannerBar.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -30f), new Vector2(90f, 6f));
+            TMP_Text bannerKicker = Label(bannerBg.rectTransform, "Kicker", "REVERSE PARKING", true, 44f, UiPalette.Lime, TextAlignmentOptions.Center, 4f);
+            Place(bannerKicker.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -44f), new Vector2(920f, 60f));
+            TMP_Text bannerText = Label(bannerBg.rectTransform, "Text", "Back into the bay.", false, 28f, UiPalette.TextPrimary, TextAlignmentOptions.Top, 0f);
+            Place(bannerText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -112f), new Vector2(900f, 100f));
+            bannerText.textWrappingMode = TextWrappingModes.Normal;
 
             // ---------------- touch controls
             RectTransform controls = NewRect(hud, "Controls");
@@ -110,7 +194,22 @@ namespace UltimateCarParking.EditorTools
             Wire(hudComp, "guideIcon", guideDot);
             Wire(hudComp, "holdFill", holdFill.rectTransform);
             Wire(hudComp, "flash", flash);
+            Wire(hudComp, "mission", manager.GetComponent<UltimateCarParking.Missions.MissionRunner>());
+            Wire(hudComp, "objectiveList", objList);
+            Wire(hudComp, "objectiveRowTemplate", rowT);
+            Wire(hudComp, "gaugeGroup", gaugeGroup);
+            Wire(hudComp, "gaugeCaption", gaugeCaption);
+            Wire(hudComp, "gaugeValue", gaugeValue);
+            Wire(hudComp, "gaugeFill", gaugeFill.rectTransform);
+            Wire(hudComp, "gaugeFillImage", gaugeFill);
+            Wire(hudComp, "toastGroup", toastGroup);
+            Wire(hudComp, "toastLabel", toastText);
+            Wire(hudComp, "bannerGroup", bannerGroup);
+            Wire(hudComp, "bannerKicker", bannerKicker);
+            Wire(hudComp, "bannerText", bannerText);
             Wire(hudComp, "vehicleCamera", camera);
+            Wire(hudComp, "viewButton", viewButton);
+            Wire(hudComp, "viewLabel", viewLabel);
 
             // ---------------- panels
             RectTransform panels = NewRect(safe, "Panels");

@@ -7,6 +7,7 @@ using UnityEngine.TestTools;
 using UltimateCarParking.Cars;
 using UltimateCarParking.Core;
 using UltimateCarParking.Levels;
+using UltimateCarParking.Missions;
 using UltimateCarParking.Progression;
 using UltimateCarParking.Save;
 using UltimateCarParking.UI;
@@ -99,6 +100,84 @@ namespace UltimateCarParking.Tests
         }
 
         [UnityTest]
+        public IEnumerator Garage_Upgrade_Persists_And_Changes_The_Spawned_Car()
+        {
+            SaveManager.Current.Data.coins = 1000;
+            SaveManager.Current.Save();
+            yield return Open(SceneNames.Garage);
+            var garage = GarageManager.Instance;
+            var ui = Object.FindAnyObjectByType<GarageController>();
+            CarData sedan = garage.SelectedCar;
+            Assert.AreEqual("sedan", sedan.CarId);
+            StringAssert.Contains("LV 0/3", ui.UpgradeText((int)UpgradeKind.Steering));
+            StringAssert.Contains("250", ui.UpgradeText((int)UpgradeKind.Steering));
+            ui.OnUpgrade(UpgradeKind.Steering);
+            ui.OnUpgrade(UpgradeKind.Steering);
+            yield return null;
+            Assert.AreEqual(250, garage.Coins, "250 + 500 spent");
+            StringAssert.Contains("LV 2/3", ui.UpgradeText((int)UpgradeKind.Steering));
+            StringAssert.Contains("900", ui.UpgradeText((int)UpgradeKind.Steering));
+            ui.OnUpgrade(UpgradeKind.Steering);   // 900: cannot afford
+            Assert.AreEqual(250, garage.Coins);
+
+            SaveManager restarted = SaveManager.Initialize(savePath);
+            Assert.AreEqual(2, restarted.Data.FindUpgrades("sedan").steering, "upgrade saved");
+            LevelSelection.Request(Levels().Get(0), Levels());
+            yield return Open(SceneNames.Gameplay);
+            yield return WaitFor(() => LevelLoader.Instance != null && LevelLoader.Instance.Vehicle != null, 5f, "car spawned");
+            float lockAngle = LevelLoader.Instance.Vehicle.MaxSteerAngle;
+            Debug.Log($"[Test] Upgrade: steering x2 -> spawned lock {lockAngle:F1} deg (stock {sedan.Handling.maxSteerAngle:F1})");
+            Assert.AreEqual(Mathf.Min(45f, sedan.Handling.maxSteerAngle + 3f), lockAngle, 0.01f, "upgraded steering lock on the spawned car");
+        }
+
+        [UnityTest]
+        public IEnumerator Finishing_A_Country_Pays_The_Bonus_And_Shows_It()
+        {
+#if UNITY_EDITOR
+            var tour = AssetDatabase.LoadAssetAtPath<UltimateCarParking.WorldTour.CountryCatalog>("Assets/_Project/WorldTour/CountryCatalog.asset");
+            UltimateCarParking.WorldTour.CountryData india = tour.FindById("in");
+            SaveData data = SaveManager.Current.Data;
+            foreach (int i in new[] { 0, 1 })
+            {
+                LevelData m = india.GetLevel(i);
+                ProgressionService.RecordCompletion(data, m, new LevelResult(m.LevelId, true, FailReason.None, 3, 20f, 0, 0));
+            }
+            SaveManager.Current.Save();
+            int coinsBefore = data.coins;
+            LevelData last = india.GetLevel(2);
+            LevelSelection.Country = india;
+            LevelSelection.Request(last, india.MissionCatalog);
+            yield return Open(SceneNames.Gameplay);
+            yield return WaitFor(() => LevelManager.Instance != null && LevelManager.Instance.State == LevelState.Playing, 10f, "IN3 playing");
+            var runner = LevelManager.Instance.Mission;
+            var car = LevelLoader.Instance.Vehicle;
+            while (LevelManager.Instance.State == LevelState.Playing && runner.Current != null)
+            {
+                int idx = runner.CurrentIndex;
+                MissionObjective o = runner.Current;
+                Quaternion rot = o is ParkObjective p ? p.ZoneRotation : car.transform.rotation;
+                car.ResetVehicle(o.TargetPoint + Vector3.up * 0.06f, rot);
+                yield return WaitFor(() => LevelManager.Instance.State != LevelState.Playing || runner.CurrentIndex != idx, 8f, o.Title);
+            }
+            Assert.AreEqual(LevelState.Completed, LevelManager.Instance.State);
+            LevelResult r = LevelManager.Instance.LastResult.Value;
+            StringAssert.StartsWith("ACCURACY", r.ScoreLabel, "IN3 is precision-scored");
+            var recorder = Object.FindAnyObjectByType<ProgressionRecorder>();
+            Assert.IsTrue(recorder.LastCountryReward.HasValue, "country bonus paid");
+            Assert.AreEqual(india.CompletionCoins, recorder.LastCountryReward.Value.CompletionCoins);
+            yield return new WaitForSecondsRealtime(2f);
+            var badge = GameObject.Find("Badge")?.GetComponent<TMPro.TMP_Text>();
+            Assert.IsNotNull(badge);
+            Debug.Log($"[Test] Country bonus: {r} | badge '{badge.text}' | coins {coinsBefore} -> {SaveManager.Current.Data.coins}");
+            StringAssert.Contains("INDIA", badge.text);
+            Assert.AreEqual(coinsBefore + recorder.LastReward.Value.Coins + recorder.LastCountryReward.Value.Coins, SaveManager.Initialize(savePath).Data.coins, "saved");
+            yield return TestScenes.WaitForTransition();
+#else
+            yield break;
+#endif
+        }
+
+        [UnityTest]
         public IEnumerator Garage_Buy_And_Select_Persist_And_Drive_The_New_Car()
         {
             SaveManager.Current.Data.coins = 1000;
@@ -139,7 +218,7 @@ namespace UltimateCarParking.Tests
             Debug.Log($"[Test] Garage: bought + selected {hatch.DisplayName}, 250 coins left; after restart Gameplay spawned '{spawned.name}' ({LevelLoader.Instance.Vehicle.Body.mass} kg)");
             Assert.AreEqual(hatch.ModelPrefab.name, spawned.name);
             Assert.AreEqual(hatch.Handling.mass, LevelLoader.Instance.Vehicle.Body.mass, 0.01f);
-            Assert.AreSame(hatch.PaintMaterial, spawned.GetComponent<CarPaint>().CurrentPaint);
+            if (hatch.PaintMaterial != null) Assert.AreSame(hatch.PaintMaterial, spawned.GetComponent<CarPaint>().CurrentPaint);
         }
 
         [UnityTest]
@@ -191,19 +270,48 @@ namespace UltimateCarParking.Tests
             var menu = Object.FindAnyObjectByType<MainMenuController>();
             Assert.IsNotNull(menu);
             var labels = Object.FindObjectsByType<TMPro.TMP_Text>().Select(t => t.text).ToList();
-            Assert.IsTrue(labels.Any(t => t.Contains("1/30 LEVELS")), "progress shown");
+            Assert.IsTrue(labels.Any(t => System.Text.RegularExpressions.Regex.IsMatch(t, @"\b1\s*/\s*30\s+LEVELS")), "progress shown");
             yield return new WaitForSecondsRealtime(1f);   // coin counter rolls
             Assert.IsTrue(Object.FindObjectsByType<TMPro.TMP_Text>().Any(t => t.text == "777"), "coins shown");
             Assert.IsNotNull(Object.FindAnyObjectByType<CarShowroom>().CurrentPreview, "selected car on show");
 
-            GameObject.Find("PlayButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            // Settings: the grid button opens the same panel as the gear.
+            var settings = Object.FindAnyObjectByType<SettingsPanel>(FindObjectsInactive.Include);
+            GameObject.Find("SettingsMenuButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return new WaitForSecondsRealtime(0.4f);
+            Assert.IsTrue(settings.gameObject.activeInHierarchy && settings.IsOpen, "settings opened from the menu grid");
+            settings.Close();
+            yield return new WaitForSecondsRealtime(0.4f);
+
+            // Missions = the level list.
+            GameObject.Find("MissionsButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.LevelSelect, 5f, "level select");
             yield return TestScenes.WaitForTransition();
             GameObject.Find("BackButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.MainMenu, 5f, "back to menu");
             yield return TestScenes.WaitForTransition();
+
+            GameObject.Find("WorldTourButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.WorldTour, 5f, "world tour");
+            yield return TestScenes.WaitForTransition();
+            GameObject.Find("BackButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.MainMenu, 5f, "back to menu from tour");
+            yield return TestScenes.WaitForTransition();
+
             GameObject.Find("GarageButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.Garage, 5f, "garage");
+            yield return TestScenes.WaitForTransition();
+            GameObject.Find("BackButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.MainMenu, 5f, "back to menu from garage");
+            yield return TestScenes.WaitForTransition();
+
+            // Play continues with the next level to beat (level 2 after clearing level 1) and exits back to the menu.
+            Assert.AreEqual(Levels().Get(1), Object.FindAnyObjectByType<MainMenuController>().NextLevel());
+            GameObject.Find("PlayButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.Gameplay, 5f, "gameplay");
+            yield return WaitFor(() => LevelManager.Instance != null && LevelManager.Instance.Level != null, 5f, "level loaded");
+            Assert.AreEqual(Levels().Get(1).LevelId, LevelManager.Instance.Level.LevelId, "Play starts the next level");
+            Assert.AreEqual(SceneNames.MainMenu, LevelSelection.ReturnScene);
             yield return TestScenes.WaitForTransition();
         }
 

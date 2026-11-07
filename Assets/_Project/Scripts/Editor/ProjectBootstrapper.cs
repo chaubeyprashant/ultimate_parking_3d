@@ -15,6 +15,8 @@ using UltimateCarParking.Levels;
 using UltimateCarParking.Parking;
 using UltimateCarParking.Progression;
 using UltimateCarParking.Vehicle;
+using UltimateCarParking.UI;
+using CarData = UltimateCarParking.Cars.CarData;
 
 namespace UltimateCarParking.EditorTools
 {
@@ -26,9 +28,9 @@ namespace UltimateCarParking.EditorTools
     /// </summary>
     public static class ProjectBootstrapper
     {
-        public const string Company = "Ergebins";
+        public const string Company = "Ultimate Parking";
         public const string Product = "Ultimate Car Parking 3D";
-        public const string PackageId = "com.ergebins.ultimatecarparking3d";
+        public const string PackageId = "om.ultimateparking.carparking3d";
 
         private const string Root = "Assets/_Project";
         public const string ScenesDir = Root + "/Scenes";
@@ -44,9 +46,12 @@ namespace UltimateCarParking.EditorTools
         public const string TestCatalogPath = TestLevelsDir + "/TestCatalog.asset";
 
         private static readonly string[] SceneOrder =
-            { SceneNames.Bootstrap, SceneNames.MainMenu, SceneNames.Garage, SceneNames.LevelSelect, SceneNames.Gameplay };
+            { SceneNames.Bootstrap, SceneNames.MainMenu, SceneNames.Garage, SceneNames.LevelSelect, SceneNames.WorldTour, SceneNames.Gameplay };
 
         public static string[] ShippedScenes => SceneOrder.Select(ScenePath).ToArray();
+        /// <summary>Arena scenes in Build Settings (only present when the real asset packs are imported).</summary>
+        private static string[] ArenaScenes =>
+            File.Exists(CountryArenaTestBuilder.ArenaBScenePath) ? CountryArenaTestBuilder.ArenaScenePaths : System.Array.Empty<string>();
         private static string ScenePath(string scene) => $"{ScenesDir}/{scene}.unity";
         public static string ScenePathOf(string scene) => ScenePath(scene);
 
@@ -64,6 +69,78 @@ namespace UltimateCarParking.EditorTools
             CreateTestLevels();
             EnvironmentKit.BuildAll();       // modules + 3 themes
             LevelDesigner.BuildAll();        // 30 campaign levels + LevelCatalog
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null)
+            {
+                RealCarFactory.Build();          // Phase C: real sedan prefab
+                RealPropFactory.BuildAll();      // Phase D: real props + materials
+                RealCarFactory.WirePlayableFleet();   // real bodies for the 5 drivable cars (CarFactory reset them to primitives)
+                RealGarageBuilder.Build();       // Phase D: Garage B1 level
+                DrivingSchoolBuilder.Build();    // missions: Chapter 1 environment (real props)
+                MissionLevelBuilder.BuildChapterOne();   // missions: levels 1-3 (standard / reverse / parallel)
+            }
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Mumbai/mum_bus.glb"))
+                MumbaiArenaBuilder.Build();          // India: Mumbai city arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/NewYork/nyc_brownstone_set.glb"))
+                NewYorkArenaBuilder.Build();         // USA: New York arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/London/ldn_mobile_pack.glb"))
+                LondonArenaBuilder.Build();          // UK: London arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Japan/jp_hydraulic_lift.glb"))
+                TokyoArenaBuilder.Build();           // Japan: Tokyo arena + 3 missions (working stacker)
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Dubai/dxb_marina_hotel.glb"))
+                DubaiArenaBuilder.Build();           // UAE: Dubai arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/China/cn_night_city.glb"))
+                ChinaArenaBuilder.Build();           // China: Beijing arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/SouthKorea/kr_lotte_tower.glb"))
+                SouthKoreaArenaBuilder.Build();      // South Korea: Seoul arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Thailand/th_cityscene.glb"))
+                ThailandArenaBuilder.Build();        // Thailand: Bangkok arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Singapore/sg_shophouse.glb"))
+                SingaporeArenaBuilder.Build();       // Singapore arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Malaysia/my_atap_house.glb"))
+                MalaysiaArenaBuilder.Build();        // Malaysia: Kuching arena + 3 missions
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Indonesia/id_ea79a679.glb"))
+                IndonesiaArenaBuilder.Build();   // Jakarta
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/SaudiArabia/sa_dfd9dd93.glb"))
+                SaudiArabiaArenaBuilder.Build();   // Riyadh
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/France/fr_63146921.glb"))
+                FranceArenaBuilder.Build();   // Paris
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Germany/de_a5334d96.glb"))
+                GermanyArenaBuilder.Build();   // Berlin
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Italy/it_0304c661.glb"))
+                ItalyArenaBuilder.Build();   // Rome
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Spain/es_5dbe4dc7.glb"))
+                SpainArenaBuilder.Build();   // Madrid
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Russia/ru_aa9e9bcb.glb"))
+                RussiaArenaBuilder.Build();   // Moscow
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Netherlands/nl_c523ef1f.glb"))
+                NetherlandsArenaBuilder.Build();   // Amsterdam
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Switzerland/ch_2ac40506.glb"))
+                SwitzerlandArenaBuilder.Build();   // Zurich
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Greece/gr_4a906147.glb"))
+                GreeceArenaBuilder.Build();   // Athens
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Brazil/br_e2b6f532.glb"))
+                BrazilArenaBuilder.Build();   // Rio
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Canada/ca_94ed8fca.glb"))
+                CanadaArenaBuilder.Build();   // Toronto
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Mexico/mx_885d323a.glb"))
+                MexicoArenaBuilder.Build();   // Mexico City
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Argentina/ar_d38dc08a.glb"))
+                ArgentinaArenaBuilder.Build();   // Buenos Aires
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Egypt/eg_ab516f77.glb"))
+                EgyptArenaBuilder.Build();   // Cairo
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Australia/au_3eeb7a40.glb"))
+                AustraliaArenaBuilder.Build();   // Sydney
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Turkey/tr_4778557d.glb"))
+                TurkeyArenaBuilder.Build();   // Istanbul
+            if (File.Exists(ArenaPropFactory.SourceRoot + "/Kenney/Commercial/building-a.glb"))
+            {
+                NigeriaArenaBuilder.Build();       // Lagos (generic stand-in)
+                SouthAfricaArenaBuilder.Build();   // Cape Town (generic stand-in)
+                NewZealandArenaBuilder.Build();    // Auckland (generic stand-in)
+            }
+            WorldTourBuilder.Build();            // World Tour: 30 countries, previews (needs the campaign levels)
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null)
+                CountryArenaTestBuilder.Build();     // 2 temporary countries: prefab arena + scene arena
             BuildScenes();
             ConfigureBuildSettings();
             AssetDatabase.SaveAssets();
@@ -106,6 +183,7 @@ namespace UltimateCarParking.EditorTools
             PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3 });
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
             PlayerSettings.SetManagedStrippingLevel(NamedBuildTarget.Android, ManagedStrippingLevel.Low);
+            BrandingBuilder.ApplyAll();
 
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
             PlayerSettings.allowedAutorotateToLandscapeLeft = true;
@@ -196,8 +274,10 @@ namespace UltimateCarParking.EditorTools
 
         private static void ConfigureBuildSettings()
         {
+            // Game scenes first (Bootstrap at 0), then country arena scenes (loaded additively on demand).
             EditorBuildSettings.scenes = SceneOrder
                 .Select(s => new EditorBuildSettingsScene(ScenePath(s), true))
+                .Concat(ArenaScenes.Select(p => new EditorBuildSettingsScene(p, true)))
                 .ToArray();
         }
 
@@ -215,6 +295,7 @@ namespace UltimateCarParking.EditorTools
             { "Asphalt", (new Color(0.20f, 0.20f, 0.21f), 0.15f, 0.0f, Color.black) },
             { "Grass", (new Color(0.24f, 0.38f, 0.18f), 0.05f, 0.0f, Color.black) },
             { "LineWhite", (new Color(0.92f, 0.92f, 0.90f), 0.2f, 0.0f, Color.black) },
+            { "LineYellow", (new Color(0.95f, 0.72f, 0.08f), 0.2f, 0.0f, Color.black) },
             { "LineTarget", (new Color(1.00f, 0.78f, 0.10f), 0.2f, 0.0f, new Color(0.25f, 0.18f, 0.0f)) },
             { "Concrete", (new Color(0.62f, 0.61f, 0.58f), 0.2f, 0.0f, Color.black) },
             { "Curb", (new Color(0.75f, 0.74f, 0.70f), 0.2f, 0.0f, Color.black) },
@@ -272,7 +353,15 @@ namespace UltimateCarParking.EditorTools
         {
             BuildBootstrapScene();
             BuildGameplayScene();
-            UiSceneBuilder.BuildAll();       // MainMenu, LevelSelect, Garage
+            UiSceneBuilder.BuildAll();       // MainMenu, LevelSelect, Garage, WorldTour
+        }
+
+        [MenuItem("Tools/Ultimate Car Parking/Rebuild Bootstrap Splash")]
+        public static void RebuildBootstrapSplash()
+        {
+            BrandingBuilder.ApplyAll();
+            BuildBootstrapScene();
+            AssetDatabase.SaveAssets();
         }
 
         private static void BuildBootstrapScene()
@@ -280,10 +369,15 @@ namespace UltimateCarParking.EditorTools
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var cam = new GameObject("Main Camera").AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = Color.black;
+            cam.backgroundColor = UiPalette.Background;
             cam.gameObject.tag = "MainCamera";
             cam.gameObject.AddComponent<AudioListener>();
-            new GameObject("Bootstrap").AddComponent<BootstrapLoader>();
+            CanvasGroup splash = UiSceneBuilder.BuildBootstrapSplash();
+            var host = new GameObject("Bootstrap");
+            var loader = host.AddComponent<BootstrapLoader>();
+            var so = new SerializedObject(loader);
+            so.FindProperty("splash").objectReferenceValue = splash;
+            so.ApplyModifiedPropertiesWithoutUndo();
             EditorSceneManager.SaveScene(scene, ScenePath(SceneNames.Bootstrap));
         }
 
@@ -316,6 +410,8 @@ namespace UltimateCarParking.EditorTools
 
             var systems = new GameObject("GameSystems");
             var validator = systems.AddComponent<ParkingValidator>();
+            var mission = systems.AddComponent<UltimateCarParking.Missions.MissionRunner>();
+            var sensorAudio = systems.AddComponent<UltimateCarParking.Missions.ParkingSensorAudio>();   // adds its AudioSource
             var manager = systems.AddComponent<LevelManager>();
             var loader = systems.AddComponent<LevelLoader>();
             var progression = systems.AddComponent<ProgressionRecorder>();
@@ -328,7 +424,14 @@ namespace UltimateCarParking.EditorTools
             var mso = new SerializedObject(manager);
             mso.FindProperty("validator").objectReferenceValue = validator;
             mso.FindProperty("loader").objectReferenceValue = loader;
+            mso.FindProperty("mission").objectReferenceValue = mission;
             mso.ApplyModifiedPropertiesWithoutUndo();
+
+            var rso = new SerializedObject(mission);
+            rso.FindProperty("validator").objectReferenceValue = validator;
+            rso.FindProperty("zoneMaterial").objectReferenceValue = Mat("LineTarget");
+            rso.FindProperty("sensorAudio").objectReferenceValue = sensorAudio;
+            rso.ApplyModifiedPropertiesWithoutUndo();
 
             var lso = new SerializedObject(loader);
             lso.FindProperty("catalog").objectReferenceValue = AssetDatabase.LoadAssetAtPath<LevelCatalog>(CatalogPath);
@@ -369,6 +472,23 @@ namespace UltimateCarParking.EditorTools
         /// The two Phase 2 levels in the original test lot, kept as test fixtures (ids T01/T02, own catalog);
         /// the automated parking tests depend on their exact layout.
         /// </summary>
+        public const string TestCarPath = TestLevelsDir + "/Car_TestPhaseOne.asset";
+
+        /// <summary>CarData for the Phase 1 primitive PlayerCar with default handling; used only by the test levels.</summary>
+        private static CarData TestCar()
+        {
+            var data = AssetDatabase.LoadAssetAtPath<CarData>(TestCarPath);
+            if (data == null) { data = ScriptableObject.CreateInstance<CarData>(); AssetDatabase.CreateAsset(data, TestCarPath); }
+            var so = new SerializedObject(data);
+            so.FindProperty("carId").stringValue = "test_phase1";
+            so.FindProperty("displayName").stringValue = "Test Car (Phase 1)";
+            so.FindProperty("modelPrefab").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(CarPrefabPath);
+            so.FindProperty("paintMaterial").objectReferenceValue = null;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(data);
+            return data;
+        }
+
         private static void CreateTestLevels()
         {
             var env = AssetDatabase.LoadAssetAtPath<GameObject>(TestLotPrefabPath);
@@ -386,6 +506,16 @@ namespace UltimateCarParking.EditorTools
                 target: new Vector3(-4.2f, 0f, -9.25f), targetYaw: 180f,
                 timeLimit: 75f, collisionLimit: 2, threeStar: (45f, 0), twoStar: (60f, 1), coins: (150, 60),
                 rules: new ParkingRules { edgeMargin = 0.05f, angleTolerance = 7f, allowEitherDirection = true, maxSpeedKmh = 1.5f, holdDuration = 2f });
+
+            // The validator/HUD tests are calibrated to the Phase 1 primitive car (4.3 x 1.8 m), so the test levels
+            // force it rather than spawning whatever the catalog's starter car is (now a real 1.94 m-wide sedan).
+            CarData testCar = TestCar();
+            foreach (LevelData l in new[] { l1, l2 })
+            {
+                var lso = new SerializedObject(l);
+                lso.FindProperty("forcedCar").objectReferenceValue = testCar;
+                lso.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             var catalog = AssetDatabase.LoadAssetAtPath<LevelCatalog>(TestCatalogPath);
             if (catalog == null)
@@ -595,7 +725,8 @@ namespace UltimateCarParking.EditorTools
             Check(PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android) == PackageId, "Android package id");
             Check(!PlayerSettings.allowedAutorotateToPortrait, "landscape only");
             foreach (string s in ShippedScenes) Check(File.Exists(s), $"scene {s}");
-            Check(EditorBuildSettings.scenes.Length == SceneOrder.Length && EditorBuildSettings.scenes[0].path == ScenePath(SceneNames.Bootstrap),
+            foreach (string s in ArenaScenes) Check(File.Exists(s), $"arena scene {s}");
+            Check(EditorBuildSettings.scenes.Length == SceneOrder.Length + ArenaScenes.Length && EditorBuildSettings.scenes[0].path == ScenePath(SceneNames.Bootstrap),
                 "build settings scene list");
 
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CarPrefabPath);
@@ -634,20 +765,53 @@ namespace UltimateCarParking.EditorTools
                 for (int i = 0; i < catalog.Count; i++)
                 {
                     LevelData l = catalog.Get(i);
-                    Check(l != null && l.Theme != null && l.Props.Length > 10 && l.LevelNumber == i + 1, $"level {i + 1} configured");
+                    bool themed = l != null && l.Theme != null && l.Props.Length > 10;                       // generated levels
+                    bool mission = l != null && l.EnvironmentPrefab != null && l.HasObjectives;              // mission levels
+                    Check(l != null && (themed || mission) && l.LevelNumber == i + 1, $"level {i + 1} configured");
                     if (l != null) foreach (var prop in l.Props) if (prop.prefab == null) { problems.Add($"level {i + 1} has a placement without prefab"); break; }
                 }
             var testCatalog = AssetDatabase.LoadAssetAtPath<LevelCatalog>(TestCatalogPath);
             Check(testCatalog != null && testCatalog.Count == 2, "test catalog with 2 levels");
             var cars = AssetDatabase.LoadAssetAtPath<UltimateCarParking.Cars.CarCatalog>(CarFactory.CarCatalogPath);
             Check(cars != null && cars.Count == 5, "car catalog with 5 cars");
+            bool realPack = AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null;
             if (cars != null)
                 for (int i = 0; i < cars.Count; i++)
                 {
                     var c = cars.Get(i);
+                    bool real = c != null && c.ModelPrefab != null && c.ModelPrefab.name.StartsWith("Car_Real");
                     Check(c != null && c.ModelPrefab != null && c.ModelPrefab.GetComponent<VehicleController>() != null
-                          && c.ModelPrefab.GetComponent<UltimateCarParking.Cars.CarPaint>().RendererCount > 0 && c.PaintMaterial != null, $"car {i} configured");
+                          && c.ModelPrefab.GetComponent<UltimateCarParking.Cars.CarPaint>() != null
+                          && (c.PaintMaterial != null ? c.ModelPrefab.GetComponent<UltimateCarParking.Cars.CarPaint>().RendererCount > 0 : real), $"car {i} configured");
+                    // With the car pack imported every drivable car must use its real body, never the primitive box.
+                    if (realPack) Check(real, $"car {i} ({(c != null ? c.CarId : "?")}) uses a real model, not {(c != null && c.ModelPrefab != null ? c.ModelPrefab.name : "none")}");
                 }
+            // World Tour: 30 countries, each with flag, preview and campaign level i; marker prefab; map data.
+            var tour = AssetDatabase.LoadAssetAtPath<UltimateCarParking.WorldTour.CountryCatalog>(WorldTourBuilder.CatalogPath);
+            var campaignForTour = AssetDatabase.LoadAssetAtPath<LevelCatalog>(CatalogPath);
+            Check(tour != null && tour.Count == 30 && tour.Campaign == campaignForTour, "world tour catalog with 30 countries");
+            if (tour != null && campaignForTour != null)
+                for (int i = 0; i < tour.Count; i++)
+                {
+                    var c = tour.Get(i);
+                    LevelCatalog arenaCat = c != null ? WorldTourBuilder.ArenaCatalog(c.CountryId) : null;
+                    bool missionsOk = c != null && (arenaCat != null
+                        ? c.MissionCount == arenaCat.Count && c.MissionCatalog == arenaCat && Enumerable.Range(0, arenaCat.Count).All(m => c.GetLevel(m) == arenaCat.Get(m))
+                        : c.MissionCount == 1 && c.GetLevel(0) == campaignForTour.Get(i));
+                    Check(c != null && c.Flag != null && c.Preview != null && missionsOk, $"country {i + 1} ({(c != null ? c.CountryId : "?")}) configured");
+                }
+            Check(AssetDatabase.LoadAssetAtPath<UltimateCarParking.UI.CountryMarker>(UiSceneBuilder.CountryMarkerPrefabPath) != null, "CountryMarker prefab");
+            if (File.Exists(CountryArenaTestBuilder.ArenaBScenePath))
+            {
+                var testTour = AssetDatabase.LoadAssetAtPath<UltimateCarParking.WorldTour.CountryCatalog>(CountryArenaTestBuilder.CatalogPath);
+                Check(testTour != null && testTour.Count == 2, "test country catalog with 2 countries");
+                Check(AssetDatabase.LoadAssetAtPath<GameObject>(CountryArenaTestBuilder.ArenaAPrefabPath) != null, "test arena A prefab (Resources)");
+                if (testTour != null)
+                    for (int i = 0; i < testTour.Count; i++)
+                        Check(testTour.Get(i) != null && UltimateCarParking.WorldTour.CountryArenaLoader.Validate(testTour.Get(i)) == null,
+                            $"test country {i} arena valid: {UltimateCarParking.WorldTour.CountryArenaLoader.Validate(testTour.Get(i))}");
+            }
+            Check(AssetDatabase.LoadAssetAtPath<TextAsset>(WorldTourBuilder.MapPath) != null, "world map data");
             Check(UiAssets.TmpReady && UiAssets.HeadingFont != null && UiAssets.BodyFont != null, "TMP settings + font assets");
             Check(AudioSetup.LibraryComplete(), "audio library has every clip");
             foreach (string sprite in new[] { "RoundRect", "Pill", "Star", "Lock", "Coin", "ChevronLeft", "SideFade", "Pause", "Gear", "Vignette" })
@@ -670,6 +834,7 @@ namespace UltimateCarParking.EditorTools
             {
                 var mso = new SerializedObject(managerInScene);
                 Check(mso.FindProperty("validator").objectReferenceValue != null, "LevelManager.validator wired");
+                Check(mso.FindProperty("mission").objectReferenceValue != null, "LevelManager.mission wired");
             }
             Check(Object.FindAnyObjectByType<VehicleController>() == null, "Gameplay has no baked car (the loader spawns it)");
             Check(Object.FindAnyObjectByType<ProgressionRecorder>() != null, "ProgressionRecorder in Gameplay");
@@ -686,7 +851,8 @@ namespace UltimateCarParking.EditorTools
             }
 
             foreach (var (sceneName, type) in new[] { (SceneNames.MainMenu, typeof(UltimateCarParking.UI.MainMenuController)),
-                         (SceneNames.LevelSelect, typeof(UltimateCarParking.UI.LevelSelectController)), (SceneNames.Garage, typeof(UltimateCarParking.UI.GarageController)) })
+                         (SceneNames.LevelSelect, typeof(UltimateCarParking.UI.LevelSelectController)), (SceneNames.Garage, typeof(UltimateCarParking.UI.GarageController)),
+                         (SceneNames.WorldTour, typeof(UltimateCarParking.UI.WorldTourController)) })
             {
                 EditorSceneManager.OpenScene(ScenePath(sceneName), OpenSceneMode.Single);
                 var ctrl = Object.FindAnyObjectByType(type) as MonoBehaviour;
@@ -695,7 +861,8 @@ namespace UltimateCarParking.EditorTools
                 var cso = new SerializedObject(ctrl);
                 SerializedProperty it = cso.GetIterator();
                 for (bool enter = true; it.NextVisible(enter); enter = false)
-                    if (it.propertyType == SerializedPropertyType.ObjectReference && it.name != "m_Script" && it.objectReferenceValue == null)
+                    if (it.propertyType == SerializedPropertyType.ObjectReference && it.name != "m_Script" && it.objectReferenceValue == null
+                        && !(it.name == "heroCar" && cso.FindProperty("heroPrefab")?.objectReferenceValue != null))   // fallback only
                         problems.Add($"{sceneName}: {type.Name}.{it.name} not wired");
                 Check(Object.FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>() != null, $"{sceneName} EventSystem");
                 Check(Object.FindObjectsByType<AudioListener>().Length == 1, $"{sceneName} has exactly one AudioListener");

@@ -63,7 +63,7 @@ namespace UltimateCarParking.EditorTools
             bool garage = themeId == EnvironmentKit.GarageId;
 
             float bayW = Round(Mathf.Lerp(3.0f, 2.65f, d), 0.05f);
-            float bayL = Round(Mathf.Lerp(5.8f, 5.6f, d), 0.05f);
+            float bayL = Round(Mathf.Lerp(5.9f, 5.7f, d), 0.05f);   // real pickup is 5.18 m long
             float aisle = Mathf.Max(8f, Round(Mathf.Lerp(13f, 8.5f, d) - (garage ? 0.5f : 0f), 0.5f));
             float aisleHalf = aisle * 0.5f;
             float hx = theme.LotSize.x * 0.5f;
@@ -243,6 +243,9 @@ namespace UltimateCarParking.EditorTools
             so.FindProperty("levelNumber").intValue = number;
             so.FindProperty("theme").objectReferenceValue = theme;
             so.FindProperty("environmentPrefab").objectReferenceValue = null;
+            so.FindProperty("missionType").enumValueIndex = 0;          // generated levels: one legacy park objective
+            so.FindProperty("briefing").stringValue = "";
+            so.FindProperty("objectives").arraySize = 0;
             WritePlacements(so.FindProperty("props"), L.Props);
             so.FindProperty("spawnPosition").vector3Value = L.Spawn;
             so.FindProperty("spawnYaw").floatValue = L.SpawnYaw;

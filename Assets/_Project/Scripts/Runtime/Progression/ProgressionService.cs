@@ -49,6 +49,7 @@ namespace UltimateCarParking.Progression
             if (catalog == null || level == null) return false;
             int i = catalog.IndexOf(level);
             if (i < 0) return false;
+            if (Core.TestingUnlocks.UnlockAll) return true;
             return i == 0 || IsCompleted(data, catalog.Get(i - 1)) || IsCompleted(data, level);
         }
 

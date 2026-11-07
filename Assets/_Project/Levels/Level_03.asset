@@ -13,433 +13,84 @@ MonoBehaviour:
   m_Name: Level_03
   m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
   levelId: L03
-  displayName: Level 3
+  displayName: Kerbside
   levelNumber: 3
-  theme: {fileID: 11400000, guid: 7d855eaeec7df4624b2eeccc6639817c, type: 2}
+  missionType: 2
+  roadDirection: 0
+  briefing: Lesson 3. Parallel park in the gap at the kerb. Pull level with the car
+    ahead, then reverse in. Finish within 0.45 m of the kerb - mount it more than
+    twice and you fail.
+  objectives:
+  - rid: 2518987905178533890
+  theme: {fileID: 0}
   props:
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -24, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -21, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -18, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -15, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -12, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -9, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -6, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -3, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 3, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 6, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 9, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 12, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 15, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 18, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 21, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 24, y: 0, z: 9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: 12.05}
+  - prefab: {fileID: 1439250360090650116, guid: 712d457dd02e2495ebb95e31ab2070e6, type: 3}
+    position: {x: 1.7, y: 0, z: -6.3}
     yaw: 90
-    scale: {x: 1, y: 1, z: 48}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -22.5, y: 0, z: 11.6}
-    yaw: 0
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -19.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -19.517761, y: 0, z: 9.28756}
-    yaw: 0.9963126
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -16.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -13.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -10.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -7.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -7.456272, y: 0, z: 9.099839}
-    yaw: -1.1449391
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -4.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -1.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -1.5729706, y: 0, z: 9.132804}
-    yaw: -0.75209796
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 1.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 4.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 4.421425, y: 0, z: 9.222819}
-    yaw: 180.15585
-    scale: {x: 0, y: 0, z: 0}
-    variant: 1
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 7.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 10.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 13.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 13.539747, y: 0, z: 9.232423}
-    yaw: -1.5005562
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 16.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 19.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 22.5, y: 0, z: 11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -24, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -21, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -18, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -15, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -12, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -9, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -6, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: -3, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 3, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 6, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 9, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 12, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 15, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 18, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 21, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 24, y: 0, z: -9.15}
-    yaw: 0
-    scale: {x: 1, y: 1, z: 5.8}
-    variant: 0
-  - prefab: {fileID: 6808643835733643639, guid: 0eafe568c03ff48bd871ae5ae189f0f2, type: 3}
-    position: {x: 0, y: 0, z: -12.05}
+  - prefab: {fileID: 5275800946364013835, guid: b742458b93436454d9d0a20a65f925e1, type: 3}
+    position: {x: 13.2, y: 0, z: -6.3}
     yaw: 90
-    scale: {x: 1, y: 1, z: 48}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -22.5, y: 0, z: -11.6}
-    yaw: 0
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -19.5, y: 0, z: -11.6}
-    yaw: 0
+  - prefab: {fileID: 1170038690869043270, guid: b769d425650b744a0b0905c12f777118, type: 3}
+    position: {x: -6.4, y: 0, z: -6.3}
+    yaw: 90
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -19.4789, y: 0, z: -9.283117}
-    yaw: 181.90161
-    scale: {x: 0, y: 0, z: 0}
-    variant: 1
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -16.5, y: 0, z: -11.6}
-    yaw: 0
+  - prefab: {fileID: 3670709065673589589, guid: e8e54123dcd26459aad051d70df93947, type: 3}
+    position: {x: 21.6, y: 0, z: -6.3}
+    yaw: 90
     scale: {x: 0, y: 0, z: 0}
     variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -13.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -13.571837, y: 0, z: -9.098263}
-    yaw: 179.71286
-    scale: {x: 0, y: 0, z: 0}
-    variant: 4
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -10.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -10.51939, y: 0, z: -9.097478}
-    yaw: 180.11076
-    scale: {x: 0, y: 0, z: 0}
-    variant: 3
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -7.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: -7.5249367, y: 0, z: -9.055164}
-    yaw: 360.35944
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -4.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: -1.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 1.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 4.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 7.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 7.4912643, y: 0, z: -9.08883}
-    yaw: 359.9331
-    scale: {x: 0, y: 0, z: 0}
-    variant: 2
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 10.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 13.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 13.523946, y: 0, z: -9.078483}
-    yaw: 361.45578
-    scale: {x: 0, y: 0, z: 0}
-    variant: 5
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 16.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 16.421722, y: 0, z: -9.261592}
-    yaw: 360.93326
-    scale: {x: 0, y: 0, z: 0}
-    variant: 4
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 19.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  - prefab: {fileID: 3148167755435644149, guid: d356c8ef6e3184e9abc83c47a697d778, type: 3}
-    position: {x: 19.491718, y: 0, z: -9.2258835}
-    yaw: 361.7673
-    scale: {x: 0, y: 0, z: 0}
-    variant: 7
-  - prefab: {fileID: 5401548748516132252, guid: 795727d7c5c19465590d4391357b46fc, type: 3}
-    position: {x: 22.5, y: 0, z: -11.6}
-    yaw: 0
-    scale: {x: 0, y: 0, z: 0}
-    variant: 0
-  environmentPrefab: {fileID: 0}
-  spawnPosition: {x: -22.5, y: 0, z: 0}
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -34, y: 0, z: -2}
   spawnYaw: 90
-  targetPosition: {x: 10.5, y: 0, z: -9.15}
-  targetYaw: 180
-  targetSize: {x: 3, y: 5.8}
-  timeLimitSeconds: 95
-  collisionLimit: 3
-  overrideParkingRules: 1
+  targetPosition: {x: 7.5, y: 0, z: -6.2}
+  targetYaw: 90
+  targetSize: {x: 2.6, y: 6.3999996}
+  timeLimitSeconds: 150
+  collisionLimit: 2
+  overrideParkingRules: 0
   parkingRules:
     edgeMargin: 0.049999997
     angleTolerance: 12
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.3000001
-  threeStarTime: 48
+  threeStarTime: 70
   threeStarMaxCollisions: 0
-  twoStarTime: 71
+  twoStarTime: 110
   twoStarMaxCollisions: 1
-  baseCoins: 110
-  coinsPerStar: 26
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 160
+  coinsPerStar: 40
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518987905178533890
+      type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Parallel park at the kerb
+        position: {x: 7.5, y: 0, z: -6.2}
+        bayYaw: 90
+        size: {x: 2.6, y: 6.3999996}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        kerbSide: 1
+        maxKerbGap: 0.45
+        kerbStrikeLimit: 2
+        strikeCooldown: 0.8

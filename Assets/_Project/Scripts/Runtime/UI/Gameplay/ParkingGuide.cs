@@ -29,6 +29,7 @@ namespace UltimateCarParking.UI
             if (levelManager == null) return;
             levelManager.LevelStarted += OnStarted;
             if (levelManager.Validator != null) levelManager.Validator.StatusChanged += OnStatus;
+            if (levelManager.Mission != null) levelManager.Mission.ActiveZoneChanged += OnZone;
         }
 
         private void OnDisable()
@@ -36,13 +37,20 @@ namespace UltimateCarParking.UI
             if (levelManager == null) return;
             levelManager.LevelStarted -= OnStarted;
             if (levelManager.Validator != null) levelManager.Validator.StatusChanged -= OnStatus;
+            if (levelManager.Mission != null) levelManager.Mission.ActiveZoneChanged -= OnZone;
         }
 
         private void OnStarted(LevelData _)
         {
-            if (loader == null || loader.Zone == null) return;
+            if (loader != null) OnZone(loader.Zone);
+        }
+
+        /// <summary>Follows the current objective's bay (multi-stage missions move it).</summary>
+        private void OnZone(ParkingZone zone)
+        {
+            if (zone == null) return;
             if (chevron == null) Build();
-            chevron.SetParent(loader.Zone.transform, false);
+            chevron.SetParent(zone.transform, false);
             chevron.gameObject.SetActive(true);
             Color(UiPalette.Lime);
         }

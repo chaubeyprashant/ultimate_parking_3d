@@ -28,7 +28,7 @@ namespace UltimateCarParking.Tests
         {
             File.WriteAllText(path, "{\"version\":1,\"coins\":40,\"selectedCarId\":\"hatch\",\"ownedCarIds\":[\"sedan\",\"hatch\"]}");
             var save = new SaveManager(path);
-            Assert.AreEqual(2, save.Data.version);
+            Assert.AreEqual(SaveData.CurrentVersion, save.Data.version, "migrated through to the current version");
             Assert.AreEqual(40, save.Data.coins, "existing progress kept");
             Assert.IsNotNull(save.Data.settings);
             Assert.AreEqual(new GameSettings().musicVolume, save.Data.settings.musicVolume);

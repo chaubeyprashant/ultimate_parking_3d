@@ -99,6 +99,12 @@ namespace UltimateCarParking.Save
             data.selectedCarId ??= "";
             data.settings ??= new UltimateCarParking.Settings.GameSettings();
             data.settings.Clamp();
+            data.selectedCountryId ??= "";
+            data.unlockedCountryIds ??= new System.Collections.Generic.List<string>();
+            data.unlockedCountryIds.RemoveAll(string.IsNullOrEmpty);
+            data.countryRewardIds ??= new System.Collections.Generic.List<string>();
+            data.carUpgrades ??= new System.Collections.Generic.List<CarUpgradeState>();
+            data.carUpgrades.RemoveAll(u => u == null || string.IsNullOrEmpty(u.carId));
             if (data.coins < 0) data.coins = 0;
 
             if (data.version > SaveData.CurrentVersion)
@@ -110,6 +116,12 @@ namespace UltimateCarParking.Save
             if (data.version < 1) data.version = 1;
             // Version 1 → 2: settings added (defaults already filled in above).
             if (data.version < 2) data.version = 2;
+            // Version 2 → 3: World Tour selection + sticky unlocks (defaults filled in above; unlocks are
+            // re-derived from level progress the next time the tour is opened).
+            if (data.version < 3) data.version = 3;
+            // Version 3 → 4: country rewards + car upgrades (empty lists filled in above). Rewards for countries
+            // already finished in an older save are paid the next time one of their missions is completed.
+            if (data.version < 4) data.version = 4;
         }
 
         private static SaveData TryRead(string path)

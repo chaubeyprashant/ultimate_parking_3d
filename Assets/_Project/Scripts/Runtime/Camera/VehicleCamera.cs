@@ -56,6 +56,12 @@ namespace UltimateCarParking.CameraSystem
 
         public Transform Target => target;
 
+        [Header("Top-down view (VIEW button)")]
+        [SerializeField, Min(4f)] private float topHeight = 15f;
+        [SerializeField] private float topBack = 2.5f;
+        /// <summary>High overhead view for lining up bays; the chase view otherwise.</summary>
+        public bool TopDown { get; set; }
+
         public float Distance
         {
             get => distance;
@@ -63,6 +69,25 @@ namespace UltimateCarParking.CameraSystem
         }
 
         public void Zoom(float delta) => Distance = distance + delta;
+
+        /// <summary>Camera height above the car (level-specific framing, e.g. under a garage ceiling).</summary>
+        public float Height
+        {
+            get => height;
+            set => height = Mathf.Max(0.5f, value);
+        }
+
+        /// <summary>Applies a level's framing; zero values keep the current setting.</summary>
+        public void ApplyFraming(float newHeight, float newDistance)
+        {
+            if (newHeight > 0f) Height = newHeight;
+            if (newDistance > 0f)
+            {
+                minDistance = Mathf.Min(minDistance, newDistance);
+                Distance = newDistance;
+            }
+            lookHeight = Mathf.Min(lookHeight, height * 0.6f);
+        }
 
         /// <summary>Short positional shake (collision feedback). Applied on top of the smoothed position.</summary>
         public void Shake(float amplitude = 0.12f, float seconds = 0.25f)
@@ -134,9 +159,11 @@ namespace UltimateCarParking.CameraSystem
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotationAt(transform.position), 1f - Mathf.Exp(-rotationSharpness * dt));
         }
 
-        private Vector3 LookPoint => target.position + Vector3.up * lookHeight;
+        private Vector3 LookPoint => target.position + Vector3.up * (TopDown ? 0f : lookHeight);
 
-        private Vector3 DesiredPosition() => target.position + Vector3.up * height - heading * distance;
+        private Vector3 DesiredPosition() => TopDown
+            ? target.position + Vector3.up * topHeight - heading * topBack
+            : target.position + Vector3.up * height - heading * distance;
 
         private Quaternion LookRotationAt(Vector3 from)
         {

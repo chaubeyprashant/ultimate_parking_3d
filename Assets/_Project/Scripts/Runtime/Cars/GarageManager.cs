@@ -62,6 +62,18 @@ namespace UltimateCarParking.Cars
             return r;
         }
 
+        public int UpgradeLevel(CarData car, UpgradeKind kind) => CarUpgrades.Level(Store.Data, car, kind);
+        public int UpgradePrice(CarData car, UpgradeKind kind) => CarUpgrades.NextPrice(Store.Data, car, kind);
+        public bool CanUpgrade(CarData car, UpgradeKind kind) => CarUpgrades.CanUpgrade(Store.Data, car, kind);
+
+        public bool Upgrade(CarData car, UpgradeKind kind)
+        {
+            if (!CarUpgrades.TryUpgrade(Store.Data, car, kind)) return false;
+            Store.Save();
+            Changed?.Invoke();
+            return true;
+        }
+
         public bool Select(CarData car)
         {
             if (!GarageService.Select(Store.Data, car)) return false;

@@ -10,4 +10,8 @@
     <type fullname="UnityEngine.SphereCollider" preserve="all" />
     <type fullname="UnityEngine.CapsuleCollider" preserve="all" />
   </assembly>
+  <!-- Mission objectives exist only inside [SerializeReference] data on LevelData assets. -->
+  <assembly fullname="UltimateCarParking.Runtime">
+    <namespace fullname="UltimateCarParking.Missions" preserve="all" />
+  </assembly>
 </linker>

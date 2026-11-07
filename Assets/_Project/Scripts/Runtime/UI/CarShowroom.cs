@@ -12,7 +12,7 @@ namespace UltimateCarParking.UI
     public sealed class CarShowroom : MonoBehaviour
     {
         [SerializeField] private Transform turntable;
-        [SerializeField] private float spinDegreesPerSecond = 14f;
+        [SerializeField] private float spinDegreesPerSecond = 6f;
         [SerializeField, Min(0.05f)] private float slideSeconds = 0.45f;
         [SerializeField] private float slideDistance = 7f;
 
@@ -27,11 +27,19 @@ namespace UltimateCarParking.UI
 
         public void Show(CarData car, int direction = 0)
         {
-            if (turntable == null) { Debug.LogError("[CarShowroom] No turntable assigned.", this); return; }
             if (car == null || car.ModelPrefab == null) return;
+            ShowPrefab(car.ModelPrefab, car.CarId, direction);
+            if (car.PaintMaterial != null && current != null && current.TryGetComponent(out CarPaint paint)) paint.Apply(car.PaintMaterial);
+        }
+
+        /// <summary>Shows a mesh prefab with physics and driving scripts switched off.</summary>
+        public void ShowPrefab(GameObject prefab, string label = "Car", int direction = 0)
+        {
+            if (turntable == null) { Debug.LogError("[CarShowroom] No turntable assigned.", this); return; }
+            if (prefab == null) return;
 
             GameObject previous = current;
-            current = Spawn(car);
+            current = Spawn(prefab, label);
             if (direction == 0 || !isActiveAndEnabled)
             {
                 if (previous != null) Destroy(previous);
@@ -41,10 +49,10 @@ namespace UltimateCarParking.UI
             StartCoroutine(Slide(current, Vector3.right * slideDistance * direction, Vector3.zero, destroyAfter: false));
         }
 
-        private GameObject Spawn(CarData car)
+        private GameObject Spawn(GameObject prefab, string label)
         {
-            GameObject go = Instantiate(car.ModelPrefab, turntable);
-            go.name = $"Preview_{car.CarId}";
+            GameObject go = Instantiate(prefab, turntable);
+            go.name = $"Preview_{label}";
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
             foreach (MonoBehaviour mb in go.GetComponentsInChildren<MonoBehaviour>(true))
@@ -56,7 +64,6 @@ namespace UltimateCarParking.UI
             }
             foreach (WheelCollider wc in go.GetComponentsInChildren<WheelCollider>(true)) wc.enabled = false;
             foreach (Collider c in go.GetComponentsInChildren<Collider>(true)) c.enabled = false;
-            if (car.PaintMaterial != null && go.TryGetComponent(out CarPaint paint)) paint.Apply(car.PaintMaterial);
             return go;
         }
 
