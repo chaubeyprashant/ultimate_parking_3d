@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_JP1
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: JP1
+  displayName: Coin Parking
+  levelNumber: 1
+  missionType: 3
+  roadDirection: 1
+  condition: 0
+  briefing: "Tokyo-size bays: 2.4 m wide. Turn left into the coin parking lot and
+    reverse the compact hatch into the free bay, centred and straight \u2014 the
+    Japanese way."
+  objectives:
+  - rid: 2518988132493033492
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/jp/JP1
+  forcedCar: {fileID: 11400000, guid: 3f08eb93a7a224a348bac6ec9963d63e, type: 2}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: 5, y: 0, z: -2.25}
+  spawnYaw: 270
+  targetPosition: {x: -26.4, y: 0, z: -15}
+  targetYaw: 0.000010017912
+  targetSize: {x: 2.3000002, y: 5}
+  timeLimitSeconds: 140
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 70
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 230
+  coinsPerStar: 55
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033492
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into the coin bay
+        position: {x: -26.4, y: 0, z: -15}
+        bayYaw: 180
+        size: {x: 2.3000002, y: 5}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 6
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxOffset: 0.22
+        maxDepthOffset: 0.8
+        maxAngle: 4
+        minAccuracy: 0.55

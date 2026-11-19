@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_US1
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: US1
+  displayName: Supermarket Run
+  levelNumber: 1
+  missionType: 0
+  roadDirection: 0
+  condition: 0
+  briefing: Drive up the avenue, wait for the supermarket's ticket gate to open,
+    then park nose-in in the free bay facing the store.
+  objectives:
+  - rid: 2518988132493033480
+  - rid: 2518988132493033481
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/us/US1
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -40, y: 0, z: -1.75}
+  spawnYaw: 90
+  targetPosition: {x: 50.65, y: 0, z: -32.75}
+  targetYaw: 180
+  targetSize: {x: 2.6000001, y: 5.5}
+  timeLimitSeconds: 130
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 60
+  threeStarMaxCollisions: 0
+  twoStarTime: 90
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 190
+  coinsPerStar: 45
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033480
+      type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the ticket gate
+        barrierId: us1_gate
+        position: {x: 14.5, y: 0, z: -18}
+        yaw: 180
+        size: {x: 7, y: 4}
+        heightTolerance: 1.6
+        maxBarrierHits: 1
+    - rid: 2518988132493033481
+      type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park facing the store
+        position: {x: 50.65, y: 0, z: -32.75}
+        bayYaw: 180
+        size: {x: 2.6000001, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1

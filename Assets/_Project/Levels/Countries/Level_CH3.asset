@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_CH3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: CH3
+  displayName: Hill Reverse
+  levelNumber: 3
+  missionType: 13
+  roadDirection: 0
+  condition: 4
+  briefing: 'Turn into the car park and reverse into the free bay between the two
+    cars, finishing within 0.7 m of the back wall. Lake fog: you can only see a short
+    way ahead. Park precisely.'
+  objectives:
+  - rid: 2518988132493033585
+  - rid: 2518988132493033586
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ch/CH3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -40, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 56.5, y: 0, z: 34}
+  targetYaw: 180
+  targetSize: {x: 2.5, y: 5.5}
+  timeLimitSeconds: 140
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 65
+  threeStarMaxCollisions: 0
+  twoStarTime: 95
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 210
+  coinsPerStar: 50
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033585
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Turn into the car park
+        position: {x: 18, y: 0, z: 16}
+        yaw: 0
+        size: {x: 8, y: 4}
+        heightTolerance: 1.6
+        hint: TURN INTO THE CAR PARK
+    - rid: 2518988132493033586
+      type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into the free bay
+        position: {x: 56.5, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.5, y: 5.5}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxRearGap: 0.7

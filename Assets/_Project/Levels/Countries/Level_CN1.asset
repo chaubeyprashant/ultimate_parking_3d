@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_CN1
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: CN1
+  displayName: Beijing Rush
+  levelNumber: 1
+  missionType: 5
+  roadDirection: 0
+  condition: 0
+  briefing: Rush hour. Drive up the avenue, turn into the car park and take the free
+    bay before the clock runs out. You get 25 seconds from the entrance; every knock
+    costs 3.
+  objectives:
+  - rid: 2518988132493033501
+  - rid: 2518988132493033502
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/cn/CN1
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -30, y: 0, z: -3.25}
+  spawnYaw: 90
+  targetPosition: {x: 59, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.7, y: 5.5}
+  timeLimitSeconds: 120
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 60
+  threeStarMaxCollisions: 0
+  twoStarTime: 90
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.45
+  twoStarQuality: 0.2
+  baseCoins: 210
+  coinsPerStar: 50
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033501
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Turn into the car park
+        position: {x: 18, y: 0, z: 16}
+        yaw: 0
+        size: {x: 8, y: 4}
+        heightTolerance: 1.6
+        hint: TURN LEFT INTO THE CAR PARK
+    - rid: 2518988132493033502
+      type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Beat the clock to the free bay
+        position: {x: 59, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.7, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        seconds: 25
+        hitPenaltySeconds: 3

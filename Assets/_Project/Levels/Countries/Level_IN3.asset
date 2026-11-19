@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_IN3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: IN3
+  displayName: Shopping Complex
+  levelNumber: 3
+  missionType: 3
+  roadDirection: 1
+  condition: 0
+  briefing: Turn into the shopping complex, weave between the parked rows and stopped
+    cars, and park precisely in the free bay by the mall entrance.
+  objectives:
+  - rid: 2518988132493033478
+  - rid: 2518988132493033479
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/in/IN3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -6, y: 0, z: 2.1}
+  spawnYaw: 90
+  targetPosition: {x: 39, y: 0, z: -47.8}
+  targetYaw: 180
+  targetSize: {x: 2.6499999, y: 5.6}
+  timeLimitSeconds: 170
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 85
+  threeStarMaxCollisions: 0
+  twoStarTime: 125
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 240
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033478
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Enter the shopping complex
+        position: {x: 24, y: 0, z: -9.5}
+        yaw: 0
+        size: {x: 9, y: 3}
+        heightTolerance: 1.6
+        hint: TURN INTO THE SHOPPING COMPLEX
+    - rid: 2518988132493033479
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park by the mall entrance
+        position: {x: 39, y: 0, z: -47.8}
+        bayYaw: 180
+        size: {x: 2.6499999, y: 5.6}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 7
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.5
+        maxOffset: 0.4
+        maxDepthOffset: 0.8
+        maxAngle: 6
+        minAccuracy: 0.5

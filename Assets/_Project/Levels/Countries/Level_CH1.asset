@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_CH1
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: CH1
+  displayName: "Parkhaus Z\xFCrich"
+  levelNumber: 1
+  missionType: 11
+  roadDirection: 0
+  condition: 3
+  briefing: 'The Parkhaus ticket gate opens on a timer. Wait for it, drive through
+    and down the ramp to level -1, and park in the free bay. Alpine snow: grip is
+    very low. Use gentle steering and braking.'
+  objectives:
+  - rid: 2518988132493033580
+  - rid: 2518988132493033581
+  - rid: 2518988132493033582
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ch/CH1
+  forcedCar: {fileID: 0}
+  cameraHeight: 2.2
+  cameraDistance: 5.5
+  spawnPosition: {x: 80, y: 0, z: 1.625}
+  spawnYaw: 270
+  targetPosition: {x: 65.84, y: -4.2, z: -60.665}
+  targetYaw: 90
+  targetSize: {x: 2.9, y: 5.5}
+  timeLimitSeconds: 180
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 90
+  threeStarMaxCollisions: 0
+  twoStarTime: 130
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 240
+  coinsPerStar: 55
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033580
+      type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the ticket gate
+        barrierId: ch1_gate
+        position: {x: 60, y: 0, z: -12.5}
+        yaw: 180
+        size: {x: 6, y: 4}
+        heightTolerance: 1.6
+        maxBarrierHits: 1
+    - rid: 2518988132493033581
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Down the ramp
+        position: {x: 60, y: -2.1, z: -29}
+        yaw: 180
+        size: {x: 5.8, y: 4}
+        heightTolerance: 1.6
+        hint: DOWN THE RAMP TO LEVEL -1
+    - rid: 2518988132493033582
+      type: {class: FloorParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park on level -1
+        position: {x: 65.84, y: -4.2, z: -60.665}
+        bayYaw: 90
+        size: {x: 2.9, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        floorLabel: LEVEL -1
+        floorTolerance: 1.2

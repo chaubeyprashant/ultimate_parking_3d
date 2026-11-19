@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Cars.CarData
   carId: pickup
   displayName: Hauler
-  tagline: Long-bed pickup. Big turning circle, big reward.
+  tagline: Long bed. Wide turning circle.
   modelPrefab: {fileID: 7413045349147033649, guid: 21982d52e446b4cea84d70b98f127222, type: 3}
   paintMaterial: {fileID: 0}
-  price: 4500
+  carClass: 2
+  price: 2500
   ownedByDefault: 0
   handling:
     driveType: 1
-    mass: 2000
-    centerOfMass: {x: 0, y: 0.42, z: 0.2}
-    motorTorque: 3000
-    reverseTorque: 2000
-    maxForwardSpeedKmh: 55
-    maxReverseSpeedKmh: 18
-    brakeTorque: 3800
+    mass: 2050
+    centerOfMass: {x: 0, y: 0.26, z: -0.04}
+    motorTorque: 2600
+    reverseTorque: 1300
+    maxForwardSpeedKmh: 58
+    maxReverseSpeedKmh: 20
+    brakeTorque: 4850
     handbrakeTorque: 5000
-    maxSteerAngle: 32
-    highSpeedSteerAngle: 10
-    steerSpeed: 95
+    maxSteerAngle: 31
+    highSpeedSteerAngle: 9
+    steerSpeed: 125

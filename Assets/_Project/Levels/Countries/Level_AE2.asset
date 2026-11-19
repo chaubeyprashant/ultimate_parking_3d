@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_AE2
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: AE2
+  displayName: Supercar Garage
+  levelNumber: 2
+  missionType: 3
+  roadDirection: 0
+  condition: 0
+  briefing: A very expensive car and a very tight garage. Turn into the ramp, go
+    down to the private garage and park dead centre in the VIP bay. One knock costs
+    the third star; two fail.
+  objectives:
+  - rid: 2518988132493033497
+  - rid: 2518988132493033498
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ae/AE2
+  forcedCar: {fileID: 11400000, guid: 225b77f8683e54a2aa1cef237db1a411, type: 2}
+  cameraHeight: 2.2
+  cameraDistance: 5.5
+  spawnPosition: {x: 95, y: 0, z: 6.25}
+  spawnYaw: 270
+  targetPosition: {x: 47.84, y: -4.2, z: 59.245003}
+  targetYaw: 90
+  targetSize: {x: 2.8, y: 5.5}
+  timeLimitSeconds: 160
+  collisionLimit: 1
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 90
+  threeStarMaxCollisions: 0
+  twoStarTime: 130
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.88
+  twoStarQuality: 0.65
+  baseCoins: 280
+  coinsPerStar: 65
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033497
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Down to the garage
+        position: {x: 42, y: -2.1, z: 31}
+        yaw: 0
+        size: {x: 5.8, y: 4}
+        heightTolerance: 1.6
+        hint: DOWN THE RAMP TO THE PRIVATE GARAGE
+    - rid: 2518988132493033498
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park in the VIP bay
+        position: {x: 47.84, y: -4.2, z: 59.245003}
+        bayYaw: 90
+        size: {x: 2.8, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 6
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxOffset: 0.3
+        maxDepthOffset: 0.8
+        maxAngle: 5
+        minAccuracy: 0.6

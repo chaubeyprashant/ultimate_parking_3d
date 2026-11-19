@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_NL3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: NL3
+  displayName: Hotel Valet
+  levelNumber: 3
+  missionType: 9
+  roadDirection: 0
+  condition: 0
+  briefing: 'Valet duty at the canal hotel: pull up at the stand, take the keys,
+    then park the guest''s car smoothly. Keep under 18 km/h.'
+  objectives:
+  - rid: 2518988132493033579
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/nl/NL3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 55.25, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.4, y: 5.5}
+  timeLimitSeconds: 160
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 80
+  threeStarMaxCollisions: 0
+  twoStarTime: 110
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 250
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033579
+      type: {class: ValetParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Valet the guest's car
+        position: {x: 55.25, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.4, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        standPosition: {x: 18, y: 0, z: 17}
+        standYaw: 0
+        standSize: {x: 3.2, y: 6.5}
+        handoverSeconds: 2
+        speedLimitKmh: 18
+        speedingPerSecond: 10
+        harshAccel: 4.5
+        harshPerSecond: 15
+        perHit: 20

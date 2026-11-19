@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_JP3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: JP3
+  displayName: Stacker Parking
+  levelNumber: 3
+  missionType: 4
+  roadDirection: 1
+  condition: 0
+  briefing: 'Turn into the stacker car park and drive nose-first onto the empty deck
+    between the posts. Keep still: the machine lifts your car to the upper level.'
+  objectives:
+  - rid: 2518988132493033495
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/jp/JP3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: 90, y: 0, z: -2.25}
+  spawnYaw: 270
+  targetPosition: {x: 54.4, y: 0, z: -17.5}
+  targetYaw: 180
+  targetSize: {x: 2.7, y: 5}
+  timeLimitSeconds: 150
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 70
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 260
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033495
+      type: {class: MechanicalParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park on the stacker deck
+        position: {x: 54.4, y: 0, z: -17.5}
+        bayYaw: 180
+        size: {x: 2.7, y: 5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 6
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        systemId: stacker
+        maxAborts: 3

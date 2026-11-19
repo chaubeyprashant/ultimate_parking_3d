@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_CN3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: CN3
+  displayName: Night Market
+  levelNumber: 3
+  missionType: 12
+  roadDirection: 0
+  condition: 1
+  briefing: "Dusk at the night market. Turn into the lantern-lit lane \u2014 barely
+    wider than the car \u2014 pick your way past the cones and barrel, and park dead
+    centre at the far end. It is night: your headlights are on. Find the bay by its
+    glowing markers."
+  objectives:
+  - rid: 2518988132493033504
+  - rid: 2518988132493033505
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/cn/CN3
+  forcedCar: {fileID: 0}
+  cameraHeight: 2.4
+  cameraDistance: 6
+  spawnPosition: {x: 92, y: 0, z: -3.25}
+  spawnYaw: 90
+  targetPosition: {x: 100, y: 0, z: 47}
+  targetYaw: 0
+  targetSize: {x: 2.8, y: 5.5}
+  timeLimitSeconds: 170
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 85
+  threeStarMaxCollisions: 0
+  twoStarTime: 125
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.8
+  twoStarQuality: 0.5
+  baseCoins: 250
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033504
+      type: {class: NarrowAlleyObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the market lane
+        mouth: {x: 100, y: 0, z: 12}
+        end: {x: 100, y: 0, z: 41}
+        width: 4.4
+        goodClearance: 0.3
+        maxScrapes: 2
+        reverseThrough: 0
+    - rid: 2518988132493033505
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park at the end of the lane
+        position: {x: 100, y: 0, z: 47}
+        bayYaw: 0
+        size: {x: 2.8, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 7
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxOffset: 0.35
+        maxDepthOffset: 0.8
+        maxAngle: 6
+        minAccuracy: 0.5

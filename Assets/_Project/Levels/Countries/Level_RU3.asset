@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_RU3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: RU3
+  displayName: Driving Exam
+  levelNumber: 3
+  missionType: 4
+  roadDirection: 0
+  condition: 0
+  briefing: 'The state driving exam: cross the start line, parallel park at the kerb,
+    then drive to the car park and park precisely in the bay.'
+  objectives:
+  - rid: 2518988132493033572
+  - rid: 2518988132493033573
+  - rid: 2518988132493033574
+  - rid: 2518988132493033575
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ru/RU3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -112, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 55.25, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.4, y: 5.5}
+  timeLimitSeconds: 260
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 150
+  threeStarMaxCollisions: 0
+  twoStarTime: 200
+  twoStarMaxCollisions: 2
+  scoreMode: 1
+  threeStarQuality: 0.8
+  twoStarQuality: 0.5
+  baseCoins: 320
+  coinsPerStar: 80
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033572
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Start line
+        position: {x: -98, y: 0, z: -1.625}
+        yaw: 90
+        size: {x: 4, y: 8}
+        heightTolerance: 1.6
+        hint: CROSS THE START LINE
+    - rid: 2518988132493033573
+      type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Parallel park at the kerb
+        position: {x: -58, y: 0, z: -5.45}
+        bayYaw: 90
+        size: {x: 2.4, y: 6.4}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        kerbSide: 1
+        maxKerbGap: 0.45
+        kerbStrikeLimit: 2
+        strikeCooldown: 0.8
+    - rid: 2518988132493033574
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Turn into the car park
+        position: {x: 18, y: 0, z: 16}
+        yaw: 0
+        size: {x: 8, y: 4}
+        heightTolerance: 1.6
+        hint: TO THE CAR PARK
+    - rid: 2518988132493033575
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Precision bay
+        position: {x: 55.25, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.4, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxOffset: 0.35
+        maxDepthOffset: 0.8
+        maxAngle: 6
+        minAccuracy: 0.5

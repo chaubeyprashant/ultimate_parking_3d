@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_EG2
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: EG2
+  displayName: Souk Rush
+  levelNumber: 2
+  missionType: 5
+  roadDirection: 0
+  condition: 0
+  briefing: The souk car park's gate opens on a timer. Wait for it, drive through,
+    then take the free bay within 30 seconds; every knock costs 3.
+  objectives:
+  - rid: 2518988132493033612
+  - rid: 2518988132493033613
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/eg/EG2
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 57.75, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.6000001, y: 5.5}
+  timeLimitSeconds: 170
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 70
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.45
+  twoStarQuality: 0.2
+  baseCoins: 240
+  coinsPerStar: 55
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033612
+      type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the gate
+        barrierId: eg2_gate
+        position: {x: 18, y: 0, z: 21}
+        yaw: 0
+        size: {x: 10, y: 4}
+        heightTolerance: 1.6
+        maxBarrierHits: 1
+    - rid: 2518988132493033613
+      type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Beat the clock
+        position: {x: 57.75, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.6000001, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        seconds: 30
+        hitPenaltySeconds: 3

@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_AE3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: AE3
+  displayName: Desert Resort
+  levelNumber: 3
+  missionType: 5
+  roadDirection: 0
+  condition: 0
+  briefing: Turn off the boulevard onto the desert road. Wait for the resort's gate
+    to slide open, then you have 30 seconds to park at the villa. Every knock costs
+    3 seconds.
+  objectives:
+  - rid: 2518988132493033499
+  - rid: 2518988132493033500
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ae/AE3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -100, y: 0, z: -6.25}
+  spawnYaw: 90
+  targetPosition: {x: -70, y: 0, z: -84}
+  targetYaw: 180
+  targetSize: {x: 2.9, y: 5.5}
+  timeLimitSeconds: 180
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 90
+  threeStarMaxCollisions: 0
+  twoStarTime: 130
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.5
+  twoStarQuality: 0.25
+  baseCoins: 270
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033499
+      type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the resort gate
+        barrierId: ae3_gate
+        position: {x: -70, y: 0, z: -62}
+        yaw: 0
+        size: {x: 7.4, y: 4}
+        heightTolerance: 1.6
+        maxBarrierHits: 1
+    - rid: 2518988132493033500
+      type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park at the villa
+        position: {x: -70, y: 0, z: -84}
+        bayYaw: 180
+        size: {x: 2.9, y: 5.5}
+        direction: 1
+        overrideRules: 0
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 10
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.5
+        seconds: 30
+        hitPenaltySeconds: 3

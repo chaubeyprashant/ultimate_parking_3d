@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_CA2
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: CA2
+  displayName: Cabin Bay
+  levelNumber: 2
+  missionType: 3
+  roadDirection: 0
+  condition: 0
+  briefing: Snowbanks narrow the car park. Turn in and park exactly in the middle
+    of the free bay; accuracy earns the stars.
+  objectives:
+  - rid: 2518988132493033599
+  - rid: 2518988132493033600
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ca/CA2
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -40, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 61.8, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.7, y: 5.5}
+  timeLimitSeconds: 150
+  collisionLimit: 1
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 75
+  threeStarMaxCollisions: 0
+  twoStarTime: 105
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.88
+  twoStarQuality: 0.65
+  baseCoins: 260
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033599
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Turn into the car park
+        position: {x: 18, y: 0, z: 16}
+        yaw: 0
+        size: {x: 8, y: 4}
+        heightTolerance: 1.6
+        hint: TURN INTO THE CAR PARK
+    - rid: 2518988132493033600
+      type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park exactly
+        position: {x: 61.8, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.7, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 6
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.4
+        maxOffset: 0.28
+        maxDepthOffset: 0.8
+        maxAngle: 5
+        minAccuracy: 0.55

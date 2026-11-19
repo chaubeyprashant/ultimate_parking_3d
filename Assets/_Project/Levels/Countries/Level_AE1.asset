@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_AE1
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: AE1
+  displayName: Hotel Valet
+  levelNumber: 1
+  missionType: 9
+  roadDirection: 0
+  condition: 0
+  briefing: 'You''re the valet. Pull the guest''s supercar up under the hotel canopy,
+    hand over, then park it in the free guest bay. Smoothly: under 18 km/h, no harsh
+    braking, no knocks.'
+  objectives:
+  - rid: 2518988132493033496
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/ae/AE1
+  forcedCar: {fileID: 11400000, guid: 225b77f8683e54a2aa1cef237db1a411, type: 2}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: 60, y: 0, z: 6.25}
+  spawnYaw: 270
+  targetPosition: {x: -43.15, y: 0, z: 30}
+  targetYaw: 0
+  targetSize: {x: 2.8000002, y: 5.5}
+  timeLimitSeconds: 150
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 80
+  threeStarMaxCollisions: 0
+  twoStarTime: 110
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 260
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033496
+      type: {class: ValetParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Valet the guest's car
+        position: {x: -43.15, y: 0, z: 30}
+        bayYaw: 0
+        size: {x: 2.8000002, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        standPosition: {x: 0, y: 0, z: 18.5}
+        standYaw: 90
+        standSize: {x: 3.2, y: 6.5}
+        handoverSeconds: 2
+        speedLimitKmh: 18
+        speedingPerSecond: 10
+        harshAccel: 4.5
+        harshPerSecond: 15
+        perHit: 20

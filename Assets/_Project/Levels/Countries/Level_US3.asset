@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_US3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: US3
+  displayName: Level 2 Only
+  levelNumber: 3
+  missionType: 7
+  roadDirection: 0
+  condition: 0
+  briefing: Your permit is for LEVEL 2. Turn into the garage, drive through level
+    1, take the ramp up and park in the reserved bay. The same bay on level 1 does
+    not count.
+  objectives:
+  - rid: 2518988132493033484
+  - rid: 2518988132493033485
+  - rid: 2518988132493033486
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/us/US3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: 75, y: 0, z: 1.75}
+  spawnYaw: 270
+  targetPosition: {x: 61.71, y: 4.2, z: 53.84}
+  targetYaw: 0
+  targetSize: {x: 2.9, y: 5.5}
+  timeLimitSeconds: 210
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 100
+  threeStarMaxCollisions: 0
+  twoStarTime: 150
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 260
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033484
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Enter the garage
+        position: {x: 48.245, y: 0, z: 48}
+        yaw: 90
+        size: {x: 5.18, y: 3}
+        heightTolerance: 1.6
+        hint: TURN INTO THE GARAGE - LEVEL 1
+    - rid: 2518988132493033485
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Take the ramp up
+        position: {x: 60, y: 2.1, z: 29.4}
+        yaw: 270
+        size: {x: 6.7999997, y: 4}
+        heightTolerance: 1.6
+        hint: UP THE RAMP TO LEVEL 2
+    - rid: 2518988132493033486
+      type: {class: FloorParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park in the level 2 bay
+        position: {x: 61.71, y: 4.2, z: 53.84}
+        bayYaw: 0
+        size: {x: 2.9, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        floorLabel: LEVEL 2
+        floorTolerance: 1.2

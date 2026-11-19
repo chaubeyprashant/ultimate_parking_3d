@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_GB3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: GB3
+  displayName: Underground Car Park
+  levelNumber: 3
+  missionType: 7
+  roadDirection: 1
+  condition: 0
+  briefing: Turn left into the car park, take the ramp down to level -1, and reverse
+    into the free PERMIT HOLDERS bay. Mind the columns.
+  objectives:
+  - rid: 2518988132493033490
+  - rid: 2518988132493033491
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/gb/GB3
+  forcedCar: {fileID: 0}
+  cameraHeight: 2.2
+  cameraDistance: 5.5
+  spawnPosition: {x: 70, y: 0, z: -1.5}
+  spawnYaw: 270
+  targetPosition: {x: 35.84, y: -4.2, z: -55.505}
+  targetYaw: 270
+  targetSize: {x: 2.9, y: 5.5}
+  timeLimitSeconds: 180
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 85
+  threeStarMaxCollisions: 0
+  twoStarTime: 125
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 250
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033490
+      type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Down the ramp
+        position: {x: 30, y: -2.1, z: -27}
+        yaw: 180
+        size: {x: 5.8, y: 4}
+        heightTolerance: 1.6
+        hint: DOWN THE RAMP TO LEVEL -1
+    - rid: 2518988132493033491
+      type: {class: FloorParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into the permit bay
+        position: {x: 35.84, y: -4.2, z: -55.505}
+        bayYaw: 90
+        size: {x: 2.9, y: 5.5}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        floorLabel: LEVEL -1
+        floorTolerance: 1.2

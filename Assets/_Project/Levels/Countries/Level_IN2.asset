@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_IN2
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: IN2
+  displayName: Narrow Lane Reverse
+  levelNumber: 2
+  missionType: 1
+  roadDirection: 1
+  condition: 0
+  briefing: Squeeze up the narrow residential lane, pass the gap between the houses,
+    then reverse in. Finish within 0.7 m of the back wall line.
+  objectives:
+  - rid: 2518988132493033477
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/in/IN2
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -26.2, y: 0, z: 6.5}
+  spawnYaw: 0
+  targetPosition: {x: -18.580002, y: 0, z: 29.5}
+  targetYaw: 270
+  targetSize: {x: 3, y: 5.4}
+  timeLimitSeconds: 150
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 65
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 200
+  coinsPerStar: 50
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033477
+      type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into the house space
+        position: {x: -18.580002, y: 0, z: 29.5}
+        bayYaw: 90
+        size: {x: 3, y: 5.4}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        maxRearGap: 0.7

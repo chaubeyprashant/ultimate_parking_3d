@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_IT3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: IT3
+  displayName: Traffico Romano
+  levelNumber: 3
+  missionType: 5
+  roadDirection: 0
+  condition: 0
+  briefing: The ZTL gate opens on a timer. Wait for it, drive through, then take
+    the free bay within 30 seconds; every knock costs 3.
+  objectives:
+  - rid: 2518988132493033561
+  - rid: 2518988132493033562
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/it/IT3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 55.25, y: 0, z: 34}
+  targetYaw: 0
+  targetSize: {x: 2.4, y: 5.5}
+  timeLimitSeconds: 170
+  collisionLimit: 3
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 70
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 1
+  threeStarQuality: 0.45
+  twoStarQuality: 0.2
+  baseCoins: 240
+  coinsPerStar: 55
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033561
+      type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Through the gate
+        barrierId: it3_gate
+        position: {x: 18, y: 0, z: 21}
+        yaw: 0
+        size: {x: 10, y: 4}
+        heightTolerance: 1.6
+        maxBarrierHits: 1
+    - rid: 2518988132493033562
+      type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Beat the clock
+        position: {x: 55.25, y: 0, z: 34}
+        bayYaw: 0
+        size: {x: 2.4, y: 5.5}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 9
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1
+        seconds: 30
+        hitPenaltySeconds: 3

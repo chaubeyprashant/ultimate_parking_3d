@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_RG01
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: RG01
+  displayName: Garage B1
+  levelNumber: 1
+  missionType: 0
+  roadDirection: 0
+  condition: 0
+  briefing: 
+  objectives: []
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 2191530967365650786, guid: d429be5db77724f31a6d01315d81c1b2, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 11400000, guid: 7bbbf572cd0e64d98ac428471cde5148, type: 2}
+  cameraHeight: 2.1
+  cameraDistance: 5.6
+  spawnPosition: {x: -22, y: 0, z: -1.2}
+  spawnYaw: 90
+  targetPosition: {x: 1.71, y: 0, z: 5.84}
+  targetYaw: 0
+  targetSize: {x: 3, y: 5.6}
+  timeLimitSeconds: 150
+  collisionLimit: 3
+  overrideParkingRules: 1
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 60
+  threeStarMaxCollisions: 0
+  twoStarTime: 100
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 200
+  coinsPerStar: 50
+  references:
+    version: 2
+    RefIds: []

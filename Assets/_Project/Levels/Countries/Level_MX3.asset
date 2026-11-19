@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Level_MX3
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: MX3
+  displayName: Calle Paralela
+  levelNumber: 3
+  missionType: 12
+  roadDirection: 0
+  condition: 1
+  briefing: 'Keep right along the avenue and parallel park at the right kerb between
+    the two cars, without touching either. Night in Mexico City: your headlights
+    are on. Find the bay by its glowing markers.'
+  objectives:
+  - rid: 2518988132493033609
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 0}
+  environmentAddress: arena/mx/MX3
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -40, y: 0, z: -1.625}
+  spawnYaw: 90
+  targetPosition: {x: 34, y: 0, z: -5.45}
+  targetYaw: 90
+  targetSize: {x: 2.4, y: 6.4}
+  timeLimitSeconds: 150
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+  threeStarTime: 70
+  threeStarMaxCollisions: 0
+  twoStarTime: 105
+  twoStarMaxCollisions: 1
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 220
+  coinsPerStar: 50
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988132493033609
+      type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Parallel park at the kerb
+        position: {x: 34, y: 0, z: -5.45}
+        bayYaw: 90
+        size: {x: 2.4, y: 6.4}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.05
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 1.2
+        kerbSide: 1
+        maxKerbGap: 0.45
+        kerbStrikeLimit: 2
+        strikeCooldown: 0.8

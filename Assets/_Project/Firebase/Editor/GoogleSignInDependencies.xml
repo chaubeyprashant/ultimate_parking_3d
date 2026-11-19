@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Google sign-in on Android via AndroidX Credential Manager ("Sign in with Google"). Resolved into
+     mainTemplate.gradle by the External Dependency Manager. Apache-2.0 libraries from Google Maven. -->
+<dependencies>
+  <androidPackages>
+    <repositories>
+      <repository>https://maven.google.com</repository>
+    </repositories>
+    <androidPackage spec="androidx.credentials:credentials:1.3.0" />
+    <androidPackage spec="androidx.credentials:credentials-play-services-auth:1.3.0" />
+    <androidPackage spec="com.google.android.libraries.identity.googleid:googleid:1.1.1" />
+  </androidPackages>
+</dependencies>
