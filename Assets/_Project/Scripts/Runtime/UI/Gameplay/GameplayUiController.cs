@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UltimateCarParking.Ads;
 using UltimateCarParking.Audio;
 using UltimateCarParking.Core;
 using UltimateCarParking.Levels;
@@ -43,12 +44,16 @@ namespace UltimateCarParking.UI
         [SerializeField] private Button nextButton;
         [SerializeField] private Button completeRetryButton;
         [SerializeField] private Button completeLevelsButton;
+        [Tooltip("Optional rewarded ad: doubles this level's coins. Hidden unless an ad is ready and allowed.")]
+        [SerializeField] private Button doubleCoinsButton;
 
         [Header("Failed")]
         [SerializeField] private CanvasGroup failPanel;
         [SerializeField] private TMP_Text failReason;
         [SerializeField] private Button failRetryButton;
         [SerializeField] private Button failLevelsButton;
+        [Tooltip("Optional rewarded ad on a time-up: +30 seconds, once per attempt.")]
+        [SerializeField] private Button continueButton;
 
         [SerializeField, Min(0f)] private float resultDelay = 0.6f;
 
@@ -68,9 +73,11 @@ namespace UltimateCarParking.UI
             Bind(pauseRestartButton, Restart);
             Bind(pauseSettingsButton, () => { if (settingsPanel != null) settingsPanel.Open(); });
             Bind(pauseLevelsButton, ToLevels);
-            Bind(nextButton, Next);
+            Bind(nextButton, NextAfterWin);
             Bind(completeRetryButton, Restart);
-            Bind(completeLevelsButton, ToLevels);
+            Bind(completeLevelsButton, LevelsAfterWin);
+            Bind(doubleCoinsButton, WatchDoubleCoins);
+            Bind(continueButton, WatchContinue);
             Bind(failRetryButton, Restart);
             Bind(failLevelsButton, ToLevels);
             if (levelManager == null) { Debug.LogError("[GameplayUI] No LevelManager assigned.", this); return; }
@@ -132,7 +139,11 @@ namespace UltimateCarParking.UI
         private static string CountryName() =>
             LevelSelection.Country != null ? LevelSelection.Country.DisplayName.ToUpperInvariant() : "COUNTRY";
 
-        private void OnCompleted(LevelResult r) => StartCoroutine(ShowComplete(r));
+        private void OnCompleted(LevelResult r)
+        {
+            AdService.NotifyLevelCompleted();
+            StartCoroutine(ShowComplete(r));
+        }
 
         private IEnumerator ShowComplete(LevelResult r)
         {
@@ -178,7 +189,33 @@ namespace UltimateCarParking.UI
                 }
             }
             if (completeCoins != null) completeCoins.text = $"+{coins}";
+            lastCoins = coins;
+            if (doubleCoinsButton != null)
+                doubleCoinsButton.gameObject.SetActive(coins > 0 && AdService.CanOfferRewarded(AdPlacement.DoubleCoins));
         }
+
+        private int lastCoins;
+
+        private void WatchDoubleCoins()
+        {
+            if (doubleCoinsButton == null || lastCoins <= 0) return;
+            doubleCoinsButton.interactable = false;
+            AdService.ShowRewarded(AdPlacement.DoubleCoins, watched =>
+            {
+                if (watched)
+                {
+                    AdService.AddCoins(lastCoins);
+                    if (completeCoins != null) completeCoins.text = $"+{lastCoins * 2}";
+                    lastCoins = 0;
+                    doubleCoinsButton.gameObject.SetActive(false);
+                }
+                else doubleCoinsButton.interactable = true;
+            });
+        }
+
+        // Interstitials only at the natural break after a win (Next / Levels), never on Retry or after a failure.
+        private void NextAfterWin() => AdService.TryShowInterstitialThen(Next);
+        private void LevelsAfterWin() => AdService.TryShowInterstitialThen(ToLevels);
 
         private void OnFailed(LevelResult r) => StartCoroutine(ShowFail(r));
 
@@ -191,8 +228,29 @@ namespace UltimateCarParking.UI
             if (hudRoot != null) hudRoot.SetActive(false);
             if (failReason != null)
                 failReason.text = FailText(r.FailReason, levelManager.FailDetail);
+            AdService.NotifyLevelFailed(r.LevelId);
+            if (continueButton != null)
+            {
+                continueButton.interactable = true;
+                continueButton.gameObject.SetActive(levelManager.CanContinueAfterTimeUp && AdService.CanOfferRewarded(AdPlacement.ContinueTime));
+            }
             Show(failPanel);
             if (failPanel != null) StartCoroutine(UiMotion.Shake((RectTransform)failPanel.transform, 10f, 0.3f));
+        }
+
+        private void WatchContinue()
+        {
+            if (continueButton == null || !levelManager.CanContinueAfterTimeUp) return;
+            continueButton.interactable = false;
+            AdService.ShowRewarded(AdPlacement.ContinueTime, watched =>
+            {
+                if (watched && levelManager.ContinueAfterTimeUp(AdPolicy.ContinueSeconds))
+                {
+                    Hide(failPanel);
+                    if (hudRoot != null) hudRoot.SetActive(true);
+                }
+                else if (continueButton != null) continueButton.interactable = true;
+            });
         }
 
         private static string FailText(FailReason reason, string detail) => reason switch

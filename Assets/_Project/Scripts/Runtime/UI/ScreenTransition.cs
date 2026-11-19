@@ -54,7 +54,9 @@ namespace UltimateCarParking.UI
         {
             busy = true;
             group.blocksRaycasts = true;
+            UltimateCarParking.DebugTools.PerfLog.Begin("->" + sceneName);
             yield return UiMotion.Fade(group, group.alpha, 1f, fade);
+            UltimateCarParking.DebugTools.PerfLog.Mark("fade out");
             AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
             if (op == null)
             {
@@ -64,6 +66,7 @@ namespace UltimateCarParking.UI
             {
                 while (!op.isDone) yield return null;
             }
+            UltimateCarParking.DebugTools.PerfLog.Mark("scene loaded");
             yield return null;
             yield return UiMotion.Fade(group, 1f, 0f, fade);
             group.blocksRaycasts = false;

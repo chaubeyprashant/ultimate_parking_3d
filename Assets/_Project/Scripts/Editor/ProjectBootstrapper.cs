@@ -73,7 +73,8 @@ namespace UltimateCarParking.EditorTools
             {
                 RealCarFactory.Build();          // Phase C: real sedan prefab
                 RealPropFactory.BuildAll();      // Phase D: real props + materials
-                RealCarFactory.WirePlayableFleet();   // real bodies for the 5 drivable cars (CarFactory reset them to primitives)
+                RealCarFactory.WirePlayableFleet();   // every licensed body, keeping existing car ids
+                FleetExpansion.Build();          // 13 more cars: 5 pack bodies + 8 low-poly cars (garage ladder)
                 RealGarageBuilder.Build();       // Phase D: Garage B1 level
                 DrivingSchoolBuilder.Build();    // missions: Chapter 1 environment (real props)
                 MissionLevelBuilder.BuildChapterOne();   // missions: levels 1-3 (standard / reverse / parallel)
@@ -138,6 +139,8 @@ namespace UltimateCarParking.EditorTools
                 SouthAfricaArenaBuilder.Build();   // Cape Town (generic stand-in)
                 NewZealandArenaBuilder.Build();    // Auckland (generic stand-in)
             }
+            ConditionsAssets.Generate();         // rain / snow / headlight beam textures + materials (Resources, so they ship)
+            MissionConditions.ApplyAll();        // night, rain, snow and fog missions (needs the arenas' levels)
             WorldTourBuilder.Build();            // World Tour: 30 countries, previews (needs the campaign levels)
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null)
                 CountryArenaTestBuilder.Build();     // 2 temporary countries: prefab arena + scene arena
@@ -192,8 +195,8 @@ namespace UltimateCarParking.EditorTools
             PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
 
             PlayerSettings.colorSpace = ColorSpace.Linear;
-            PlayerSettings.bundleVersion = "0.1.0";
-            PlayerSettings.Android.bundleVersionCode = 1;
+            PlayerSettings.bundleVersion = "1.0.1";
+            PlayerSettings.Android.bundleVersionCode = 2;
 
             // Input System package only (the legacy Input Manager is not used anywhere).
             Object playerSettingsAsset = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset").FirstOrDefault();
@@ -773,13 +776,15 @@ namespace UltimateCarParking.EditorTools
             var testCatalog = AssetDatabase.LoadAssetAtPath<LevelCatalog>(TestCatalogPath);
             Check(testCatalog != null && testCatalog.Count == 2, "test catalog with 2 levels");
             var cars = AssetDatabase.LoadAssetAtPath<UltimateCarParking.Cars.CarCatalog>(CarFactory.CarCatalogPath);
-            Check(cars != null && cars.Count == 5, "car catalog with 5 cars");
+            Check(cars != null && cars.Count == FleetExpansion.ExpectedCatalogSize, $"car catalog with {FleetExpansion.ExpectedCatalogSize} cars");
             bool realPack = AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null;
             if (cars != null)
                 for (int i = 0; i < cars.Count; i++)
                 {
                     var c = cars.Get(i);
-                    bool real = c != null && c.ModelPrefab != null && c.ModelPrefab.name.StartsWith("Car_Real");
+                    // The five starters use Car_Real*; the 13 garage-expansion cars are real models built by FleetExpansion (never the primitive box).
+                    bool primitiveBox = c != null && c.ModelPrefab != null && (c.ModelPrefab.name == "PlayerCar" || c.ModelPrefab.name == "Car_Hatch" || c.ModelPrefab.name == "Car_Sport" || c.ModelPrefab.name == "Car_SUV" || c.ModelPrefab.name == "Car_Pickup");
+                    bool real = c != null && c.ModelPrefab != null && !primitiveBox;
                     Check(c != null && c.ModelPrefab != null && c.ModelPrefab.GetComponent<VehicleController>() != null
                           && c.ModelPrefab.GetComponent<UltimateCarParking.Cars.CarPaint>() != null
                           && (c.PaintMaterial != null ? c.ModelPrefab.GetComponent<UltimateCarParking.Cars.CarPaint>().RendererCount > 0 : real), $"car {i} configured");

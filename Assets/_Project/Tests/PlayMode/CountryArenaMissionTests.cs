@@ -67,7 +67,10 @@ namespace UltimateCarParking.Tests
 
             // Road direction: start prompt and the car starts in the keep-side lane.
             if (level.RoadDirection == RoadDirection.LeftHand)
-                Assert.AreEqual("DRIVE ON THE LEFT", runner.LastNotice, "left-hand traffic prompt at start");
+                StringAssert.StartsWith("DRIVE ON THE LEFT", runner.LastNotice, "left-hand traffic prompt at start");
+            // A weather / night mission adds its own warning under the same start banner.
+            string conditionHint = UltimateCarParking.Conditions.ConditionProfiles.For(level.Condition).Hint;
+            if (conditionHint.Length > 0) StringAssert.Contains(conditionHint, runner.LastNotice, "start banner warns about the " + level.Condition);
             Vector3 right = level.SpawnRotation * Vector3.right;
             Debug.Log($"[Test] {id} {level.DisplayName}: road {level.RoadDirection}, {runner.Objectives.Count} objectives, spawn {level.SpawnPosition}");
 

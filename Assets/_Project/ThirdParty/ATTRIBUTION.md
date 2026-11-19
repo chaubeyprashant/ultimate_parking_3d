@@ -217,3 +217,20 @@ Title, author, licence and source come from each file's embedded glTF `asset.ext
 
 | Nigeria / South Africa / New Zealand (stand-ins) | Kenney/Suburban/*.glb | City Kit (Suburban) 2.0 | Kenney | CC0 1.0 (no attribution required) | https://kenney.nl/assets/city-kit-suburban |
 | Nigeria / South Africa / New Zealand (stand-ins) | Kenney/Commercial/*.glb | City Kit (Commercial) 2.0 | Kenney | CC0 1.0 (no attribution required) | https://kenney.nl/assets/city-kit-commercial |
+
+| Vehicles (premium garage) | Premium/asti_stradale_89.glb | Asti Stradale '89 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/97b15b067111443ebe05840137b49c65 |
+| Vehicles (premium garage) | Premium/bokaroo_67.glb | Bokaroo '67 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/22015d1863d6455aa31cfd738b972c50 |
+| Vehicles (premium garage) | Premium/chapman_73.glb | Chapman '73 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/f30b644b59b54e809355009dce463d47 |
+| Vehicles (premium garage) | Premium/cheetah_84.glb | Cheetah '84 - Low poly Model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/c967ab4abbc54ae4b7933fd81a86c99c |
+| Vehicles (premium garage) | Premium/duke_69.glb | Duke '69 - Low Poly Model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/46fed79f600c4fc69e060991f9e3e4f9 |
+| Vehicles (premium garage) | Premium/exterminator_00.glb | Exterminator '00 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/857f048c4bbb40b4be4fb0b765a52116 |
+| Vehicles (premium garage) | Premium/fairheaven_lt_80.glb | Fairheaven LT '80 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/e2678da920cc4be68dbc193727919ffb |
+| Vehicles (premium garage) | Premium/negotiator_80.glb | Negotiator '80 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/892b2684fb37442299bfad9222cf331c |
+| Vehicles (premium garage) | Premium/phoenix455_71.glb | Phoenix 455 '71 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/955edc733c6d44fabc0ad7c246a15896 |
+| Vehicles (premium garage) | Premium/rancher_80_lifted.glb | Rancher '80 Lifted - Low Poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/fbf1767c4c3a450caa59c6431af79263 |
+| Vehicles (premium garage) | Premium/roadster_00.glb | Roadster '00 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/82fd2008ce304df688ec4dfcd42d41ce |
+| Vehicles (premium garage) | Premium/saba_v12_95.glb | Saba V12 '95 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/3ab977050c334c13b6abb5de078b4957 |
+| Vehicles (premium garage) | Premium/tiara_gt_83.glb | Tiara GT '83 Tuned - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/59a0eaaa2af144b2956957e7032d0221 |
+| Vehicles (premium garage) | Premium/urban_10.glb | Urban '10 - Low poly model | Daniel Zhabotinsky | CC BY 4.0 | https://sketchfab.com/3d-models/2866efdfa943484391ef8313768e074d |
+| Vehicles (premium garage) | Premium/f1_lowpoly.glb | Low Poly-F1 | salasilma13 | CC BY 4.0 | https://sketchfab.com/3d-models/0ac02bfa81f64549be15acaa78f36f29 |
+| Vehicles (premium garage) | (built from Arenas/NewYork/nyc_pickup_lightbody85.glb and Premium/rancher_80_lifted.glb) | Goliath '85 Monster and Mammoth '80 Monster: derivatives of Lightbody Lifted '85 and Rancher '80 Lifted with enlarged wheels and a raised body | Daniel Zhabotinsky (original models) | CC BY 4.0 | https://sketchfab.com/3d-models/67beae18c3d24be68f9c8f0ec382d8e3 , https://sketchfab.com/3d-models/fbf1767c4c3a450caa59c6431af79263 |

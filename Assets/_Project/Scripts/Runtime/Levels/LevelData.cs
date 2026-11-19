@@ -25,6 +25,8 @@ namespace UltimateCarParking.Levels
         [SerializeField] private MissionType missionType = MissionType.StandardParking;
         [Tooltip("Which side traffic keeps to in this level's arena (layout, kerb side, start prompt). Controls are unchanged.")]
         [SerializeField] private WorldTour.RoadDirection roadDirection = WorldTour.RoadDirection.RightHand;
+        [Tooltip("Weather / time of day: changes lighting, fog, precipitation and tyre grip. Clear = unchanged.")]
+        [SerializeField] private Conditions.RoadCondition condition = Conditions.RoadCondition.Clear;
         [Tooltip("One or two sentences shown in the start banner.")]
         [SerializeField, TextArea(2, 4)] private string briefing = "";
         [Tooltip("Objective sequence, run in order. Empty = one standard parking objective built from the Parking target below.")]
@@ -88,6 +90,7 @@ namespace UltimateCarParking.Levels
 
         public MissionType MissionType => missionType;
         public WorldTour.RoadDirection RoadDirection => roadDirection;
+        public Conditions.RoadCondition Condition => condition;
         public string Briefing => briefing;
         public bool HasObjectives => objectives != null && objectives.Length > 0;
 

@@ -77,6 +77,19 @@ namespace UltimateCarParking.Missions
             Advance();
         }
 
+        /// <summary>
+        /// Picks a stopped attempt back up (the "+30 seconds" continue): re-begins the current objective, keeping the
+        /// objectives already completed. Does nothing when the attempt finished or never ran.
+        /// </summary>
+        public bool Resume()
+        {
+            if (ctx == null || IsRunning || IsComplete || Current == null) return false;
+            IsRunning = true;
+            Current.Begin(ctx);
+            SetHint(Current.Hint(ctx));
+            return true;
+        }
+
         /// <summary>Stops the attempt (level completed, failed or unloaded). Keeps the zones until the next Prepare.</summary>
         public void Stop()
         {

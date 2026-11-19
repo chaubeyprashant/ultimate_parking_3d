@@ -91,7 +91,11 @@ namespace UltimateCarParking.UI
         {
             int count = garage.Catalog.Count;
             if (count <= 1) return;
-            index = (index + delta + count) % count;
+            for (int n = 0; n < count; n++)
+            {
+                index = (index + delta + count) % count;
+                if (garage.Catalog.Get(index) != null) break;
+            }
             ShowCar(delta);
         }
 
@@ -101,7 +105,7 @@ namespace UltimateCarParking.UI
             if (car == null) return;
             if (showroom != null) showroom.Show(car, direction);
             if (carName != null) carName.text = car.DisplayName.ToUpperInvariant();
-            if (tagline != null) tagline.text = car.Tagline;
+            if (tagline != null) tagline.text = $"<color=#B7F51F>{car.ClassLabel}</color>  ·  {car.Tagline}";
             if (indexLabel != null) indexLabel.text = $"{index + 1:00} / {garage.Catalog.Count:00}";
             CarStats s = CarStats.From(Upgraded(car));
             topSpeed?.SetValue(s.TopSpeed);

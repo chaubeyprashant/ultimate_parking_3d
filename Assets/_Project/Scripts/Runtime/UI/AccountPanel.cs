@@ -69,9 +69,12 @@ namespace UltimateCarParking.UI
             if (accountLabel != null)
                 accountLabel.text = s == AuthState.Starting || (busy && s != AuthState.Google) ? "SIGNING IN…"
                     : s == AuthState.Google ? AuthService.ShortName()
-                    : s == AuthState.Unavailable ? "OFFLINE" : "GUEST  ·  SIGN IN";
+                    : s == AuthState.Unavailable ? "OFFLINE"
+                    : s == AuthState.SignedOut ? "SIGN IN" : "GUEST  ·  SIGN IN";
             if (statusLabel != null)
-                statusLabel.text = s == AuthState.Google ? "SIGNED IN WITH GOOGLE" : s == AuthState.Unavailable ? "OFFLINE" : "PLAYING AS GUEST";
+                statusLabel.text = s == AuthState.Google ? "SIGNED IN WITH GOOGLE"
+                    : s == AuthState.Unavailable ? "OFFLINE"
+                    : s == AuthState.SignedOut ? "SIGNED OUT" : "PLAYING AS GUEST";
             if (detailLabel != null)
             {
                 AuthUser u = AuthService.User;
@@ -79,7 +82,9 @@ namespace UltimateCarParking.UI
                     ? $"{(string.IsNullOrEmpty(u.DisplayName) ? "Google player" : u.DisplayName)}\n<color=#8C96A3>{u.Email}</color>"
                     : s == AuthState.Unavailable
                         ? "The account service can't be reached. You can keep playing; try again later."
-                        : "Sign in with Google to link this player to your Google account. Your progress is saved on this device.";
+                        : s == AuthState.SignedOut
+                            ? "Sign in with Google, or continue as a guest."
+                            : "Sign in with Google to link this player to your Google account. Your progress is saved on this device.";
             }
             if (errorLabel != null) errorLabel.text = AuthService.LastError;
             bool google = s == AuthState.Google;
@@ -92,8 +97,8 @@ namespace UltimateCarParking.UI
                 googleLabel.text = busy ? "SIGNING IN…" : AuthService.GoogleSupported ? "SIGN IN WITH GOOGLE" : "GOOGLE SIGN-IN: ANDROID ONLY";
             if (signOutButton != null)
             {
-                signOutButton.gameObject.SetActive(google);
-                signOutButton.interactable = !busy;
+                signOutButton.gameObject.SetActive(true);
+                signOutButton.interactable = !busy && s != AuthState.Starting;
             }
         }
     }

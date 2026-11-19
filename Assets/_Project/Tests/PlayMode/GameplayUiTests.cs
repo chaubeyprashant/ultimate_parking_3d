@@ -141,8 +141,8 @@ namespace UltimateCarParking.Tests
             Assert.Less(Car.ForwardSpeedKmh, -3f, "brake pedal ends up reversing");
             Assert.AreEqual("R", GameObject.Find("Gear").GetComponent<TMPro.TMP_Text>().text, "gear shows R");
             brake.SetHeld(false);
-            yield return null;
-            Assert.AreEqual(0f, Car.Input.Throttle);
+            yield return new WaitForSeconds(0.7f);   // the on-screen pedal eases back to zero instead of cutting
+            Assert.AreEqual(0f, Car.Input.Throttle, 0.01f);
             Debug.Log($"[Test] Pedals: gas 2 s → {forward:F1} m; brake/reverse 4 s → {Car.ForwardSpeedKmh:F1} km/h");
         }
 

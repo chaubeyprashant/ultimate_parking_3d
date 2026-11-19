@@ -258,6 +258,8 @@ namespace UltimateCarParking.UI
             int done = WorldTourService.CompletedMissions(save, c);
             CountryState state = m.State;
             bool locked = state == CountryState.Locked;
+            // Start fetching this mission's country pack now (download only), unless the country is still locked.
+            if (!locked && !missionLocked) ArenaPrefetcher.Prefetch(next);
 
             if (kicker != null) kicker.text = $"{RegionNames[ChipOf(c.Region)]}   ·   STOP {index + 1:00} / {tour.Count}";
             if (flagImage != null) flagImage.sprite = c.Flag;
@@ -366,6 +368,20 @@ namespace UltimateCarParking.UI
         {
             StartCoroutine(UiMotion.Fade(detailGroup, 0.2f, 1f, 0.25f));
             yield return UiMotion.Move(detailContent, new Vector2(26f, 0f), Vector2.zero, 0.25f);
+        }
+
+        /// <summary>Starts a country's mission directly (used by the on-device benchmark and tests). False when it cannot start.</summary>
+        public bool PlayCountryMission(string countryId, int mission)
+        {
+            for (int i = 0; i < markers.Count; i++)
+            {
+                if (markers[i].Country.CountryId != countryId) continue;
+                Select(i, focus: false);
+                SelectMission(mission);
+                PlaySelected();
+                return LevelSelection.HasRequest;
+            }
+            return false;
         }
 
         public void PlaySelected()

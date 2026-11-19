@@ -3,6 +3,9 @@ using UltimateCarParking.Vehicle;
 
 namespace UltimateCarParking.Cars
 {
+    /// <summary>Market class: sets the price band. Budget cars cost least, premium cars most (see FleetPricing).</summary>
+    public enum CarClass { Starter = 0, Economy = 1, Standard = 2, Performance = 3, Premium = 4, Elite = 5 }
+
     /// <summary>
     /// One car the player can own: id, name, model prefab, paint, price and handling. Data only.
     /// Create via Assets ▸ Create ▸ Ultimate Car Parking ▸ Car Data and add it to the CarCatalog.
@@ -23,6 +26,7 @@ namespace UltimateCarParking.Cars
         [SerializeField] private Material paintMaterial;
 
         [Header("Economy")]
+        [SerializeField] private CarClass carClass = CarClass.Standard;
         [SerializeField, Min(0)] private int price;
         [Tooltip("Owned from the first launch (the starter car).")]
         [SerializeField] private bool ownedByDefault;
@@ -35,6 +39,8 @@ namespace UltimateCarParking.Cars
         public string Tagline => tagline;
         public GameObject ModelPrefab => modelPrefab;
         public Material PaintMaterial => paintMaterial;
+        public CarClass Class => carClass;
+        public string ClassLabel => carClass == CarClass.Starter ? "STARTER" : carClass.ToString().ToUpperInvariant();
         public int Price => price;
         public bool OwnedByDefault => ownedByDefault;
         public VehicleHandling Handling => handling;

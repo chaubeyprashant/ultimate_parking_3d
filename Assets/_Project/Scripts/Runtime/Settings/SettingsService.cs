@@ -13,6 +13,8 @@ namespace UltimateCarParking.Settings
         public static void SetMusicVolume(float v) => Apply(s => s.musicVolume = v);
         public static void SetSoundVolume(float v) => Apply(s => s.soundVolume = v);
         public static void SetSteeringSensitivity(float v) => Apply(s => s.steeringSensitivity = v);
+        public static void SetGraphicsMode(int v) => Apply(s => s.graphicsMode = v);
+        public static void SetFrameRateMode(int v) => Apply(s => s.frameRateMode = v);
 
         /// <summary>Writes the save file (call when a settings screen closes, not on every slider tick).</summary>
         public static void Commit() => SaveManager.Current.Save();

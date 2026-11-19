@@ -50,9 +50,9 @@ namespace UltimateCarParking.Account
 
     /// <summary>
     /// Player accounts: every player is signed in anonymously as a guest on first launch (Firebase Auth); "Sign in
-    /// with Google" links the guest to their Google account, and signing out returns to a fresh guest. On Android the
-    /// backend is Firebase Auth + Credential Manager; in the editor and tests a local stand-in is used, so play mode
-    /// never creates users in the live Firebase project.
+    /// with Google" links the guest to their Google account. Signing out leaves them signed out so the sign-in
+    /// screen can offer Google or a new guest. On Android the backend is Firebase Auth + Credential Manager; in the
+    /// editor and tests a local stand-in is used, so play mode never creates users in the live Firebase project.
     /// </summary>
     public static class AuthService
     {
@@ -159,7 +159,7 @@ namespace UltimateCarParking.Account
             finally { Busy = false; Changed?.Invoke(); }
         }
 
-        /// <summary>Signs out of Google and continues as a new guest.</summary>
+        /// <summary>Signs out of Google and leaves the player signed out, so the sign-in screen can take over.</summary>
         public static async Task SignOut()
         {
             await Initialize();
@@ -169,14 +169,34 @@ namespace UltimateCarParking.Account
             {
                 backend.SignOut();
                 google?.SignOut();
-                State = AuthState.SignedOut; User = null; Changed?.Invoke();
+                User = null;
+                State = AuthState.SignedOut;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[Auth] sign-out failed: " + e.Message);
+                User = null;
+                State = AuthState.SignedOut;
+                LastError = "Signed out. Sign in again to continue.";
+            }
+            finally { Busy = false; Changed?.Invoke(); }
+        }
+
+        /// <summary>Starts a fresh guest session from the sign-in screen.</summary>
+        public static async Task ContinueAsGuest()
+        {
+            await Initialize();
+            if (Busy || State == AuthState.Google) return;
+            Busy = true; LastError = "";
+            try
+            {
                 Set(await backend.SignInAnonymously(), "");
             }
             catch (Exception e)
             {
-                Debug.LogWarning("[Auth] sign-out/guest failed: " + e.Message);
+                Debug.LogWarning("[Auth] guest sign-in failed: " + e.Message);
                 State = AuthState.SignedOut;
-                LastError = "Signed out. Couldn't start a guest session.";
+                LastError = "Couldn't start a guest session.";
             }
             finally { Busy = false; Changed?.Invoke(); }
         }

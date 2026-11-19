@@ -12,7 +12,7 @@ namespace UltimateCarParking.UI
     public sealed class CarShowroom : MonoBehaviour
     {
         [SerializeField] private Transform turntable;
-        [SerializeField] private float spinDegreesPerSecond = 6f;
+        [SerializeField] private float spinDegreesPerSecond = 12f;
         [SerializeField, Min(0.05f)] private float slideSeconds = 0.45f;
         [SerializeField] private float slideDistance = 7f;
 

@@ -87,8 +87,8 @@ namespace UltimateCarParking.Tests
             input.KeyboardEnabled = false;
             Press(keyboard.wKey);
             input.SetThrottle(-0.4f);
-            yield return Frames(2);
-            Assert.AreEqual(-0.4f, input.Throttle, 1e-4f, "keyboard ignored when disabled; mobile value used");
+            yield return new WaitForSeconds(0.7f);   // the on-screen pedal ramps to its target
+            Assert.AreEqual(-0.4f, input.Throttle, 1e-3f, "keyboard ignored when disabled; mobile value used");
         }
     }
 }

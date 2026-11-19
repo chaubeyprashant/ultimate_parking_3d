@@ -28,11 +28,22 @@ namespace UltimateCarParking.EditorTools
 
         private static void Build(string output, BuildOptions options, bool appBundle)
         {
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
+            {
+                // Addressables only creates the per-country asset packs when Android is the active target; building anyway
+                // would ship an AAB without the arenas. Tools/build_android.sh passes -buildTarget Android.
+                Debug.LogError("[Build] BUILD FAILED: the active build target is " + EditorUserBuildSettings.activeBuildTarget + ", not Android (run with -buildTarget Android).");
+                if (Application.isBatchMode) EditorApplication.Exit(1);
+                return;
+            }
             ProjectBootstrapper.ConfigurePlayer();
             EditorUserBuildSettings.buildAppBundle = appBundle;
             // Addressables for Android only moves groups into asset packs when the binary is split (AAB).
             PlayerSettings.Android.splitApplicationBinary = appBundle;
+            ConditionsAssets.KeepFogVariants();                  // fog set at run time must survive shader stripping
+            PlayerSettings.enableFrameTimingStats = true;        // CPU/GPU frame timing for the on-device PerfMonitor
             PlayerSettings.stripUnusedMeshComponents = true;     // size budget: drop unused vertex channels
+            AdsSetup.Configure();
             ResolveAndroidDependencies();
             if (!ArenaDelivery.BuildContent())
             {

@@ -48,29 +48,88 @@ namespace UltimateCarParking.EditorTools
         /// model). Called by the bootstrap after <see cref="CarFactory.BuildAll"/>, which resets the catalog to the
         /// primitive bodies. Needs the parked props from <see cref="RealPropFactory.BuildAll"/> for the parked fleet.
         /// </summary>
+        private sealed class FleetCar
+        {
+            public string Body, File, Id, Name, Tagline;
+            public CarClass Class;
+            public int Price;
+            public bool Starter;
+            public VehicleHandling Handling;
+        }
+
+        /// <summary>
+        /// Every distinct body in the CC BY 4.0 passenger pack becomes a drivable car.
+        /// Existing save ids (sedan, hatch, sport, suv, pickup) are kept. New ids are appended.
+        /// </summary>
+        private static FleetCar[] Fleet => new[]
+        {
+            Car("Sedan Body", "Car_RealSedan", "sedan", "Harbor Sedan", "Starter. Stable, short, and free.", CarClass.Starter, 0, true, Fwd(1400f, 1600f, 62f, 34f)),
+            Car("Hatchback Body", "Car_RealHatch", "hatch", "Volt Hatch", "Light nose. Easy in tight bays.", CarClass.Economy, 800, false, Fwd(1100f, 1500f, 58f, 38f)),
+            Car("Compact Body", "Car_RealCompact", "compact", "Nim Compact", "Shortest wheelbase in the garage.", CarClass.Economy, 1400, false, Fwd(980f, 1400f, 54f, 40f)),
+            Car("Coupe Body", "Car_RealCoupe", "coupe", "Vesper Coupe", "Low rear-drive coupe. Sharp brakes.", CarClass.Performance, 4200, false, Rwd(1320f, 2400f, 86f, 32f)),
+            Car("Sport body", "Car_RealSport", "sport", "Apex GT", "Fastest road car in the licensed fleet.", CarClass.Premium, 7500, false, Rwd(1280f, 2800f, 98f, 30f)),
+            Car("Wagon Body", "Car_RealWagon", "wagon", "Lumen Wagon", "Long roof, all-wheel drive, planted.", CarClass.Standard, 2800, false, Awd(1680f, 2100f, 72f, 33f)),
+            Car("SUV Body", "Car_RealSuv", "suv", "Ridge SUV", "Tall all-wheel drive. Watch the width.", CarClass.Premium, 5200, false, Awd(1980f, 2600f, 68f, 32f)),
+            Car("Offroad Body", "Car_RealOffroad", "offroad", "Dune Scout", "Heavy, high, and slow to turn.", CarClass.Premium, 6400, false, Awd(2200f, 3000f, 60f, 30f)),
+            Car("Pickup Body", "Car_RealPickup", "pickup", "Hauler", "Long bed. Wide turning circle.", CarClass.Standard, 3600, false, Rwd(2050f, 2600f, 58f, 31f)),
+            Car("minivan body", "Car_RealMinivan", "minivan", "Cove Van", "High cabin. Soft steering, short speed.", CarClass.Economy, 2200, false, Fwd(1850f, 1700f, 52f, 34f)),
+        };
+
+        private static FleetCar Car(string body, string file, string id, string name, string tagline, CarClass cls, int price, bool starter, VehicleHandling handling) =>
+            new FleetCar { Body = body, File = file, Id = id, Name = name, Tagline = tagline, Class = cls, Price = price, Starter = starter, Handling = handling };
+
+        private static VehicleHandling Fwd(float mass, float torque, float kmh, float steer) => new VehicleHandling
+        {
+            driveType = VehicleController.DriveType.FrontWheelDrive, mass = mass, centerOfMass = new Vector3(0f, 0.32f, 0.06f),
+            motorTorque = torque, reverseTorque = torque * 0.65f, maxForwardSpeedKmh = kmh, maxReverseSpeedKmh = 18f,
+            brakeTorque = 2400f + mass, handbrakeTorque = 4200f, maxSteerAngle = steer, highSpeedSteerAngle = 12f, steerSpeed = 120f,
+        };
+
+        private static VehicleHandling Rwd(float mass, float torque, float kmh, float steer) => new VehicleHandling
+        {
+            driveType = VehicleController.DriveType.RearWheelDrive, mass = mass, centerOfMass = new Vector3(0f, 0.26f, -0.04f),
+            motorTorque = torque, reverseTorque = torque * 0.5f, maxForwardSpeedKmh = kmh, maxReverseSpeedKmh = 20f,
+            brakeTorque = 2800f + mass, handbrakeTorque = 5000f, maxSteerAngle = steer, highSpeedSteerAngle = 9f, steerSpeed = 125f,
+        };
+
+        private static VehicleHandling Awd(float mass, float torque, float kmh, float steer) => new VehicleHandling
+        {
+            driveType = VehicleController.DriveType.AllWheelDrive, mass = mass, centerOfMass = new Vector3(0f, 0.4f, 0.02f),
+            motorTorque = torque, reverseTorque = torque * 0.6f, maxForwardSpeedKmh = kmh, maxReverseSpeedKmh = 16f,
+            brakeTorque = 3000f + mass * 0.8f, handbrakeTorque = 5200f, maxSteerAngle = steer, highSpeedSteerAngle = 11f, steerSpeed = 100f,
+        };
+
+        /// <summary>How many car-pack bodies the playable fleet holds.</summary>
+        internal static int FleetCount => Fleet.Length;
+
         public static bool WirePlayableFleet()
         {
-            var lineup = new[]
-            {
-                ("Sedan Body", "Car_RealSedan", "sedan"),
-                ("Hatchback Body", "Car_RealHatch", "hatch"),
-                ("Sport body", "Car_RealSport", "sport"),
-                ("SUV Body", "Car_RealSuv", "suv"),
-                ("Pickup Body", "Car_RealPickup", "pickup"),
-            };
-            var catalog = AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath);
+            FleetCar[] lineup = Fleet;
             int built = 0;
-            foreach ((string body, string file, string id) in lineup)
+            var datas = new System.Collections.Generic.List<CarData>();
+            var catalog = AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath);
+            if (catalog != null)
+                for (int i = 0; i < catalog.Count; i++)
+                    if (catalog.Get(i) != null) datas.Add(catalog.Get(i));
+
+            foreach (FleetCar car in lineup)
             {
-                GameObject prefab = BuildOne(body, $"Assets/_Project/Prefabs/Vehicles/{file}.prefab", writeStandaloneData: false);
-                catalog = AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath);
-                CarData data = catalog != null ? catalog.FindById(id) : null;
-                if (prefab == null || data == null) { Debug.LogError($"[RealCar] fleet skip {id} / {body} prefab={(prefab != null)} catalog={(catalog != null)}"); continue; }
-                var so = new SerializedObject(data);
-                so.FindProperty("modelPrefab").objectReferenceValue = prefab;
-                so.FindProperty("paintMaterial").objectReferenceValue = null;
-                so.ApplyModifiedPropertiesWithoutUndo();
+                GameObject prefab = BuildOne(car.Body, $"Assets/_Project/Prefabs/Vehicles/{car.File}.prefab", writeStandaloneData: false, tightBounds: true);
+                if (prefab == null) { Debug.LogError("[RealCar] fleet skip " + car.Id); continue; }
+                CarData data = WriteFleetData(car, prefab);
+                if (data == null) continue;
+                if (!datas.Contains(data)) datas.Add(data);
                 built++;
+            }
+
+            catalog = AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath);
+            if (catalog != null)
+            {
+                var so = new SerializedObject(catalog);
+                SerializedProperty list = so.FindProperty("cars");
+                list.arraySize = datas.Count;
+                for (int i = 0; i < datas.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = datas[i];
+                so.ApplyModifiedPropertiesWithoutUndo();
             }
             ParkedFleetBuilder.Build();
             AssetDatabase.SaveAssets();
@@ -79,7 +138,45 @@ namespace UltimateCarParking.EditorTools
             return ok;
         }
 
-        private static GameObject BuildOne(string bodyName, string prefabPath, bool writeStandaloneData)
+        private static CarData WriteFleetData(FleetCar car, GameObject prefab)
+        {
+            string path = $"{CarFactory.CarsDir}/Car_{char.ToUpperInvariant(car.Id[0])}{car.Id.Substring(1)}.asset";
+            var data = AssetDatabase.LoadAssetAtPath<CarData>(path);
+            if (data == null)
+            {
+                if (!AssetDatabase.IsValidFolder(CarFactory.CarsDir)) return null;
+                data = ScriptableObject.CreateInstance<CarData>();
+                AssetDatabase.CreateAsset(data, path);
+            }
+            var so = new SerializedObject(data);
+            so.FindProperty("carId").stringValue = car.Id;
+            so.FindProperty("displayName").stringValue = car.Name;
+            so.FindProperty("tagline").stringValue = car.Tagline;
+            so.FindProperty("modelPrefab").objectReferenceValue = prefab;
+            so.FindProperty("paintMaterial").objectReferenceValue = null;
+            so.FindProperty("carClass").enumValueIndex = (int)car.Class;
+            so.FindProperty("price").intValue = car.Price;
+            so.FindProperty("ownedByDefault").boolValue = car.Starter;
+            SerializedProperty h = so.FindProperty("handling");
+            VehicleHandling v = car.Handling;
+            h.FindPropertyRelative("driveType").enumValueIndex = (int)v.driveType;
+            h.FindPropertyRelative("mass").floatValue = v.mass;
+            h.FindPropertyRelative("centerOfMass").vector3Value = v.centerOfMass;
+            h.FindPropertyRelative("motorTorque").floatValue = v.motorTorque;
+            h.FindPropertyRelative("reverseTorque").floatValue = v.reverseTorque;
+            h.FindPropertyRelative("maxForwardSpeedKmh").floatValue = v.maxForwardSpeedKmh;
+            h.FindPropertyRelative("maxReverseSpeedKmh").floatValue = v.maxReverseSpeedKmh;
+            h.FindPropertyRelative("brakeTorque").floatValue = v.brakeTorque;
+            h.FindPropertyRelative("handbrakeTorque").floatValue = v.handbrakeTorque;
+            h.FindPropertyRelative("maxSteerAngle").floatValue = v.maxSteerAngle;
+            h.FindPropertyRelative("highSpeedSteerAngle").floatValue = v.highSpeedSteerAngle;
+            h.FindPropertyRelative("steerSpeed").floatValue = v.steerSpeed;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(data);
+            return data;
+        }
+
+        internal static GameObject BuildOne(string bodyName, string prefabPath, bool writeStandaloneData, bool tightBounds = false)
         {
             var pack = AssetDatabase.LoadAssetAtPath<GameObject>(RealCarAnalysis.PackPath);
             if (pack == null) { Debug.LogError("[RealCar] car pack not imported: " + RealCarAnalysis.PackPath); return null; }
@@ -170,6 +267,7 @@ namespace UltimateCarParking.EditorTools
                 if (!fittedAny) { fitted = r.bounds; fittedAny = true; }
                 else fitted.Encapsulate(r.bounds);
             }
+            if (tightBounds) fitted = TightBounds(model.GetComponentsInChildren<MeshFilter>());
             Vector3 size = fitted.size;
             Transform cols = ProjectBootstrapper.Child(root.transform, "Colliders");
             float bodyBottom = Mathf.Clamp(size.y * 0.2f, 0.16f, 0.45f);
@@ -222,7 +320,7 @@ namespace UltimateCarParking.EditorTools
             return prefab;
         }
 
-        private static MeshRenderer CopyRenderer(MeshFilter source, Transform parent, string name)
+        internal static MeshRenderer CopyRenderer(MeshFilter source, Transform parent, string name)
         {
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
@@ -232,7 +330,7 @@ namespace UltimateCarParking.EditorTools
             return r;
         }
 
-        private static WheelCollider Wheel(Transform parent, string name, Vector3 localPos, float radius, float mass)
+        internal static WheelCollider Wheel(Transform parent, string name, Vector3 localPos, float radius, float mass)
         {
             var go = new GameObject(name + "Collider");
             go.transform.SetParent(parent, false);
@@ -269,7 +367,23 @@ namespace UltimateCarParking.EditorTools
             AssetDatabase.SaveAssets();
         }
 
-        private static Bounds Combined(Renderer[] rs)
+        /// <summary>Bounds from the real vertices (renderer bounds can be inflated by an oddly rotated mesh's own bounding box).</summary>
+        internal static Bounds TightBounds(MeshFilter[] filters)
+        {
+            bool any = false; Bounds b = default;
+            foreach (MeshFilter mf in filters)
+            {
+                if (mf.sharedMesh == null) continue;
+                foreach (Vector3 v in mf.sharedMesh.vertices)
+                {
+                    Vector3 w = mf.transform.TransformPoint(v);
+                    if (!any) { b = new Bounds(w, Vector3.zero); any = true; } else b.Encapsulate(w);
+                }
+            }
+            return b;
+        }
+
+        internal static Bounds Combined(Renderer[] rs)
         {
             Bounds b = rs[0].bounds;
             foreach (Renderer r in rs) b.Encapsulate(r.bounds);

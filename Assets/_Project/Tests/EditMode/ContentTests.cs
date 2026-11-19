@@ -102,13 +102,14 @@ namespace UltimateCarParking.Tests
         }
 
         [Test]
-        public void Five_Cars_With_Distinct_Ids_Paint_And_Handling()
+        public void Every_Garage_Car_Has_A_Real_Body_Distinct_Id_And_Handling()
         {
-            Assert.AreEqual(5, Cars.Count);
-            var cars = Enumerable.Range(0, 5).Select(i => Cars.Get(i)).ToList();
-            Assert.AreEqual(5, cars.Select(c => c.CarId).Distinct().Count());
-            // Real bodies keep their own paint (PaintMaterial empty); every drivable car must be a real model.
-            foreach (CarData c in cars) StringAssert.StartsWith("Car_Real", c.ModelPrefab.name, $"{c.CarId} uses a real body, not a primitive box");
+            Assert.AreEqual(UltimateCarParking.EditorTools.FleetExpansion.ExpectedCatalogSize, Cars.Count);
+            var cars = Enumerable.Range(0, Cars.Count).Select(i => Cars.Get(i)).ToList();
+            Assert.AreEqual(cars.Count, cars.Select(c => c.CarId).Distinct().Count());
+            // Real bodies keep their own paint (PaintMaterial empty); no drivable car may be the primitive box.
+            string[] primitives = { "PlayerCar", "Car_Hatch", "Car_Sport", "Car_SUV", "Car_Pickup" };
+            foreach (CarData c in cars) CollectionAssert.DoesNotContain(primitives, c.ModelPrefab.name, $"{c.CarId} uses a real body, not a primitive box");
             Assert.AreEqual(1, cars.Count(c => c.OwnedByDefault));
             for (int i = 1; i < cars.Count; i++) Assert.Greater(cars[i].Price, cars[i - 1].Price, "prices ascend");
             foreach (CarData c in cars)
@@ -119,19 +120,22 @@ namespace UltimateCarParking.Tests
                 CarStats s = CarStats.From(c.Handling);
                 foreach (float v in new[] { s.TopSpeed, s.Acceleration, s.Handling, s.Braking }) Assert.That(v, Is.InRange(0f, 1f));
             }
-            Assert.AreEqual(5, cars.Select(c => c.ModelPrefab).Distinct().Count(), "five body styles");
-            Assert.AreEqual(5, cars.Select(c => c.Handling.maxForwardSpeedKmh + c.Handling.mass).Distinct().Count(), "handling differs");
+            Assert.AreEqual(cars.Count, cars.Select(c => c.ModelPrefab).Distinct().Count(), "one body style per car");
+            Assert.AreEqual(cars.Count, cars.Select(c => (c.Handling.maxForwardSpeedKmh, c.Handling.mass)).Distinct().Count(), "handling differs");
         }
 
         [Test]
-        public void Starter_Car_Matches_The_Phase_1_Defaults()
+        public void Starter_Car_Is_Free_Owned_And_Handles_Like_A_Safe_Allrounder()
         {
-            VehicleHandling d = new VehicleHandling(), s = Cars.Default.Handling;
-            Assert.AreEqual("Car_RealSedan", Cars.Default.ModelPrefab.name);
-            Assert.AreEqual(d.mass, s.mass);
-            Assert.AreEqual(d.motorTorque, s.motorTorque);
-            Assert.AreEqual(d.maxForwardSpeedKmh, s.maxForwardSpeedKmh);
-            Assert.AreEqual(d.maxSteerAngle, s.maxSteerAngle);
+            CarData starter = Cars.Default;
+            VehicleHandling h = starter.Handling;
+            Assert.AreEqual("Car_RealSedan", starter.ModelPrefab.name);
+            Assert.AreEqual(0, starter.Price);
+            Assert.IsTrue(starter.OwnedByDefault);
+            Assert.That(h.mass, Is.InRange(1000f, 1600f), "family-sedan weight");
+            Assert.That(h.maxForwardSpeedKmh, Is.InRange(50f, 70f), "a modest top speed for a starter");
+            Assert.That(h.maxSteerAngle, Is.InRange(30f, 40f));
+            Assert.LessOrEqual(h.motorTorque / h.mass, 1.6f, "no faster than any other car");
         }
     }
 }

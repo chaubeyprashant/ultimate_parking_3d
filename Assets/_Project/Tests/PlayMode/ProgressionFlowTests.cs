@@ -189,33 +189,34 @@ namespace UltimateCarParking.Tests
             Assert.AreEqual("sedan", garage.SelectedCar.CarId);
             Assert.AreEqual("SELECTED", ui.ActionText);
 
-            ui.Step(1);   // → Volt Hatch, 750
+            ui.Step(1);   // → the next car up the price ladder (the cheapest one still to buy)
             yield return null;
             CarData hatch = ui.Shown;
-            Assert.AreEqual("hatch", hatch.CarId);
+            Assert.AreEqual(garage.Catalog.Get(1).CarId, hatch.CarId);
             StringAssert.StartsWith("BUY", ui.ActionText);
             Assert.AreEqual(PurchaseResult.Purchased, garage.Buy(hatch));
             Assert.IsTrue(garage.Select(hatch));
             yield return null;
             Assert.AreEqual("SELECTED", ui.ActionText);
-            Assert.AreEqual(250, garage.Coins);
+            Assert.AreEqual(1000 - hatch.Price, garage.Coins);
 
-            ui.Step(1);   // → Apex GT, 2000: unaffordable
+            ui.Step(1);   // → the next car up: dearer than the coins left, so unaffordable
+            Assert.Greater(ui.Shown.Price, 1000 - hatch.Price, "the next car costs more than the remaining coins");
             yield return null;
             Assert.AreEqual(PurchaseResult.NotEnoughCoins, garage.Buy(ui.Shown));
-            Assert.AreEqual(250, garage.Coins);
+            Assert.AreEqual(1000 - hatch.Price, garage.Coins);
 
             SaveManager restarted = SaveManager.Initialize(savePath);
-            Assert.AreEqual(250, restarted.Data.coins);
-            Assert.AreEqual("hatch", restarted.Data.selectedCarId);
-            CollectionAssert.Contains(restarted.Data.ownedCarIds, "hatch");
+            Assert.AreEqual(1000 - hatch.Price, restarted.Data.coins);
+            Assert.AreEqual(hatch.CarId, restarted.Data.selectedCarId);
+            CollectionAssert.Contains(restarted.Data.ownedCarIds, hatch.CarId);
             CollectionAssert.DoesNotContain(restarted.Data.ownedCarIds, "sport");
 
             LevelSelection.Request(Levels().Get(0), Levels());
             yield return Open(SceneNames.Gameplay);
             yield return WaitFor(() => LevelLoader.Instance != null && LevelLoader.Instance.Vehicle != null, 5f, "car spawned");
             GameObject spawned = LevelLoader.Instance.Vehicle.gameObject;
-            Debug.Log($"[Test] Garage: bought + selected {hatch.DisplayName}, 250 coins left; after restart Gameplay spawned '{spawned.name}' ({LevelLoader.Instance.Vehicle.Body.mass} kg)");
+            Debug.Log($"[Test] Garage: bought + selected {hatch.DisplayName}, {1000 - hatch.Price} coins left; after restart Gameplay spawned '{spawned.name}' ({LevelLoader.Instance.Vehicle.Body.mass} kg)");
             Assert.AreEqual(hatch.ModelPrefab.name, spawned.name);
             Assert.AreEqual(hatch.Handling.mass, LevelLoader.Instance.Vehicle.Body.mass, 0.01f);
             if (hatch.PaintMaterial != null) Assert.AreSame(hatch.PaintMaterial, spawned.GetComponent<CarPaint>().CurrentPaint);

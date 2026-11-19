@@ -1,6 +1,8 @@
 using UnityEngine;
 using UltimateCarParking.CameraSystem;
 using UltimateCarParking.Cars;
+using UltimateCarParking.Conditions;
+using UltimateCarParking.DebugTools;
 using UltimateCarParking.Environment;
 using UltimateCarParking.Save;
 using UltimateCarParking.Parking;
@@ -21,6 +23,20 @@ namespace UltimateCarParking.Levels
     public sealed class LevelLoader : MonoBehaviour
     {
         private AsyncOperationHandle<GameObject> arenaHandle;
+
+        /// <summary>Country-arena Addressables handles currently held. Must return to 0 when the level scene is left (leak guard).</summary>
+        public static int OpenArenaHandles { get; private set; }
+
+        private void ReleaseArena()
+        {
+            if (!arenaHandle.IsValid()) return;
+            Addressables.Release(arenaHandle);
+            arenaHandle = default;
+            OpenArenaHandles = Mathf.Max(0, OpenArenaHandles - 1);
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => OpenArenaHandles = 0;
 
         [Header("Levels")]
         [SerializeField] private LevelCatalog catalog;
@@ -68,7 +84,8 @@ namespace UltimateCarParking.Levels
 
         private void OnDestroy()
         {
-            if (Instance == this) Instance = null;
+            // Leaving the level: free the country arena (its bundle was staying in memory for the whole session).
+            if (Instance == this) { if (conditions != null) conditions.Clear(); ReleaseArena(); Instance = null; }
         }
 
         private void Start()
@@ -119,6 +136,9 @@ namespace UltimateCarParking.Levels
             return Build(level, carData, carPrefab, null, default);
         }
 
+        private ConditionsApplier conditions;
+        public ConditionsApplier Conditions => conditions;
+
         private Coroutine pendingArena;
 
         /// <summary>True while a country arena is still loading from its asset pack.</summary>
@@ -133,6 +153,7 @@ namespace UltimateCarParking.Levels
 
         private System.Collections.IEnumerator LoadArenaThenBuild(LevelData level, CarData carData, GameObject carPrefab)
         {
+            PerfLog.Mark("level requested");
             // On-demand asset packs must be on the device first; installed packs finish this step instantly.
             while (true)
             {
@@ -152,9 +173,11 @@ namespace UltimateCarParking.Levels
                 while (!retryRequested && !cancelRequested) yield return null;
                 if (cancelRequested) { downloadStatus = ""; downloadFailed = false; pendingArena = null; LoadCancelled?.Invoke(); UltimateCarParking.UI.ScreenTransition.LoadScene(LevelSelection.ReturnScene); yield break; }
             }
+            PerfLog.Mark("pack ready (download check)");
             downloadStatus = "Loading arena\u2026";
             AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(level.EnvironmentAddress);
             yield return handle;
+            PerfLog.Mark("arena asset loaded");
             pendingArena = null;
             if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result == null)
             {
@@ -203,6 +226,7 @@ namespace UltimateCarParking.Levels
         private bool Build(LevelData level, CarData carData, GameObject carPrefab, GameObject arena, AsyncOperationHandle<GameObject> handle)
         {
             bool ok = BuildInner(level, carData, carPrefab, arena, handle);
+            PerfLog.End("level built (arena + car + mission)");
             downloadStatus = "";
             return ok;
         }
@@ -215,7 +239,9 @@ namespace UltimateCarParking.Levels
             if (arena != null)
             {
                 arenaHandle = handle;
+                OpenArenaHandles++;
                 Environment = Instantiate(arena, Vector3.zero, Quaternion.identity);
+                PerfLog.Mark("arena instantiated");
             }
             else if (level.Theme != null)
             {
@@ -252,6 +278,11 @@ namespace UltimateCarParking.Levels
                 collisions = car.AddComponent<CollisionHandler>();
             }
 
+            // Weather / time of day for this mission (no-op for Clear). Undone when the level is left.
+            if (conditions == null && !TryGetComponent(out conditions)) conditions = gameObject.AddComponent<ConditionsApplier>();
+            conditions.PrecipitationScale = Quality.QualityService.Initialized && Quality.QualityService.ActiveTier == Quality.QualityTier.Low ? 0.5f : 1f;
+            conditions.Apply(level.Condition, controller, vehicleCamera != null ? vehicleCamera.transform : null);
+
             if (levelManager.Mission != null) levelManager.Mission.Configure(null, zoneMarkerMaterial);
 
             if (vehicleCamera != null)
@@ -269,7 +300,8 @@ namespace UltimateCarParking.Levels
         {
             if (pendingArena != null) { StopCoroutine(pendingArena); pendingArena = null; }
             if (Environment != null) Destroy(Environment);
-            if (arenaHandle.IsValid()) { Addressables.Release(arenaHandle); arenaHandle = default; }
+            ReleaseArena();
+            if (conditions != null) conditions.Clear();
             if (Vehicle != null) Destroy(Vehicle.gameObject);
             Environment = null;
             Vehicle = null;

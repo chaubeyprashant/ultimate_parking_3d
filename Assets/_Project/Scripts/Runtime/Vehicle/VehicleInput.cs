@@ -21,7 +21,14 @@ namespace UltimateCarParking.Vehicle
         [Tooltip("Seconds for a held throttle key to go from 0 to full. Keys are digital; the ramp makes them act like a pedal.")]
         [SerializeField, Min(0f)] private float keyboardThrottleRampTime = 0.3f;
 
+        [Header("On-screen pedals")]
+        [Tooltip("Seconds for a held Gas / Reverse button to ramp from 0 to full. The buttons are digital; a ramp makes launches smooth and controllable.")]
+        [SerializeField, Min(0f)] private float mobileThrottleRiseTime = 0.45f;
+        [Tooltip("Seconds to ramp back to 0 when the button is released (short, so the car still answers quickly).")]
+        [SerializeField, Min(0f)] private float mobileThrottleFallTime = 0.45f;
+
         private float keyboardThrottle;
+        private float mobileThrottleTarget;
         private float mobileThrottle;
         private float mobileSteering;
         private float mobileBrake;
@@ -48,7 +55,7 @@ namespace UltimateCarParking.Vehicle
         // ---- Mobile / UI input. Call these from on-screen buttons, sliders or a steering wheel. ----
 
         /// <summary>-1..1. For a pedal + gear UI pass <c>reverseGear ? -pedal : pedal</c>.</summary>
-        public void SetThrottle(float value) => mobileThrottle = Mathf.Clamp(value, -1f, 1f);
+        public void SetThrottle(float value) => mobileThrottleTarget = Mathf.Clamp(value, -1f, 1f);
 
         /// <summary>-1 (left) .. 1 (right).</summary>
         public void SetSteering(float value) => mobileSteering = Mathf.Clamp(value, -1f, 1f);
@@ -61,6 +68,7 @@ namespace UltimateCarParking.Vehicle
         /// <summary>Releases every mobile control (e.g. when the app is paused or a level ends).</summary>
         public void ResetMobileInput()
         {
+            mobileThrottleTarget = 0f;
             mobileThrottle = 0f;
             mobileSteering = 0f;
             mobileBrake = 0f;
@@ -102,6 +110,11 @@ namespace UltimateCarParking.Vehicle
             keyboardThrottle = keyboardThrottleRampTime <= 0f
                 ? keyThrottleTarget
                 : Mathf.MoveTowards(keyboardThrottle, keyThrottleTarget, Time.deltaTime / keyboardThrottleRampTime);
+
+            // Ramp the digital on-screen pedal: slowly up (smooth launch), quicker down; crossing zero uses the quick rate.
+            bool rising = Mathf.Abs(mobileThrottleTarget) > Mathf.Abs(mobileThrottle) && (mobileThrottle == 0f || Mathf.Sign(mobileThrottleTarget) == Mathf.Sign(mobileThrottle));
+            float seconds = rising ? mobileThrottleRiseTime : mobileThrottleFallTime;
+            mobileThrottle = seconds <= 0f ? mobileThrottleTarget : Mathf.MoveTowards(mobileThrottle, mobileThrottleTarget, Time.deltaTime / seconds);
 
             Throttle = Mathf.Clamp(keyboardThrottle + mobileThrottle, -1f, 1f);
             Steering = Mathf.Clamp(keySteer + mobileSteering, -1f, 1f);

@@ -47,8 +47,18 @@ namespace UltimateCarParking.Levels
 
         /// <summary>Seconds left, or +∞ when the level has no time limit.</summary>
         public float RemainingSeconds => Level != null && Level.HasTimeLimit
-            ? Mathf.Max(0f, Level.TimeLimitSeconds - ElapsedSeconds)
+            ? Mathf.Max(0f, Level.TimeLimitSeconds + ExtraSeconds - ElapsedSeconds)
             : float.PositiveInfinity;
+
+        /// <summary>Seconds added by a rewarded "+30 seconds" continue this attempt (0 otherwise).</summary>
+        public float ExtraSeconds { get; private set; }
+
+        /// <summary>True once the continue has been used this attempt (it can be used once).</summary>
+        public bool ContinueUsed { get; private set; }
+
+        /// <summary>A time-up failure that can still be continued.</summary>
+        public bool CanContinueAfterTimeUp => State == LevelState.Failed && !ContinueUsed
+            && LastResult.HasValue && LastResult.Value.FailReason == FailReason.TimeUp;
 
         public bool HasNextLevel => loader != null && loader.Catalog != null && Level != null && loader.Catalog.Next(Level) != null;
 
@@ -96,6 +106,8 @@ namespace UltimateCarParking.Levels
             Vehicle = vehicle;
             collisionHandler = collisions;
             ElapsedSeconds = 0f;
+            ExtraSeconds = 0f;
+            ContinueUsed = false;
             LastResult = null;
             FailDetail = "";
 
@@ -126,8 +138,11 @@ namespace UltimateCarParking.Levels
             if (collisionHandler != null) collisionHandler.Counting = true;
             SetState(LevelState.Playing);
             mission.Run();
-            if (Level.RoadDirection == WorldTour.RoadDirection.LeftHand)
-                mission.RaiseNotice(UltimateCarParking.Environment.TrafficSide.KeepPrompt(Level.RoadDirection), false);
+            string notice = Level.RoadDirection == WorldTour.RoadDirection.LeftHand
+                ? UltimateCarParking.Environment.TrafficSide.KeepPrompt(Level.RoadDirection) : "";
+            string conditionHint = Conditions.ConditionProfiles.For(Level.Condition).Hint;
+            if (conditionHint.Length > 0) notice = notice.Length > 0 ? notice + "\n" + conditionHint : conditionHint;
+            if (notice.Length > 0) mission.RaiseNotice(notice, false);
             LevelStarted?.Invoke(Level);
             Debug.Log($"[Level] Started {Level.LevelId} ({Level.DisplayName})");
         }
@@ -143,9 +158,9 @@ namespace UltimateCarParking.Levels
             if (State != LevelState.Playing) return;
 
             ElapsedSeconds += Time.deltaTime;
-            if (Level.HasTimeLimit && ElapsedSeconds >= Level.TimeLimitSeconds)
+            if (Level.HasTimeLimit && ElapsedSeconds >= Level.TimeLimitSeconds + ExtraSeconds)
             {
-                ElapsedSeconds = Level.TimeLimitSeconds;
+                ElapsedSeconds = Level.TimeLimitSeconds + ExtraSeconds;
                 FailLevel(FailReason.TimeUp);
             }
         }
@@ -200,6 +215,25 @@ namespace UltimateCarParking.Levels
             if (validator != null && validator.Status != ParkingStatus.Parked) validator.SetArmed(false);
             SetState(state);
             Debug.Log($"[Level] {result}");
+        }
+
+        /// <summary>
+        /// Rewarded "+30 seconds": after a time-up failure, gives the attempt more time and resumes where it stopped
+        /// (same car position, same objective). Once per attempt. Returns false when it does not apply.
+        /// </summary>
+        public bool ContinueAfterTimeUp(float extraSeconds)
+        {
+            if (!CanContinueAfterTimeUp || extraSeconds <= 0f) return false;
+            if (!mission.Resume()) return false;
+            ContinueUsed = true;
+            ExtraSeconds += extraSeconds;
+            LastResult = null;
+            FailDetail = "";
+            if (Vehicle != null) Vehicle.ControlsEnabled = true;
+            if (collisionHandler != null) collisionHandler.Counting = true;
+            SetState(LevelState.Playing);
+            Debug.Log($"[Level] {Level.LevelId}: continued with +{extraSeconds:0}s");
+            return true;
         }
 
         /// <summary>Reloads the scene with the same level (resets every prop the car knocked over).</summary>

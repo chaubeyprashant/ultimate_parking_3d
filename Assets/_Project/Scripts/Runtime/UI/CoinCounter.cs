@@ -16,6 +16,9 @@ namespace UltimateCarParking.UI
 
         private void OnEnable()
         {
+            var plate = GetComponent<UnityEngine.UI.Image>();
+            if (plate != null) plate.color = new Color(1f, 0.82f, 0.16f, 1f);
+            if (label != null) label.color = new Color(0.07f, 0.08f, 0.09f, 1f);
             SaveManager.Current.Saved += OnSaved;
             target = SaveManager.Current.Data.coins;
             shown = target;

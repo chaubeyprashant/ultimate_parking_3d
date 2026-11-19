@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UltimateCarParking.Ads;
 using UltimateCarParking.Audio;
 using UltimateCarParking.Cars;
 using UltimateCarParking.Core;
@@ -37,6 +38,14 @@ namespace UltimateCarParking.UI
         [SerializeField] private SettingsPanel settingsPanel;
         [SerializeField] private TMP_Text carLabel;
         [SerializeField] private TMP_Text progressLabel;
+        [Tooltip("Optional rewarded 'free coins' chip: shown only when an ad is ready and the cooldown has passed.")]
+        [SerializeField] private Button freeCoinsButton;
+        [Header("World Tour hero card")]
+        [Tooltip("Live progress on the hero card: missions finished out of all missions.")]
+        [SerializeField] private TMP_Text tourProgressLabel;
+        [SerializeField] private WorldTour.CountryCatalog tourCatalog;
+        [Tooltip("The hero card; it breathes gently to draw the eye.")]
+        [SerializeField] private RectTransform heroCard;
         [SerializeField] private CanvasGroup[] introGroups = System.Array.Empty<CanvasGroup>();
 
         private void Awake()
@@ -48,6 +57,43 @@ namespace UltimateCarParking.UI
             if (garageButton != null) garageButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.Garage));
             if (settingsButton != null && settingsPanel != null) settingsButton.onClick.AddListener(settingsPanel.Open);
             if (featuredButton != null) featuredButton.onClick.AddListener(PlayFeatured);
+            if (freeCoinsButton != null) freeCoinsButton.onClick.AddListener(WatchFreeCoins);
+        }
+
+        private void OnEnable()
+        {
+            AdService.Initialize();
+            AdService.ShowBanner();
+            RefreshFreeCoins();
+        }
+
+        private void OnDisable() => AdService.HideBanner();
+
+        private float nextRefresh;
+
+        private void Update()
+        {
+            // The chip appears when an ad finishes loading or the cooldown ends; checked twice a second, not per frame.
+            if (freeCoinsButton == null || Time.unscaledTime < nextRefresh) return;
+            nextRefresh = Time.unscaledTime + 0.5f;
+            RefreshFreeCoins();
+            AdService.ShowBanner();
+        }
+
+        private void RefreshFreeCoins()
+        {
+            if (freeCoinsButton != null) freeCoinsButton.gameObject.SetActive(AdService.CanOfferRewarded(AdPlacement.FreeCoins));
+        }
+
+        private void WatchFreeCoins()
+        {
+            freeCoinsButton.interactable = false;
+            AdService.ShowRewarded(AdPlacement.FreeCoins, watched =>
+            {
+                if (watched) AdService.AddCoins(AdPolicy.FreeCoinsAmount);
+                freeCoinsButton.interactable = true;
+                RefreshFreeCoins();
+            });
         }
 
         private void Start()
@@ -77,8 +123,42 @@ namespace UltimateCarParking.UI
                 for (int i = 0; i < levels.Count; i++) if (ProgressionService.IsCompleted(save, levels.Get(i))) done++;
                 progressLabel.text = $"{done}  /  {levels.Count}    LEVELS      ·      {ProgressionService.TotalStars(save, levels)}  /  {levels.Count * 3}    STARS";
             }
+            RefreshTourProgress(save);
+            if (heroCard != null) StartCoroutine(Breathe(heroCard));
             for (int i = 0; i < introGroups.Length; i++)
                 if (introGroups[i] != null) StartCoroutine(Intro(introGroups[i], i * 0.08f));
+        }
+
+        /// <summary>World Tour missions finished and the total, from the save.</summary>
+        public static (int done, int total) TourProgress(WorldTour.CountryCatalog tour, SaveData save)
+        {
+            int done = 0, total = 0;
+            if (tour == null) return (0, 0);
+            for (int i = 0; i < tour.Count; i++)
+            {
+                WorldTour.CountryData c = tour.Get(i);
+                if (c == null) continue;
+                total += c.MissionCount;
+                done += Mathf.Min(c.MissionCount, WorldTour.WorldTourService.CompletedMissions(save, c));
+            }
+            return (done, total);
+        }
+
+        private void RefreshTourProgress(SaveData save)
+        {
+            if (tourProgressLabel == null) return;
+            (int done, int total) = TourProgress(tourCatalog, save);
+            tourProgressLabel.text = total > 0 ? $"{done} / {total} DONE" : "";
+        }
+
+        private static IEnumerator Breathe(RectTransform card)
+        {
+            while (card != null)
+            {
+                float k = 1f + 0.012f * Mathf.Sin(Time.unscaledTime * 2.2f);   // a slow 1.2% swell
+                card.localScale = new Vector3(k, k, 1f);
+                yield return null;
+            }
         }
 
         /// <summary>The level Play starts: the furthest unlocked campaign level (the next one to beat).</summary>

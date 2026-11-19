@@ -23,7 +23,8 @@ namespace UltimateCarParking.Core
 
         private IEnumerator Boot()
         {
-            Application.targetFrameRate = targetFrameRate;
+            // The quality service owns the frame rate on device (tier, player choice, thermals); this is only the fallback.
+            if (!UltimateCarParking.Quality.QualityService.Initialized) Application.targetFrameRate = targetFrameRate;
             if (keepScreenOn) Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
             if (string.IsNullOrEmpty(firstScene) || !Application.CanStreamedLevelBeLoaded(firstScene))

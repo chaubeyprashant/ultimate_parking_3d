@@ -39,7 +39,7 @@ namespace UltimateCarParking.Tests
             Assert.IsTrue(ui.PanelOpen);
             Assert.AreEqual("PLAYING AS GUEST", ui.StatusText);
             Assert.IsTrue(ui.GoogleButtonShown);
-            Assert.IsFalse(ui.SignOutShown);
+            Assert.IsTrue(ui.SignOutShown, "sign out is available for a guest too");
 
             var signIn = AuthService.SignInWithGoogle();
             while (!signIn.IsCompleted) yield return null;
@@ -52,7 +52,16 @@ namespace UltimateCarParking.Tests
             var signOut = AuthService.SignOut();
             while (!signOut.IsCompleted) yield return null;
             yield return null;
+            Assert.AreEqual(AuthState.SignedOut, AuthService.State);
+            Assert.AreEqual("SIGN IN", ui.AccountText);
+            var gate = Object.FindAnyObjectByType<SignInGate>();
+            Assert.IsNotNull(gate);
+            Assert.IsTrue(gate.IsShowing, "sign out opens the sign-in screen");
+            var guest = AuthService.ContinueAsGuest();
+            while (!guest.IsCompleted) yield return null;
+            yield return null;
             Assert.AreEqual("GUEST  ·  SIGN IN", ui.AccountText);
+            Assert.IsFalse(gate.IsShowing);
             ui.Close();
             Assert.IsFalse(ui.PanelOpen);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UltimateCarParking.Ads;
 using UltimateCarParking.Audio;
 using UltimateCarParking.Core;
 using UltimateCarParking.Environment;
@@ -42,6 +43,9 @@ namespace UltimateCarParking.UI
         public int CurrentTab => currentTab;
         public IReadOnlyList<LevelCard> Cards => cards;
         public int SectionCount => sections.Count;
+
+        private void OnEnable() { AdService.Initialize(); AdService.ShowBanner(); }
+        private void OnDisable() => AdService.HideBanner();
 
         private void Awake()
         {

@@ -63,15 +63,18 @@ namespace UltimateCarParking.Tests
         }
 
         [UnityTest]
-        public IEnumerator Sign_Out_Returns_To_A_New_Guest()
+        public IEnumerator Sign_Out_Returns_To_The_Sign_In_Screen_Then_A_New_Guest()
         {
             yield return Wait(AuthService.Initialize());
             yield return Wait(AuthService.SignInWithGoogle());
             string googleUid = AuthService.User.Uid;
             yield return Wait(AuthService.SignOut());
+            Assert.AreEqual(AuthState.SignedOut, AuthService.State);
+            Assert.IsNull(AuthService.User);
+            Assert.AreEqual(1, google.SignOuts, "Google account choice cleared");
+            yield return Wait(AuthService.ContinueAsGuest());
             Assert.AreEqual(AuthState.Guest, AuthService.State);
             Assert.AreNotEqual(googleUid, AuthService.User.Uid);
-            Assert.AreEqual(1, google.SignOuts, "Google account choice cleared");
         }
 
         [UnityTest]

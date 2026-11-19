@@ -27,6 +27,8 @@ namespace UltimateCarParking.Save
         public List<string> countryRewardIds = new List<string>();
         /// <summary>Per-car upgrade levels (cars without an entry are stock).</summary>
         public List<CarUpgradeState> carUpgrades = new List<CarUpgradeState>();
+        /// <summary>Ad frequency state (see AdPolicy). Missing in older saves = defaults.</summary>
+        public AdState ads = new AdState();
         public long lastSavedUtcTicks;
 
         public CarUpgradeState FindUpgrades(string carId)
@@ -62,6 +64,21 @@ namespace UltimateCarParking.Save
             levels.Add(p);
             return p;
         }
+    }
+
+    [Serializable]
+    public sealed class AdState
+    {
+        public string dayKey = "";
+        public int interstitialsToday;
+        public int freeCoinsToday;
+        public long lastInterstitialTicks;
+        public long lastRewardedTicks;
+        public long lastFreeCoinsTicks;
+        public int levelsSinceInterstitial;
+        public int consecutiveFails;
+        public string failLevelId = "";
+        public long lastFailTicks;
     }
 
     [Serializable]

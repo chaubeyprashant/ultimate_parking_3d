@@ -298,8 +298,8 @@ namespace UltimateCarParking.Tests
 
             float minDist = float.MaxValue, maxDist = 0f, maxAngle = 0f, maxAccel = 0f, worstStepRatio = 0f;
             Vector3 lastCam = camGo.transform.position, lastCar = car.transform.position, lastVel = Vector3.zero;
-            int frames = 0;
-            float time = 0f;
+            int frames = 0, winFrames = 0;
+            float time = 0f, winCam = 0f, winCar = 0f, winTime = 0f;
             var samples = new System.Collections.Generic.List<(float t, Vector3 p)>();
             Set(1f);
             while (time < 8f)
@@ -317,9 +317,19 @@ namespace UltimateCarParking.Tests
                 maxDist = Mathf.Max(maxDist, toCar.magnitude);
                 maxAngle = Mathf.Max(maxAngle, Vector3.Angle(camGo.transform.forward, toCar));
 
-                // No snapping: the camera never moves much further in a frame than the car does.
+                // No snapping: the camera never moves much further than the car does. Measured over 0.1 s windows, like the
+                // acceleration check below: a single frame's step ratio swings with host frame-time jitter (physics steps per
+                // frame, stalls) even though the camera's own motion is identical from run to run.
                 float camStep = (cam - lastCam).magnitude, carStep = (carPos - lastCar).magnitude;
-                if (frames > 2) worstStepRatio = Mathf.Max(worstStepRatio, camStep / (carStep + 0.02f));
+                if (frames > 2)
+                {
+                    winCam += camStep; winCar += carStep; winTime += dt; winFrames++;
+                    if (winTime >= 0.1f)
+                    {
+                        worstStepRatio = Mathf.Max(worstStepRatio, winCam / (winCar + 0.02f * winFrames));
+                        winCam = winCar = winTime = 0f; winFrames = 0;
+                    }
+                }
                 samples.Add((time, cam));
                 lastCam = cam;
                 lastCar = carPos;

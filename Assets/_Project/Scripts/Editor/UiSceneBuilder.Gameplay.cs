@@ -169,7 +169,8 @@ namespace UltimateCarParking.EditorTools
             Fill(controls, 0, 0, 0, 0);
             HoldButton left = HoldControl(controls, "SteerLeft", "Circle", new Vector2(0f, 0f), new Vector2(170f, 170f), new Vector2(200f, 200f), icon: "ChevronLeft", label: null);
             HoldButton right = HoldControl(controls, "SteerRight", "Circle", new Vector2(0f, 0f), new Vector2(410f, 170f), new Vector2(200f, 200f), icon: "ChevronRight", label: null);
-            HoldButton gas = HoldControl(controls, "Gas", "RoundRect", new Vector2(1f, 0f), new Vector2(-160f, 200f), new Vector2(190f, 300f), icon: null, label: "GAS");
+            HoldButton gas = HoldControl(controls, "Gas", "RoundRect", new Vector2(1f, 0f), new Vector2(-140f, 210f), new Vector2(200f, 320f), icon: null, label: "GAS",
+                idle: new Color(0.71f, 1f, 0.18f, 1f), held: new Color(0.95f, 1f, 0.55f, 1f), labelColor: new Color(0.07f, 0.08f, 0.09f));
             HoldButton brake = HoldControl(controls, "BrakeReverse", "RoundRect", new Vector2(1f, 0f), new Vector2(-390f, 150f), new Vector2(200f, 200f), icon: null, label: "BRAKE\n<size=60%>REVERSE</size>");
             HoldButton handbrake = HoldControl(controls, "Handbrake", "Pill", new Vector2(1f, 0f), new Vector2(-390f, 330f), new Vector2(200f, 74f), icon: null, label: "<size=80%>HANDBRAKE</size>");
             var mobile = controls.gameObject.AddComponent<MobileControls>();
@@ -221,7 +222,7 @@ namespace UltimateCarParking.EditorTools
             Button pSettings = PillButton(pauseBody, "Settings", "SETTINGS", false, new Vector2(70f, 180f), new Vector2(560f, 88f), 36f);
             Button pLevels = PillButton(pauseBody, "Levels", "LEVELS", false, new Vector2(70f, 76f), new Vector2(560f, 88f), 36f);
 
-            CanvasGroup completePanel = Modal(panels, "CompletePanel", new Vector2(820f, 660f), "PARKED", "LEVEL COMPLETE", out RectTransform cBody);
+            CanvasGroup completePanel = Modal(panels, "CompletePanel", new Vector2(820f, 760f), "PARKED", "LEVEL COMPLETE", out RectTransform cBody);
             var stars = new Image[3];
             for (int i = 0; i < 3; i++)
             {
@@ -234,14 +235,20 @@ namespace UltimateCarParking.EditorTools
             TMP_Text cCoins = StatColumn(cBody, "Coins", "COINS", 230f);
             cCoins.color = UiPalette.Gold;
             TMP_Text badge = Label(cBody, "Badge", "NEW BEST", true, 26f, UiPalette.Lime, TextAlignmentOptions.Center, 10f);
-            Place(badge.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 150f), new Vector2(400f, 36f));
+            Place(badge.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 244f), new Vector2(400f, 36f));
+            Button cDouble = PillButton(cBody, "DoubleCoins", "WATCH AD: DOUBLE COINS", false, new Vector2(110f, 148f), new Vector2(600f, 80f), 28f);
+            cDouble.GetComponentInChildren<TMP_Text>().color = UiPalette.Gold;
+            cDouble.gameObject.SetActive(false);
             Button cLevels = PillButton(cBody, "Levels", "LEVELS", false, new Vector2(50f, 40f), new Vector2(220f, 92f), 32f);
             Button cRetry = PillButton(cBody, "Retry", "RETRY", false, new Vector2(300f, 40f), new Vector2(220f, 92f), 32f);
             Button cNext = PillButton(cBody, "Next", "NEXT", true, new Vector2(550f, 40f), new Vector2(220f, 92f), 38f);
 
-            CanvasGroup failPanel = Modal(panels, "FailPanel", new Vector2(700f, 520f), "FAILED", "LEVEL FAILED", out RectTransform fBody);
+            CanvasGroup failPanel = Modal(panels, "FailPanel", new Vector2(700f, 640f), "FAILED", "LEVEL FAILED", out RectTransform fBody);
             TMP_Text reason = Label(fBody, "Reason", "TIME'S UP", true, 60f, UiPalette.Danger, TextAlignmentOptions.Center, 3f);
             Place(reason.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0f, -220f), new Vector2(640f, 80f));
+            Button fContinue = PillButton(fBody, "Continue", "WATCH AD: +30 SECONDS", false, new Vector2(70f, 270f), new Vector2(560f, 92f), 30f);
+            fContinue.GetComponentInChildren<TMP_Text>().color = UiPalette.Gold;
+            fContinue.gameObject.SetActive(false);
             Button fRetry = PillButton(fBody, "Retry", "RETRY", true, new Vector2(70f, 150f), new Vector2(560f, 100f), 44f);
             Button fLevels = PillButton(fBody, "Levels", "LEVELS", false, new Vector2(70f, 40f), new Vector2(560f, 88f), 36f);
 
@@ -274,6 +281,8 @@ namespace UltimateCarParking.EditorTools
             Wire(ui, "failReason", reason);
             Wire(ui, "failRetryButton", fRetry);
             Wire(ui, "failLevelsButton", fLevels);
+            Wire(ui, "doubleCoinsButton", cDouble);
+            Wire(ui, "continueButton", fContinue);
 
             var guideGo = new GameObject("ParkingGuide");
             var guideComp = guideGo.AddComponent<ParkingGuide>();
@@ -313,17 +322,19 @@ namespace UltimateCarParking.EditorTools
         private static TMP_Text StatColumn(RectTransform parent, string name, string caption, float x)
         {
             TMP_Text cap = Label(parent, name + "Caption", caption, false, 20f, UiPalette.TextSecondary, TextAlignmentOptions.Center, 8f);
-            Place(cap.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 290f), new Vector2(200f, 30f));
+            Place(cap.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 380f), new Vector2(200f, 30f));
             TMP_Text val = Label(parent, name + "Value", "-", true, 52f, UiPalette.TextPrimary, TextAlignmentOptions.Center);
-            Place(val.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 240f), new Vector2(220f, 60f));
+            Place(val.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0.5f), new Vector2(x, 330f), new Vector2(220f, 60f));
             return val;
         }
 
-        private static HoldButton HoldControl(RectTransform parent, string name, string sprite, Vector2 anchor, Vector2 pos, Vector2 size, string icon, string label)
+        private static HoldButton HoldControl(RectTransform parent, string name, string sprite, Vector2 anchor, Vector2 pos, Vector2 size, string icon, string label,
+            Color? idle = null, Color? held = null, Color? labelColor = null)
         {
-            Image bg = Img(parent, name, sprite, new Color(1f, 1f, 1f, 0.16f), sliced: sprite != "Circle", raycast: true);
+            Color idleColor = idle ?? new Color(1f, 1f, 1f, 0.16f);
+            Image bg = Img(parent, name, sprite, idleColor, sliced: sprite != "Circle", raycast: true);
             Place(bg.rectTransform, anchor, new Vector2(0.5f, 0.5f), pos, size);
-            Image ring = Img(bg.rectTransform, "Ring", sprite == "Circle" ? null : sprite + "Outline", new Color(1f, 1f, 1f, 0.35f));
+            Image ring = Img(bg.rectTransform, "Ring", sprite == "Circle" ? null : sprite + "Outline", new Color(0.07f, 0.08f, 0.09f, idle.HasValue ? 0.35f : 0.35f));
             if (sprite == "Circle") Object.DestroyImmediate(ring.gameObject);
             else Fill(ring.rectTransform, 0, 0, 0, 0);
             if (icon != null)
@@ -333,18 +344,22 @@ namespace UltimateCarParking.EditorTools
             }
             if (label != null)
             {
-                TMP_Text t = Label(bg.rectTransform, "Label", label, true, 40f, UiPalette.TextPrimary, TextAlignmentOptions.Center, 4f);
+                TMP_Text t = Label(bg.rectTransform, "Label", label, true, name == "Gas" ? 56f : 40f, labelColor ?? UiPalette.TextPrimary, TextAlignmentOptions.Center, 4f);
                 Fill(t.rectTransform, 0, 0, 0, 0);
             }
             var hold = bg.gameObject.AddComponent<HoldButton>();
             Wire(hold, "target", bg);
+            var so = new SerializedObject(hold);
+            so.FindProperty("idleColor").colorValue = idleColor;
+            so.FindProperty("heldColor").colorValue = held ?? new Color(0.71f, 1f, 0.18f, 0.55f);
+            so.ApplyModifiedPropertiesWithoutUndo();
             return hold;
         }
 
         /// <summary>Music / Sound / Steering sliders + DONE. Shared by the main menu and the pause menu.</summary>
         private static SettingsPanel BuildSettingsPanel(RectTransform parent)
         {
-            CanvasGroup group = Modal(parent, "SettingsPanel", new Vector2(820f, 600f), "SETTINGS", null, out RectTransform body);
+            CanvasGroup group = Modal(parent, "SettingsPanel", new Vector2(820f, 960f), "SETTINGS", null, out RectTransform body);
             (Slider s, TMP_Text v) Row(string caption, float y)
             {
                 TMP_Text cap = Label(body, caption + "Caption", caption, false, 24f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 6f);
@@ -357,7 +372,15 @@ namespace UltimateCarParking.EditorTools
             var music = Row("MUSIC", -210f);
             var sound = Row("SOUND", -300f);
             var steer = Row("STEERING", -390f);
-            Button done = PillButton(body, "Done", "DONE", true, new Vector2(130f, 40f), new Vector2(560f, 96f), 42f);
+            TMP_Text accCap = Label(body, "AccountCaption", "ACCOUNT", false, 24f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 6f);
+            Place(accCap.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(70f, -720f), new Vector2(200f, 40f));
+            TMP_Text accValue = Label(body, "AccountValue", "Guest (not signed in)", true, 26f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineRight);
+            Place(accValue.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(280f, -720f), new Vector2(480f, 44f));
+            Button gfxButton = PillButton(body, "GraphicsButton", "GRAPHICS: AUTO", false, new Vector2(130f, 370f), new Vector2(560f, 76f), 28f);
+            Button fpsButton = PillButton(body, "FrameRateButton", "FRAME RATE: AUTO", false, new Vector2(130f, 280f), new Vector2(560f, 76f), 28f);
+            Button accButton = PillButton(body, "AccountButton", "SIGN IN WITH GOOGLE", false, new Vector2(100f, 220f), new Vector2(270f, 76f), 26f);
+            Button signOut = PillButton(body, "SignOutButton", "SIGN OUT", false, new Vector2(390f, 220f), new Vector2(270f, 76f), 26f);
+            Button done = PillButton(body, "Done", "DONE", true, new Vector2(130f, 30f), new Vector2(560f, 96f), 42f);
             var panel = group.gameObject.AddComponent<SettingsPanel>();
             Wire(panel, "group", group);
             Wire(panel, "music", music.s);
@@ -367,6 +390,15 @@ namespace UltimateCarParking.EditorTools
             Wire(panel, "soundValue", sound.v);
             Wire(panel, "sensitivityValue", steer.v);
             Wire(panel, "closeButton", done);
+            Wire(panel, "graphicsButton", gfxButton);
+            Wire(panel, "graphicsLabel", gfxButton.GetComponentInChildren<TMP_Text>());
+            Wire(panel, "frameRateButton", fpsButton);
+            Wire(panel, "frameRateLabel", fpsButton.GetComponentInChildren<TMP_Text>());
+            Wire(panel, "accountValue", accValue);
+            Wire(panel, "accountButton", accButton);
+            Wire(panel, "accountButtonLabel", accButton.GetComponentInChildren<TMP_Text>());
+            Wire(panel, "signOutButton", signOut);
+            Wire(panel, "signOutLabel", signOut.GetComponentInChildren<TMP_Text>());
             group.gameObject.SetActive(true);   // SettingsPanel hides itself in Awake (so it is wired while active)
             return panel;
         }

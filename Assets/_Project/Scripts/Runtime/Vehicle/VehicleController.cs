@@ -46,6 +46,17 @@ namespace UltimateCarParking.Vehicle
         [SerializeField, Min(0f)] private float coastBrakeTorque = 120f;
         [Tooltip("Brake per wheel that holds the car still once it has stopped with no throttle.")]
         [SerializeField, Min(0f)] private float standstillBrakeTorque = 800f;
+        [Tooltip("Idle (no pedal) coast brake fades out between these speeds (km/h): wheels lock below ~3.5 km/h, which clamps the car at tyre-grip limit.")]
+        [SerializeField, Min(0.5f)] private float coastFadeStartKmh = 4.5f;
+        [SerializeField, Min(1f)] private float coastFadeEndKmh = 7f;
+        [Tooltip("Gentle stopping deceleration (m/s²) applied to the body below the fade-end speed with no pedal; tapers to 0 at a standstill.")]
+        [SerializeField, Min(0f)] private float rollOutDecel = 1.5f;
+        [Tooltip("Speed (km/h) at which the roll-out force has fully tapered in; below it the force fades to zero.")]
+        [SerializeField, Min(0.1f)] private float rollOutTaperKmh = 1.5f;
+        [Tooltip("Below this speed (km/h) the full standstill hold applies.")]
+        [SerializeField, Min(0.05f)] private float holdBelowKmh = 0.35f;
+        [Tooltip("Most the idle brake may change per second (N·m/s): keeps stops soft.")]
+        [SerializeField, Min(100f)] private float idleBrakeRamp = 2500f;
         [Tooltip("Below this speed an opposite throttle changes direction instead of braking.")]
         [SerializeField, Min(0f)] private float directionChangeSpeedKmh = 2f;
 
@@ -149,6 +160,7 @@ namespace UltimateCarParking.Vehicle
 
             ApplySteering(steering);
             ApplyDriveAndBrakes(throttle, brake, handbrake);
+            ApplyRollOutAssist(Mathf.Abs(throttle) > InputDeadzone || brake > 0.01f || handbrake);
             ApplyAntiRoll(frontLeft, frontRight);
             ApplyAntiRoll(rearLeft, rearRight);
 
@@ -236,6 +248,8 @@ namespace UltimateCarParking.Vehicle
         {
             float motor = 0f;
             float brake = brakeInput * brakeTorque;
+            // While a pedal is down, the eased idle brake restarts from the light coast brake (never from a stale standstill hold).
+            if (throttle > InputDeadzone || throttle < -InputDeadzone) idleBrake = coastBrakeTorque;
 
             if (!ControlsEnabled)
             {
@@ -263,8 +277,7 @@ namespace UltimateCarParking.Vehicle
             }
             else
             {
-                float idle = SpeedKmh < 1f ? standstillBrakeTorque : coastBrakeTorque;
-                brake = Mathf.Max(brake, idle);
+                brake = Mathf.Max(brake, EasedIdleBrake());
             }
 
             int driven = driveType == DriveType.AllWheelDrive ? 4 : 2;
@@ -287,6 +300,64 @@ namespace UltimateCarParking.Vehicle
                 rearLeft.motorTorque = 0f;
                 rearRight.motorTorque = 0f;
             }
+        }
+
+        private float idleBrake;
+        private float[] baseForwardStiff, baseSideStiff;
+        private float surfaceGrip = 1f;
+
+        /// <summary>Current tyre grip multiplier (1 = dry road; rain, snow and ice use less).</summary>
+        public float SurfaceGrip => surfaceGrip;
+
+        /// <summary>
+        /// Scales the forward and sideways tyre grip for a wet or icy road. 1 restores the stock handling. Works from the wheels'
+        /// original stiffness, so calling it repeatedly never compounds.
+        /// </summary>
+        public void SetSurfaceGrip(float scale)
+        {
+            scale = Mathf.Clamp(scale, 0.1f, 1.5f);
+            WheelCollider[] ws = Wheels();
+            if (ws[0] == null) return;
+            if (baseForwardStiff == null)
+            {
+                baseForwardStiff = new float[ws.Length]; baseSideStiff = new float[ws.Length];
+                for (int i = 0; i < ws.Length; i++) { baseForwardStiff[i] = ws[i].forwardFriction.stiffness; baseSideStiff[i] = ws[i].sidewaysFriction.stiffness; }
+            }
+            surfaceGrip = scale;
+            for (int i = 0; i < ws.Length; i++)
+            {
+                WheelFrictionCurve f = ws[i].forwardFriction; f.stiffness = baseForwardStiff[i] * scale; ws[i].forwardFriction = f;
+                WheelFrictionCurve sd = ws[i].sidewaysFriction; sd.stiffness = baseSideStiff[i] * scale; ws[i].sidewaysFriction = sd;
+            }
+        }
+
+        /// <summary>
+        /// The brake held while no pedal is pressed: the light coast brake at speed, faded out as the car slows (so the
+        /// wheels never lock at parking speed), then the full standstill hold once it has essentially stopped. Rate-limited.
+        /// </summary>
+        private float EasedIdleBrake()
+        {
+            float fade = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(coastFadeStartKmh, coastFadeEndKmh, SpeedKmh));
+            float target = SpeedKmh < holdBelowKmh ? standstillBrakeTorque : coastBrakeTorque * fade;
+            // Applying brake is rate-limited (soft); releasing it is immediate so it can never linger into the speed range where the wheels lock.
+            idleBrake = target < idleBrake ? target : Mathf.MoveTowards(idleBrake, target, idleBrakeRamp * Time.fixedDeltaTime);
+            return idleBrake;
+        }
+
+        /// <summary>
+        /// Soft stop with no pedal: below the fade speed the wheel brake is off (it locks the wheels), so a small body
+        /// force along the travel direction slows the car at <see cref="rollOutDecel"/>, tapering to zero as it stops.
+        /// </summary>
+        private void ApplyRollOutAssist(bool pedalActive)
+        {
+            if (pedalActive || !ControlsEnabled) return;
+            float speed = SpeedKmh;
+            if (speed >= coastFadeEndKmh || speed < holdBelowKmh) return;
+            float taper = Mathf.SmoothStep(0f, 1f, speed / rollOutTaperKmh);
+            // Fade the assist in over the last 2 km/h above its start speed so it joins the wheel-brake coast without a step.
+            taper *= Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(coastFadeEndKmh, coastFadeEndKmh - 2f, speed));
+            Vector3 along = transform.forward * Mathf.Sign(ForwardSpeedKmh);
+            body.AddForce(-along * (body.mass * rollOutDecel * taper), ForceMode.Force);
         }
 
         /// <summary>
