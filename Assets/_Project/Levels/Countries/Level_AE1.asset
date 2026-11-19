@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 9
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: 'You''re the valet. Pull the guest''s supercar up under the hotel canopy,
     hand over, then park it in the free guest bay. Smoothly: under 18 km/h, no harsh
     braking, no knocks.'
   objectives:
-  - rid: 2518988173726711832
+  - rid: 2518988183786750004
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 80
   threeStarMaxCollisions: 0
   twoStarTime: 110
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711832
+    - rid: 2518988183786750004
       type: {class: ValetParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Valet the guest's car
@@ -71,6 +73,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0
         standPosition: {x: 0, y: 0, z: 18.5}
         standYaw: 90
         standSize: {x: 3.2, y: 6.5}

@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Challenge_C09
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: C09
+  displayName: Snow Valet
+  levelNumber: 39
+  missionType: 9
+  roadDirection: 0
+  condition: 3
+  difficulty: 3
+  briefing: Challenge 9, Advanced. Snow and ice. Pick up the guest's car at the valet
+    stand on the lane, then park it in bay 6 smoothly. Harsh driving lowers the guest
+    rating.
+  objectives:
+  - rid: 2518988184230559758
+  theme: {fileID: 0}
+  props:
+  - prefab: {fileID: 1170038690869043270, guid: b769d425650b744a0b0905c12f777118, type: 3}
+    position: {x: -12.5, y: 0, z: 7.7}
+    yaw: 0
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.6}
+  spawnYaw: 90
+  targetPosition: {x: -9.5, y: 0, z: 7.5}
+  targetYaw: 0
+  targetSize: {x: 2.73, y: 5.95}
+  timeLimitSeconds: 180
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 144
+  threeStarMaxCollisions: 0
+  twoStarTime: 171
+  twoStarMaxCollisions: 1
+  scoreMode: 2
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 275
+  coinsPerStar: 80
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559758
+      type: {class: ValetParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: 'Valet: park the guest''s car'
+        position: {x: -9.5, y: 0, z: 7.5}
+        bayYaw: 0
+        size: {x: 2.73, y: 5.95}
+        direction: 0
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 1.5
+          holdDuration: 1.2
+          requireParkingBrake: 0
+        standPosition: {x: -2, y: 0, z: -1.6}
+        standYaw: 90
+        standSize: {x: 3.2, y: 6.5}
+        handoverSeconds: 2
+        speedLimitKmh: 15
+        speedingPerSecond: 10
+        harshAccel: 4.5
+        harshPerSecond: 15
+        perHit: 20

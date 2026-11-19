@@ -96,6 +96,8 @@ namespace UltimateCarParking.EditorTools
                 built++;
             }
             SortCatalogByPrice();
+            HandlingProfiles.Apply(AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath));   // Phase 2 chassis + per-car corrections
+            FleetSpecs.Apply(AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath));         // measured spec sheets for the garage
             FleetPricing.Apply(AssetDatabase.LoadAssetAtPath<CarCatalog>(CarFactory.CarCatalogPath));   // class bands + performance rank, never hand-set
             SortCatalogByPrice();                                                                      // list the garage from budget to premium
             AssetDatabase.SaveAssets();

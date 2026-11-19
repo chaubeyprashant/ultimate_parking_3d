@@ -7,7 +7,7 @@ namespace UltimateCarParking.Levels
     /// <see cref="Quality"/>: the mission's own 0..1 score (accuracy, time left, clearance, guest rating, ...) plus the
     /// same hit ceilings; the elapsed time is ignored.
     /// </summary>
-    public enum ScoreMode { TimeAndCollisions, Quality }
+    public enum ScoreMode { TimeAndCollisions, Quality, Parking }
 
     /// <summary>Per-level star rules: a time (or quality) and a collision ceiling for three stars and for two.</summary>
     public readonly struct StarThresholds
@@ -41,7 +41,8 @@ namespace UltimateCarParking.Levels
     {
         public static int Calculate(float elapsedSeconds, int collisions, StarThresholds t, float quality = 1f)
         {
-            if (t.Mode == ScoreMode.Quality)
+            // Parking (Phase 5): the realistic parking scorecard is the quality; same rule as Quality.
+            if (t.Mode == ScoreMode.Quality || t.Mode == ScoreMode.Parking)
             {
                 if (quality >= t.ThreeStarQuality && collisions <= t.ThreeStarMaxCollisions) return 3;
                 if (quality >= t.TwoStarQuality && collisions <= t.TwoStarMaxCollisions) return 2;

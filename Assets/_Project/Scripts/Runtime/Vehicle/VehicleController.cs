@@ -57,6 +57,20 @@ namespace UltimateCarParking.Vehicle
         [SerializeField, Min(0.05f)] private float holdBelowKmh = 0.35f;
         [Tooltip("Most the idle brake may change per second (N·m/s): keeps stops soft.")]
         [SerializeField, Min(100f)] private float idleBrakeRamp = 2500f;
+        [Tooltip("Steepest grade (rise / run) the standstill hold keeps the car still on; heavier cars and bigger wheels get a stronger hold.")]
+        [SerializeField, Range(0f, 0.6f)] private float holdGrade = 0.35f;
+
+        [Header("Pedal feel and driver aids")]
+        [Tooltip("Pedal → torque curve: 1 = linear, higher = gentler at part pedal for fine creeping (full pedal is unchanged).")]
+        [SerializeField, Range(1f, 2.5f)] private float throttleCurve = 1.5f;
+        [Tooltip("Anti-lock brakes: eases a wheel's brake when it starts to lock, so wet and icy stops stay straight and shorter.")]
+        [SerializeField] private bool antiLockBrakes = true;
+        [SerializeField, Range(0.05f, 1f)] private float absSlip = 0.2f;
+        [Tooltip("Traction control: trims a driven wheel's torque when it spins (wet roads, monster trucks, launches).")]
+        [SerializeField] private bool tractionControl = true;
+        [SerializeField, Range(0.05f, 1f)] private float tractionSlip = 0.5f;
+        [Tooltip("Strongest acceleration (m/s²) below parking speed; the limit fades out between 6 and 15 km/h. 0 = off.")]
+        [SerializeField, Min(0f)] private float launchAccel = 3.2f;
         [Tooltip("Below this speed an opposite throttle changes direction instead of braking.")]
         [SerializeField, Min(0f)] private float directionChangeSpeedKmh = 2f;
 
@@ -190,7 +204,46 @@ namespace UltimateCarParking.Vehicle
             if (body == null) body = GetComponent<Rigidbody>();
             body.mass = h.mass;
             body.centerOfMass = centerOfMass;
+            ConfigureChassis(h);
         }
+
+        /// <summary>
+        /// Per-car suspension, tyres and roll stiffness. Springs come from a natural frequency and damping ratio on
+        /// each wheel's share of the mass, so a heavy truck and a light sports car both ride as intended. Zero values
+        /// keep what the prefab has.
+        /// </summary>
+        private void ConfigureChassis(VehicleHandling h)
+        {
+            if (h.antiRoll > 0f) antiRollStiffness = h.antiRoll;
+            if (h.steerReturnSpeed > 0f) steerReturnSpeed = h.steerReturnSpeed;
+            if (h.launchAccel > 0f) launchAccel = h.launchAccel;
+            WheelCollider[] ws = Wheels();
+            if (ws[0] == null) return;
+            float corner = Mathf.Max(50f, h.mass * 0.25f);
+            foreach (WheelCollider w in ws)
+            {
+                if (h.suspensionTravel > 0f) w.suspensionDistance = h.suspensionTravel;
+                if (h.springHz > 0f)
+                {
+                    JointSpring sp = w.suspensionSpring;
+                    float omega = 2f * Mathf.PI * h.springHz;
+                    sp.spring = corner * omega * omega;
+                    float zeta = h.dampingRatio > 0f ? h.dampingRatio : 0.6f;
+                    sp.damper = 2f * zeta * Mathf.Sqrt(sp.spring * corner);
+                    sp.targetPosition = 0.5f;
+                    w.suspensionSpring = sp;
+                }
+                if (h.tireGrip > 0f) { WheelFrictionCurve f = w.forwardFriction; f.stiffness = h.tireGrip; w.forwardFriction = f; }
+                if (h.sideGrip > 0f) { WheelFrictionCurve f = w.sidewaysFriction; f.stiffness = h.sideGrip; w.sidewaysFriction = f; }
+            }
+            // Wet / icy grip scales from the new stock values.
+            baseForwardStiff = null;
+            if (!Mathf.Approximately(surfaceGrip, 1f)) SetSurfaceGrip(surfaceGrip);
+        }
+
+        public float SuspensionTravelMeters => frontLeft != null ? frontLeft.suspensionDistance : 0f;
+        public float AntiRollStiffness => antiRollStiffness;
+        public float HoldBrakeTorque => HoldTorque;
 
         public DriveType Drive => driveType;
         public float MotorTorque => motorTorque;
@@ -212,7 +265,7 @@ namespace UltimateCarParking.Vehicle
                 foreach (WheelCollider w in Wheels())
                 {
                     w.motorTorque = 0f;
-                    w.brakeTorque = standstillBrakeTorque;
+                    w.brakeTorque = HoldTorque;
                     w.steerAngle = 0f;
                 }
         }
@@ -261,7 +314,7 @@ namespace UltimateCarParking.Vehicle
                     brake = Mathf.Max(brake, throttle * brakeTorque);           // rolling backwards: brake first
                 else
                 {
-                    motor = throttle * motorTorque * SpeedLimitFactor(ForwardSpeedKmh, maxForwardSpeedKmh);
+                    motor = Shape(throttle) * motorTorque * SpeedLimitFactor(ForwardSpeedKmh, maxForwardSpeedKmh);
                     brake = Mathf.Max(brake, OverspeedBrake(ForwardSpeedKmh, maxForwardSpeedKmh));
                 }
             }
@@ -271,7 +324,7 @@ namespace UltimateCarParking.Vehicle
                     brake = Mathf.Max(brake, -throttle * brakeTorque);          // rolling forwards: brake first
                 else
                 {
-                    motor = throttle * reverseTorque * SpeedLimitFactor(-ForwardSpeedKmh, maxReverseSpeedKmh);
+                    motor = -Shape(-throttle) * reverseTorque * SpeedLimitFactor(-ForwardSpeedKmh, maxReverseSpeedKmh);
                     brake = Mathf.Max(brake, OverspeedBrake(-ForwardSpeedKmh, maxReverseSpeedKmh));
                 }
             }
@@ -281,7 +334,7 @@ namespace UltimateCarParking.Vehicle
             }
 
             int driven = driveType == DriveType.AllWheelDrive ? 4 : 2;
-            float perWheel = motor / driven;
+            float perWheel = LimitLaunch(motor) / driven;
             bool frontDriven = driveType != DriveType.RearWheelDrive;
             bool rearDriven = driveType != DriveType.FrontWheelDrive;
 
@@ -300,6 +353,50 @@ namespace UltimateCarParking.Vehicle
                 rearLeft.motorTorque = 0f;
                 rearRight.motorTorque = 0f;
             }
+            ApplyDriverAids(frontLeft, false);
+            ApplyDriverAids(frontRight, false);
+            ApplyDriverAids(rearLeft, handbrake);
+            ApplyDriverAids(rearRight, handbrake);
+        }
+
+        /// <summary>
+        /// Caps drive torque below parking speed to what gives <see cref="launchAccel"/> on this car, so a short tap of the
+        /// pedal moves a powerful car about as far as a modest one. The cap rises steeply from 6 km/h and is gone by 15 km/h.
+        /// </summary>
+        private float LimitLaunch(float motor)
+        {
+            if (launchAccel <= 0f || body == null || frontLeft == null) return motor;
+            float v = SpeedKmh;
+            if (v >= 15f) return motor;
+            float cap = body.mass * launchAccel * frontLeft.radius * (1f + 4f * Mathf.InverseLerp(6f, 15f, v));
+            return Mathf.Clamp(motor, -cap, cap);
+        }
+
+        /// <summary>Progressive pedal: gentler at part pedal (fine creeping), unchanged at full pedal.</summary>
+        private float Shape(float pedal) => Mathf.Pow(Mathf.Clamp01(pedal), throttleCurve);
+
+        /// <summary>Brake that keeps the stopped car still: the configured hold, or more for heavy cars on big wheels.</summary>
+        private float HoldTorque
+        {
+            get
+            {
+                if (body == null || frontLeft == null) return standstillBrakeTorque;
+                // Per-wheel torque to hold the car on a holdGrade slope, with a 30 % margin.
+                float needed = body.mass * 9.81f * holdGrade * frontLeft.radius * 0.25f * 1.3f;
+                return Mathf.Max(standstillBrakeTorque, needed);
+            }
+        }
+
+        /// <summary>ABS and traction control for one wheel, from its measured longitudinal slip.</summary>
+        private void ApplyDriverAids(WheelCollider w, bool handbrakeLocked)
+        {
+            if (!antiLockBrakes && !tractionControl) return;
+            if (!w.GetGroundHit(out WheelHit hit)) return;
+            float slip = Mathf.Abs(hit.forwardSlip);
+            if (antiLockBrakes && !handbrakeLocked && SpeedKmh > 3f && w.brakeTorque > coastBrakeTorque * 2f && slip > absSlip)
+                w.brakeTorque *= 0.45f;
+            if (tractionControl && Mathf.Abs(w.motorTorque) > 1f && w.brakeTorque <= coastBrakeTorque * 2f && slip > tractionSlip)
+                w.motorTorque *= 0.75f;   // gentle trim just past peak grip (extremum slip 0.4), not a cut
         }
 
         private float idleBrake;
@@ -338,9 +435,12 @@ namespace UltimateCarParking.Vehicle
         private float EasedIdleBrake()
         {
             float fade = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(coastFadeStartKmh, coastFadeEndKmh, SpeedKmh));
-            float target = SpeedKmh < holdBelowKmh ? standstillBrakeTorque : coastBrakeTorque * fade;
+            float hold = HoldTorque;
+            float target = SpeedKmh < holdBelowKmh ? hold : coastBrakeTorque * fade;
             // Applying brake is rate-limited (soft); releasing it is immediate so it can never linger into the speed range where the wheels lock.
-            idleBrake = target < idleBrake ? target : Mathf.MoveTowards(idleBrake, target, idleBrakeRamp * Time.fixedDeltaTime);
+            // The ramp scales with the hold so a heavy truck reaches its stronger hold as quickly as a light car.
+            float ramp = idleBrakeRamp * Mathf.Max(1f, hold / Mathf.Max(1f, standstillBrakeTorque));
+            idleBrake = target < idleBrake ? target : Mathf.MoveTowards(idleBrake, target, ramp * Time.fixedDeltaTime);
             return idleBrake;
         }
 

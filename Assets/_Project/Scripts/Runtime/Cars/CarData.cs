@@ -34,6 +34,9 @@ namespace UltimateCarParking.Cars
         [Header("Handling")]
         [SerializeField] private VehicleHandling handling = new VehicleHandling();
 
+        [Header("Spec sheet (measured, imported by FleetSpecs)")]
+        [SerializeField] private CarSpecs specs = new CarSpecs();
+
         public string CarId => carId;
         public string DisplayName => string.IsNullOrEmpty(displayName) ? carId : displayName;
         public string Tagline => tagline;
@@ -44,6 +47,7 @@ namespace UltimateCarParking.Cars
         public int Price => price;
         public bool OwnedByDefault => ownedByDefault;
         public VehicleHandling Handling => handling;
+        public CarSpecs Specs => specs ??= new CarSpecs();
 
         /// <summary>Applies paint and handling to a spawned instance of <see cref="ModelPrefab"/>.</summary>
         public void ApplyTo(GameObject instance)

@@ -187,6 +187,16 @@ namespace UltimateCarParking.EditorTools
             for (int i = 0; i < paintRenderers.Count; i++) pr.GetArrayElementAtIndex(i).objectReferenceValue = paintRenderers[i];
             pso.ApplyModifiedPropertiesWithoutUndo();
 
+            // Cockpit view: models with a modelled interior get the driver's eye just behind and above the steering wheel.
+            Transform steering = src.GetComponentsInChildren<Transform>(true)
+                .FirstOrDefault(t => t.name.IndexOf("steering", System.StringComparison.OrdinalIgnoreCase) >= 0 && t.GetComponentsInChildren<Renderer>(true).Length > 0);
+            if (steering != null)
+            {
+                Bounds sw = Combined(steering.GetComponentsInChildren<Renderer>(true));
+                Vector3 eye = Local(sw.center) + Vector3.up * lift + new Vector3(0f, 0.3f * Mathf.Max(0.6f, scale), -0.42f * Mathf.Max(0.6f, scale));
+                root.AddComponent<UltimateCarParking.Vehicle.CockpitMount>().eyeLocal = eye;
+            }
+
             PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
             Object.DestroyImmediate(root);
             Object.DestroyImmediate(src);

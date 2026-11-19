@@ -18,12 +18,13 @@ MonoBehaviour:
   missionType: 5
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: Rush hour. Drive up the avenue, turn into the car park and take the free
     bay before the clock runs out. You get 25 seconds from the entrance; every knock
     costs 3.
   objectives:
-  - rid: 2518988173726711837
-  - rid: 2518988173726711838
+  - rid: 2518988183786750009
+  - rid: 2518988183786750010
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -45,6 +46,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 60
   threeStarMaxCollisions: 0
   twoStarTime: 90
@@ -57,7 +59,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711837
+    - rid: 2518988183786750009
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Turn into the car park
@@ -66,7 +68,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TURN LEFT INTO THE CAR PARK
-    - rid: 2518988173726711838
+    - rid: 2518988183786750010
       type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Beat the clock to the free bay
@@ -81,5 +83,6 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0
         seconds: 25
         hitPenaltySeconds: 3

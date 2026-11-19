@@ -9,5 +9,6 @@ namespace UltimateCarParking.Core
         public const string LevelSelect = "LevelSelect";
         public const string WorldTour = "WorldTour";
         public const string Gameplay = "Gameplay";
+        public const string Career = "Career";
     }
 }

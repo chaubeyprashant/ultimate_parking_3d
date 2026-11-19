@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Academy_A06
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: A06
+  displayName: Parking Sensors
+  levelNumber: 6
+  missionType: 0
+  roadDirection: 0
+  condition: 0
+  difficulty: 1
+  briefing: Reverse toward the wall. The sensor counts down; stop when it reads under
+    1 m.
+  objectives:
+  - rid: 2518988184230559773
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: 18.5, y: 0, z: 6.5}
+  spawnYaw: 180
+  targetPosition: {x: 4.2, y: 0, z: 9.25}
+  targetYaw: 0
+  targetSize: {x: 2.8, y: 5.5}
+  timeLimitSeconds: 0
+  collisionLimit: -1
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 9999
+  threeStarMaxCollisions: 99
+  twoStarTime: 9999
+  twoStarMaxCollisions: 99
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 100
+  coinsPerStar: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559773
+      type: {class: TutorialObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Back up to the wall
+        action: 4
+        amount: 1

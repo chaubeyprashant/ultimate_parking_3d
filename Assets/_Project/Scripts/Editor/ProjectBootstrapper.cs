@@ -46,7 +46,7 @@ namespace UltimateCarParking.EditorTools
         public const string TestCatalogPath = TestLevelsDir + "/TestCatalog.asset";
 
         private static readonly string[] SceneOrder =
-            { SceneNames.Bootstrap, SceneNames.MainMenu, SceneNames.Garage, SceneNames.LevelSelect, SceneNames.WorldTour, SceneNames.Gameplay };
+            { SceneNames.Bootstrap, SceneNames.MainMenu, SceneNames.Garage, SceneNames.LevelSelect, SceneNames.WorldTour, SceneNames.Gameplay, SceneNames.Career };
 
         public static string[] ShippedScenes => SceneOrder.Select(ScenePath).ToArray();
         /// <summary>Arena scenes in Build Settings (only present when the real asset packs are imported).</summary>
@@ -78,6 +78,8 @@ namespace UltimateCarParking.EditorTools
                 RealGarageBuilder.Build();       // Phase D: Garage B1 level
                 DrivingSchoolBuilder.Build();    // missions: Chapter 1 environment (real props)
                 MissionLevelBuilder.BuildChapterOne();   // missions: levels 1-3 (standard / reverse / parallel)
+                ChallengeLevels.Build();         // Phase 5: 12 challenge levels appended after level 30 (same yard, templates)
+                CareerBuilder.Build();           // Phase 6: 5 career chapters over existing levels + Driving Academy lessons
             }
             if (File.Exists(ArenaPropFactory.SourceRoot + "/Mumbai/mum_bus.glb"))
                 MumbaiArenaBuilder.Build();          // India: Mumbai city arena + 3 missions
@@ -421,6 +423,7 @@ namespace UltimateCarParking.EditorTools
             var overlay = systems.AddComponent<LevelDebugOverlay>();
             var pso = new SerializedObject(progression);
             pso.FindProperty("levelManager").objectReferenceValue = manager;
+            pso.FindProperty("career").objectReferenceValue = AssetDatabase.LoadAssetAtPath<UltimateCarParking.Career.CareerCatalog>(CareerBuilder.CatalogPath);
             pso.ApplyModifiedPropertiesWithoutUndo();
 
             // Assets loaded after NewScene so the references survive the scene switch.
@@ -763,7 +766,8 @@ namespace UltimateCarParking.EditorTools
             if (prefab != null) Check(prefab.GetComponent<CollisionHandler>() != null, "CollisionHandler on car");
             Check(AssetDatabase.LoadAssetAtPath<GameObject>(TestLotPrefabPath) != null, "test lot environment prefab");
             var catalog = AssetDatabase.LoadAssetAtPath<LevelCatalog>(CatalogPath);
-            Check(catalog != null && catalog.Count == LevelDesigner.LevelCount, $"level catalog with {LevelDesigner.LevelCount} levels");
+            int expectedLevels = LevelDesigner.LevelCount + (AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null ? ChallengeLevels.Count : 0);
+            Check(catalog != null && catalog.Count == expectedLevels, $"level catalog with {expectedLevels} levels");
             if (catalog != null)
                 for (int i = 0; i < catalog.Count; i++)
                 {
@@ -844,7 +848,9 @@ namespace UltimateCarParking.EditorTools
             Check(Object.FindAnyObjectByType<VehicleController>() == null, "Gameplay has no baked car (the loader spawns it)");
             Check(Object.FindAnyObjectByType<ProgressionRecorder>() != null, "ProgressionRecorder in Gameplay");
             foreach (System.Type t in new[] { typeof(UltimateCarParking.UI.GameplayUiController), typeof(UltimateCarParking.UI.GameplayHud),
-                         typeof(UltimateCarParking.UI.MobileControls), typeof(UltimateCarParking.UI.ParkingGuide), typeof(UltimateCarParking.UI.SettingsPanel) })
+                         typeof(UltimateCarParking.UI.MobileControls), typeof(UltimateCarParking.UI.ParkingGuide), typeof(UltimateCarParking.UI.SettingsPanel),
+                         typeof(UltimateCarParking.UI.ControlsPanel), typeof(UltimateCarParking.UI.ControlLayout), typeof(UltimateCarParking.UI.SpeedGauge),
+                         typeof(UltimateCarParking.UI.SteeringWheel), typeof(UltimateCarParking.UI.ParkAssistView), typeof(UltimateCarParking.UI.HudLayout) })
             {
                 var comp = Object.FindAnyObjectByType(t, FindObjectsInactive.Include) as MonoBehaviour;
                 Check(comp != null, $"Gameplay {t.Name}");
@@ -857,7 +863,7 @@ namespace UltimateCarParking.EditorTools
 
             foreach (var (sceneName, type) in new[] { (SceneNames.MainMenu, typeof(UltimateCarParking.UI.MainMenuController)),
                          (SceneNames.LevelSelect, typeof(UltimateCarParking.UI.LevelSelectController)), (SceneNames.Garage, typeof(UltimateCarParking.UI.GarageController)),
-                         (SceneNames.WorldTour, typeof(UltimateCarParking.UI.WorldTourController)) })
+                         (SceneNames.WorldTour, typeof(UltimateCarParking.UI.WorldTourController)), (SceneNames.Career, typeof(UltimateCarParking.UI.CareerController)) })
             {
                 EditorSceneManager.OpenScene(ScenePath(sceneName), OpenSceneMode.Single);
                 var ctrl = Object.FindAnyObjectByType(type) as MonoBehaviour;

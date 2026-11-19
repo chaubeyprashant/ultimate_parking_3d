@@ -21,10 +21,12 @@ namespace UltimateCarParking.UI
         [SerializeField] private TMP_Text distanceLabel;
         [SerializeField] private Image distancePill;
         [SerializeField, Min(0.01f)] private float fadeSeconds = 0.15f;
+        [Tooltip("Panel background, tinted amber / red as the gap closes.")]
+        [SerializeField] private Image frame;
 
         private UltimateCarParking.Vehicle.VehicleController attachedTo;
 
-        public bool Showing => group != null && group.alpha > 0.5f;
+        public bool Showing => group != null && group.alpha > 0.05f;
         public RearViewCamera RearCamera => rearCamera;
         public string DistanceText => distanceLabel != null ? distanceLabel.text : "";
 
@@ -51,13 +53,24 @@ namespace UltimateCarParking.UI
             {
                 float target = show ? 1f : 0f;
                 group.alpha = Mathf.MoveTowards(group.alpha, target, Time.unscaledDeltaTime / fadeSeconds);
+                // Eased entrance: grows from 92 % as it fades in, so the panel arrives instead of popping.
+                float e = 1f - (1f - group.alpha) * (1f - group.alpha);
+                group.transform.localScale = Vector3.one * Mathf.Lerp(0.92f, 1f, e);
             }
             if (!show) return;
-            if (guides != null) guides.Refresh(rearCamera);
+            bool expert = AssistPolicy.Current == UltimateCarParking.Parking.AssistLevel.Expert;
+            if (guides != null)
+            {
+                if (guides.gameObject.activeSelf == expert) guides.gameObject.SetActive(!expert);
+                if (!expert) guides.Refresh(rearCamera);
+            }
+            if (distancePill != null && distancePill.gameObject.activeSelf == expert) distancePill.gameObject.SetActive(!expert);
             float d = rearCamera.RearDistance;
-            if (distanceLabel != null) distanceLabel.text = float.IsInfinity(d) ? "CLEAR" : $"{d:0.0} m";
-            if (distancePill != null)
-                distancePill.color = float.IsInfinity(d) || d > 2f ? UiPalette.Lime : d > 1f ? new Color(1f, 0.78f, 0.1f) : UiPalette.Danger;
+            if (distanceLabel != null) distanceLabel.text = float.IsInfinity(d) ? "CLEAR" : d <= 0.3f ? "STOP" : $"{d:0.0} m";
+            Color band = float.IsInfinity(d) || d > 2f ? UiPalette.Lime : d > 1f ? new Color(1f, 0.78f, 0.1f) : UiPalette.Danger;
+            if (distancePill != null) distancePill.color = band;
+            // The frame takes the warning colour too, readable at a glance without reading the number.
+            if (frame != null) frame.color = Color.Lerp(new Color(0.03f, 0.035f, 0.04f, 0.92f), band, float.IsInfinity(d) || d > 2f ? 0f : 0.55f);
             if (distanceLabel != null) distanceLabel.color = UiPalette.TextOnLime;
         }
     }

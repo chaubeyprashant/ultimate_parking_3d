@@ -18,12 +18,13 @@ MonoBehaviour:
   missionType: 6
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: "Drive past the kampung lane, then reverse all the way down it \u2014
     between the houses, barely wider than the car \u2014 and into the space at the
     end. Two scrapes allowed."
   objectives:
-  - rid: 2518988173726711865
-  - rid: 2518988173726711866
+  - rid: 2518988183786750037
+  - rid: 2518988183786750038
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -45,6 +46,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 90
   threeStarMaxCollisions: 0
   twoStarTime: 130
@@ -57,7 +59,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711865
+    - rid: 2518988183786750037
       type: {class: NarrowAlleyObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse down the lane
@@ -67,7 +69,7 @@ MonoBehaviour:
         goodClearance: 0.3
         maxScrapes: 2
         reverseThrough: 1
-    - rid: 2518988173726711866
+    - rid: 2518988183786750038
       type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Into the space at the end
@@ -82,4 +84,5 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         maxRearGap: 0.8

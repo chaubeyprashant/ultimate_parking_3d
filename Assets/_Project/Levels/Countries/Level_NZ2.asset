@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 11
   roadDirection: 1
   condition: 3
+  difficulty: 0
   briefing: 'Turn left into the narrow hillside lane, squeeze past the cones and
     park at the end. Snow and ice: grip is very low. Use gentle steering and braking.'
   objectives:
-  - rid: 2518988173726711976
-  - rid: 2518988173726711977
+  - rid: 2518988183786750148
+  - rid: 2518988183786750149
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 90
   threeStarMaxCollisions: 0
   twoStarTime: 130
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711976
+    - rid: 2518988183786750148
       type: {class: NarrowAlleyObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Down the lane
@@ -66,7 +68,7 @@ MonoBehaviour:
         goodClearance: 0.3
         maxScrapes: 2
         reverseThrough: 0
-    - rid: 2518988173726711977
+    - rid: 2518988183786750149
       type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park at the end
@@ -81,3 +83,4 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0

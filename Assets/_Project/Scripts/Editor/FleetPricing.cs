@@ -46,6 +46,19 @@ namespace UltimateCarParking.EditorTools
             return 0.30f * top + 0.40f * accel + 0.15f * brake + 0.15f * handling;
         }
 
+        /// <summary>
+        /// Garage prices locked on 2026-11-19 (the prices players see; handling work must not move them). A car listed
+        /// here keeps this price whatever its performance score; cars not listed are priced by class and rank.
+        /// </summary>
+        public static readonly Dictionary<string, int> Pinned = new Dictionary<string, int>
+        {
+            ["sedan"] = 0, ["hatch"] = 950, ["wagon"] = 3500, ["coupe"] = 8500,
+            ["suv"] = 13000, ["urban_10"] = 14650, ["bokaroo_67"] = 16350, ["fairheaven_lt_80"] = 18000,
+            ["phoenix455_71"] = 19650, ["tiara_gt_83"] = 21350, ["asti_stradale_89"] = 23000, ["roadster_00"] = 24650,
+            ["chapman_73"] = 26350, ["sport"] = 28000, ["monster_mammoth"] = 32000, ["monster_goliath"] = 36600,
+            ["saba_v12_95"] = 41200, ["cheetah_84"] = 45800, ["exterminator_00"] = 50400, ["f1_velocity"] = 55000,
+        };
+
         /// <summary>Price for a car's rank within its class (0 = weakest). Rounded to 50.</summary>
         public static int PriceAt(CarClass cls, int rank, int count)
         {
@@ -67,7 +80,7 @@ namespace UltimateCarParking.EditorTools
                 {
                     var so = new SerializedObject(ranked[r]);
                     so.FindProperty("carClass").enumValueIndex = (int)group.Key;
-                    so.FindProperty("price").intValue = PriceAt(group.Key, r, ranked.Count);
+                    so.FindProperty("price").intValue = Pinned.TryGetValue(ranked[r].CarId, out int pinned) ? pinned : PriceAt(group.Key, r, ranked.Count);
                     so.ApplyModifiedPropertiesWithoutUndo();
                     EditorUtility.SetDirty(ranked[r]);
                 }

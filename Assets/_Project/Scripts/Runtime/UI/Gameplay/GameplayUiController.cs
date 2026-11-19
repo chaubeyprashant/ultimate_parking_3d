@@ -155,12 +155,16 @@ namespace UltimateCarParking.UI
             int coins = progression != null && progression.LastReward is LevelReward reward ? reward.Coins : r.Coins;
             WorldTour.CountryReward? countryBonus = progression != null ? progression.LastCountryReward : null;
             if (countryBonus.HasValue) coins += countryBonus.Value.Coins;
+            var careerRewards = progression != null ? progression.LastCareerRewards : null;
+            if (careerRewards != null) foreach (var cr in careerRewards) coins += cr.Coins;
             bool newBest = progression != null && progression.LastReward is LevelReward rw && rw.NewBest && !rw.FirstCompletion;
             if (completeTitle != null) completeTitle.text = "PARKED";
             if (completeTime != null) completeTime.text = $"{r.ElapsedSeconds:0.0}s";
             if (completeCollisions != null) completeCollisions.text = r.Collisions.ToString();
             if (completeCoins != null) completeCoins.text = "+0";
-            if (completeBadge != null) completeBadge.text = countryBonus.HasValue
+            if (completeBadge != null) completeBadge.text = careerRewards != null && careerRewards.Count > 0
+                ? careerRewards[careerRewards.Count - 1].Label
+                : countryBonus.HasValue
                 ? (countryBonus.Value.PerfectCoins > 0 ? $"{CountryName()} ALL STARS +{countryBonus.Value.Coins}" : $"{CountryName()} COMPLETE +{countryBonus.Value.Coins}")
                 : newBest ? "NEW BEST" : r.ScoreLabel;
             if (nextButton != null) nextButton.gameObject.SetActive(levelManager.HasNextLevel);

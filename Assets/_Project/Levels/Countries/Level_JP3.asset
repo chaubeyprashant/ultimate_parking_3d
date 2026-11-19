@@ -18,10 +18,11 @@ MonoBehaviour:
   missionType: 4
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: 'Turn into the stacker car park and drive nose-first onto the empty deck
     between the posts. Keep still: the machine lifts your car to the upper level.'
   objectives:
-  - rid: 2518988173726711831
+  - rid: 2518988184230559795
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -43,6 +44,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 70
   threeStarMaxCollisions: 0
   twoStarTime: 100
@@ -55,7 +57,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711831
+    - rid: 2518988184230559795
       type: {class: MechanicalParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park on the stacker deck
@@ -70,5 +72,6 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0
         systemId: stacker
         maxAborts: 3

@@ -52,7 +52,7 @@ namespace UltimateCarParking.UI
         {
             if (playButton != null) playButton.onClick.AddListener(PlayNext);
             if (worldTourButton != null) worldTourButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.WorldTour));
-            if (missionsButton != null) missionsButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.LevelSelect));
+            if (missionsButton != null) missionsButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.Career));   // career map (chapters + academy)
             if (settingsMenuButton != null && settingsPanel != null) settingsMenuButton.onClick.AddListener(settingsPanel.Open);
             if (garageButton != null) garageButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.Garage));
             if (settingsButton != null && settingsPanel != null) settingsButton.onClick.AddListener(settingsPanel.Open);

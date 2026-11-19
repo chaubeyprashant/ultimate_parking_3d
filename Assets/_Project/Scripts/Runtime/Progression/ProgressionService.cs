@@ -92,6 +92,7 @@ namespace UltimateCarParking.Progression
 
             p.bestStars = Mathf.Max(previous, stars);
             if (p.bestTimeSeconds < 0f || result.ElapsedSeconds < p.bestTimeSeconds) p.bestTimeSeconds = result.ElapsedSeconds;
+            p.bestQuality = Mathf.Max(p.bestQuality, Mathf.Clamp01(result.Quality));
             p.completions++;
             data.coins += coins;
             return new LevelReward(coins, stars, previous, first);

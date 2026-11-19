@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Academy_A05
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: A05
+  displayName: Parallel Parking
+  levelNumber: 5
+  missionType: 0
+  roadDirection: 0
+  condition: 0
+  difficulty: 1
+  briefing: Pull level with the gap, then reverse in toward the kerb.
+  objectives:
+  - rid: 2518988184230559772
+  theme: {fileID: 0}
+  props: []
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -30, y: 0, z: -2}
+  spawnYaw: 90
+  targetPosition: {x: 14.5, y: 0, z: -6.1}
+  targetYaw: 90
+  targetSize: {x: 2.8, y: 8}
+  timeLimitSeconds: 0
+  collisionLimit: -1
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 9999
+  threeStarMaxCollisions: 99
+  twoStarTime: 9999
+  twoStarMaxCollisions: 99
+  scoreMode: 0
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 100
+  coinsPerStar: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559772
+      type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Parallel park at the kerb
+        position: {x: 14.5, y: 0, z: -6.1}
+        bayYaw: 90
+        size: {x: 2.8, y: 8}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 15
+          allowEitherDirection: 1
+          maxSpeedKmh: 2
+          holdDuration: 0.8
+          requireParkingBrake: 0
+        kerbSide: 1
+        maxKerbGap: 0.6
+        kerbStrikeLimit: 3
+        strikeCooldown: 0.8

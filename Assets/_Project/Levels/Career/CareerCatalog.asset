@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80c7b3f7d54c403381fe5f06c4c51bc, type: 3}
+  m_Name: CareerCatalog
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Career.CareerCatalog
+  chapters:
+  - id: ch1
+    title: BEGINNER ACADEMY
+    subtitle: Steering, braking, forward parking, reversing and simple bays.
+    missions: {fileID: 11400000, guid: 9654dd75dce574402ba55e8206601de9, type: 2}
+    unlockAfter: 0
+    completionCoins: 1500
+    masteryCoins: 750
+    accent: {r: 0.71, g: 1, b: 0.18, a: 1}
+  - id: ch2
+    title: CITY DRIVER
+    subtitle: Parallel parking, traffic rules, narrow streets and urban bays.
+    missions: {fileID: 11400000, guid: ffb7dced236ba4574a702b6dc34554d1, type: 2}
+    unlockAfter: 6
+    completionCoins: 3000
+    masteryCoins: 1500
+    accent: {r: 0.33, g: 0.78, b: 1, a: 1}
+  - id: ch3
+    title: PROFESSIONAL VALET
+    subtitle: Guest pickups and deliveries, multi-stage jobs and precision.
+    missions: {fileID: 11400000, guid: 6a78d76f7b2fc411cb6f620c2c3d5765, type: 2}
+    unlockAfter: 6
+    completionCoins: 5000
+    masteryCoins: 2500
+    accent: {r: 1, g: 0.78, b: 0.24, a: 1}
+  - id: ch4
+    title: HEAVY VEHICLE EXPERT
+    subtitle: Big SUVs and monster trucks, tight turns and restricted spaces.
+    missions: {fileID: 11400000, guid: dbec2544d4fde4ed4a7b920c5ce116d0, type: 2}
+    unlockAfter: 6
+    completionCoins: 7500
+    masteryCoins: 3500
+    accent: {r: 1, g: 0.5, b: 0.25, a: 1}
+  - id: ch5
+    title: PARKING MASTER
+    subtitle: Combinations, night, bad weather and expert precision.
+    missions: {fileID: 11400000, guid: aa3ece5edab2643b5a99aa1e143e9135, type: 2}
+    unlockAfter: 6
+    completionCoins: 10000
+    masteryCoins: 5000
+    accent: {r: 0.85, g: 0.45, b: 1, a: 1}
+  academy: {fileID: 11400000, guid: 34a64c38ea6df43f98572898a3cdd626, type: 2}

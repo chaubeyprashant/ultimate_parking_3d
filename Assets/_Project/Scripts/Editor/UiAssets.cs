@@ -140,6 +140,43 @@ namespace UltimateCarParking.EditorTools
                 float e = Mathf.Max(dx, dy);
                 return new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 1f, e)));
             });
+            // Driving HUD (Phase 1 controls): steering wheel, gauge ring, ribbed pedal, camera and zoom icons.
+            WriteSprite("SteeringWheel", 256, 256, 0, (x, y) =>
+            {
+                float r = Vector2.Distance(new Vector2(x, y), new Vector2(128f, 128f));
+                float rim = Mathf.Abs(r - 108f) - 13f;
+                float spokes = Mathf.Min(Mathf.Min(Segment(x, y, 128, 128, 22, 140), Segment(x, y, 128, 128, 234, 140)), Segment(x, y, 128, 128, 128, 22)) - 10f;
+                float hub = r - 34f;
+                float grip = Mathf.Max(Mathf.Abs(r - 108f) - 17f, Mathf.Abs(y - 128f) - 38f);   // thicker hand grips at 9 and 3 o'clock
+                float d = Mathf.Min(Mathf.Min(rim, spokes), Mathf.Min(hub, grip));
+                float a = Fill(d, aa);
+                float hole = Fill(r - 13f, aa);                                                 // horn badge ring
+                return new Color(1f, 1f, 1f, a * (1f - 0.55f * hole));
+            });
+            WriteSprite("Ring", 256, 256, 0, (x, y) => Fill(Mathf.Abs(Vector2.Distance(new Vector2(x, y), new Vector2(128f, 128f)) - 116f) - 9f, aa));
+            WriteSprite("Pedal", 128, 192, 0, (x, y) =>
+            {
+                float body = RoundRect(x, y, 64, 96, 62, 94, 22);
+                float a = Fill(body, aa);
+                bool ribZone = Mathf.Abs(x - 64f) < 44f && y > 112f && y < 172f;   // upper part only: the label stays clear
+                float rib = ribZone && Mathf.Repeat(y - 70f, 20f) < 6f ? 0.62f : 1f;
+                return new Color(1f, 1f, 1f, a * rib);
+            });
+            WriteSprite("CameraIcon", 64, 64, 0, (x, y) =>
+            {
+                float body = RoundRect(x, y, 32, 28, 26, 17, 5);
+                float bump = RoundRect(x, y, 24, 47, 9, 5, 2);
+                float lens = Vector2.Distance(new Vector2(x, y), new Vector2(32f, 28f)) - 9f;
+                float d = Mathf.Max(Mathf.Min(body, bump), -lens);
+                return Fill(d, aa);
+            });
+            WriteSprite("ZoomIcon", 64, 64, 0, (x, y) =>
+            {
+                float ring = Mathf.Abs(Vector2.Distance(new Vector2(x, y), new Vector2(27f, 37f)) - 16f) - 4f;
+                float handle = Segment(x, y, 39, 25, 54, 10) - 5f;
+                float plus = Mathf.Min(Segment(x, y, 20, 37, 34, 37), Segment(x, y, 27, 30, 27, 44)) - 2.5f;
+                return Fill(Mathf.Min(Mathf.Min(ring, handle), plus), aa);
+            });
             WriteSprite("Stripes", 64, 64, 0, (x, y) =>
             {
                 float v = Mathf.Repeat((x + y) / 16f, 1f);

@@ -18,12 +18,13 @@ MonoBehaviour:
   missionType: 3
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: 'Singapore''s housing-estate car parks: 2.4 m bays, no tolerance. Turn
     into the car park and park dead centre and straight; the stars come from accuracy,
     not speed.'
   objectives:
-  - rid: 2518988173726711855
-  - rid: 2518988173726711856
+  - rid: 2518988183786750027
+  - rid: 2518988183786750028
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -45,6 +46,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 75
   threeStarMaxCollisions: 0
   twoStarTime: 105
@@ -57,7 +59,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711855
+    - rid: 2518988183786750027
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Into the car park
@@ -66,7 +68,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TURN INTO THE CAR PARK
-    - rid: 2518988173726711856
+    - rid: 2518988183786750028
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park dead centre
@@ -81,6 +83,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.5
+          requireParkingBrake: 0
         maxOffset: 0.22
         maxDepthOffset: 0.8
         maxAngle: 4

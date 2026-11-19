@@ -32,6 +32,7 @@ namespace UltimateCarParking.EditorTools
             BuildLevelSelect();
             BuildGarage();
             BuildWorldTourScene();
+            BuildCareer();
         }
 
         // ------------------------------------------------------------------ MainMenu
@@ -290,7 +291,9 @@ namespace UltimateCarParking.EditorTools
             RectTransform root = MakeCanvas("GarageCanvas", out _);
             Image drag = Img(root, "DragArea", null, new Color(0f, 0f, 0f, 0f), raycast: true);
             Fill(drag.rectTransform, 0, 0, 0, 0);
-            Wire(drag.gameObject.AddComponent<ShowroomDragArea>(), "showroom", showroom);
+            var dragArea = drag.gameObject.AddComponent<ShowroomDragArea>();
+            Wire(dragArea, "showroom", showroom);
+            Wire(dragArea, "zoomCamera", Object.FindAnyObjectByType<Camera>());
             Image fade = Img(root, "SideFade", "SideFade", UiPalette.Background);
             Place(fade.rectTransform, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero);
             fade.rectTransform.anchorMax = new Vector2(0f, 1f);
@@ -340,7 +343,29 @@ namespace UltimateCarParking.EditorTools
             Image dot = Img(dots, "DotTemplate", "Circle", UiPalette.Outline, sliced: false);
             dot.rectTransform.sizeDelta = new Vector2(13f, 13f);
             dot.gameObject.AddComponent<LayoutElement>().preferredWidth = 13f;
-            TMP_Text dragHint = Label(safe, "DragHint", "DRAG TO ROTATE", false, 20f, UiPalette.TextSecondary.WithAlpha(0.6f), TextAlignmentOptions.Center, 6f);
+            // Spec sheet (top right): measured figures, parking difficulty, strength, COMPARE with the car in use.
+            Image specBg = Img(safe, "Specs", "RoundRect", UiPalette.Surface.WithAlpha(0.78f));
+            Place(specBg.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-60f, -170f), new Vector2(500f, 430f));
+            RectTransform spec = specBg.rectTransform;
+            TMP_Text specKicker = Label(spec, "Kicker", "MEASURED SPECS", true, 22f, UiPalette.Lime, TextAlignmentOptions.TopLeft, 8f);
+            Place(specKicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -20f), new Vector2(440f, 30f));
+            TMP_Text specValues = Label(spec, "Values", "", false, 23f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 1f);
+            specValues.lineSpacing = 6f;
+            Place(specValues.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -60f), new Vector2(450f, 230f));
+            TMP_Text specDiff = Label(spec, "Difficulty", "PARKING  EASY 1/5", true, 24f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 4f);
+            Place(specDiff.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -292f), new Vector2(450f, 32f));
+            TMP_Text specStrength = Label(spec, "Strength", "", false, 21f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 0f);
+            specStrength.textWrappingMode = TextWrappingModes.Normal;
+            Place(specStrength.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -326f), new Vector2(450f, 50f));
+            Button compare = PillButton(spec, "CompareButton", "COMPARE", false, new Vector2(28f, 16f), new Vector2(444f, 56f), 22f);
+            var specsPanel = spec.gameObject.AddComponent<GarageSpecsPanel>();
+            Wire(specsPanel, "values", specValues);
+            Wire(specsPanel, "difficulty", specDiff);
+            Wire(specsPanel, "strength", specStrength);
+            Wire(specsPanel, "compareButton", compare);
+            Wire(specsPanel, "compareLabel", compare.GetComponentInChildren<TMP_Text>());
+
+            TMP_Text dragHint = Label(safe, "DragHint", "DRAG TO ROTATE  ·  PINCH TO ZOOM", false, 20f, UiPalette.TextSecondary.WithAlpha(0.6f), TextAlignmentOptions.Center, 6f);
             Place(dragHint.rectTransform, new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-560f, 60f), new Vector2(400f, 30f));
             MakeEventSystem();
 
@@ -368,6 +393,7 @@ namespace UltimateCarParking.EditorTools
             Wire(ctrl, "coins", Object.FindAnyObjectByType<CoinCounter>());
             WireArray(ctrl, "upgradeButtons", upgradeButtons);
             WireArray(ctrl, "upgradeLabels", upgradeLabels);
+            Wire(ctrl, "specsPanel", specsPanel);
             Wire(garageGo.AddComponent<BackNavigation>(), "targetScene", SceneNames.MainMenu);
 
             EditorSceneManager.SaveScene(scene, ProjectBootstrapper.ScenePathOf(SceneNames.Garage));

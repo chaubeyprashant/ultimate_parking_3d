@@ -18,12 +18,13 @@ MonoBehaviour:
   missionType: 5
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: Turn off the boulevard onto the desert road. Wait for the resort's gate
     to slide open, then you have 30 seconds to park at the villa. Every knock costs
     3 seconds.
   objectives:
-  - rid: 2518988173726711835
-  - rid: 2518988173726711836
+  - rid: 2518988183786750007
+  - rid: 2518988183786750008
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -45,6 +46,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 90
   threeStarMaxCollisions: 0
   twoStarTime: 130
@@ -57,7 +59,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711835
+    - rid: 2518988183786750007
       type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Through the resort gate
@@ -67,7 +69,7 @@ MonoBehaviour:
         size: {x: 7.4, y: 4}
         heightTolerance: 1.6
         maxBarrierHits: 1
-    - rid: 2518988173726711836
+    - rid: 2518988183786750008
       type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park at the villa
@@ -82,5 +84,6 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.5
+          requireParkingBrake: 0
         seconds: 30
         hitPenaltySeconds: 3

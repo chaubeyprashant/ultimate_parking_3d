@@ -13,7 +13,7 @@ namespace UltimateCarParking.UI
     /// Mission HUD: start banner (mission type + briefing), objective checklist (ticks with a lime pop when done),
     /// the live instruction line from the current objective, a mission gauge (rear sensor, kerb gap…) and toasts.
     /// In-level HUD: level number and name, countdown timer (turns red under 10 s), collision counter against the
-    /// limit, gear (D / R / P), and the parking guide chip with hold progress. Event-driven except the timer and the
+    /// limit, and the parking guide (the gear and speed are shown by SpeedGauge) chip with hold progress. Event-driven except the timer and the
     /// hold bar, which update text only when the displayed value changes.
     /// </summary>
     public sealed class GameplayHud : MonoBehaviour
@@ -27,7 +27,6 @@ namespace UltimateCarParking.UI
         [SerializeField] private TMP_Text timerLabel;
         [SerializeField] private TMP_Text collisionLabel;
         [SerializeField] private RectTransform collisionPill;
-        [SerializeField] private TMP_Text gearLabel;
 
         [Header("Guide")]
         [SerializeField] private CanvasGroup guideGroup;
@@ -58,9 +57,19 @@ namespace UltimateCarParking.UI
         [Tooltip("Switches the main camera between the chase view and a top-down view.")]
         [SerializeField] private Button viewButton;
         [SerializeField] private TMP_Text viewLabel;
+        [Tooltip("Cycles the chase camera distance: near / mid / far.")]
+        [SerializeField] private Button zoomButton;
+        [SerializeField] private TMP_Text zoomLabel;
+        [Tooltip("Gear refusals (\"stop to change gear\") are shown as toasts.")]
+        [SerializeField] private MobileControls controls;
+        [Tooltip("\"OBJECTIVES 1/3\" above the checklist (hidden for plain parking levels).")]
+        [SerializeField] private TMP_Text objectiveProgress;
+        [Tooltip("Tap target on the objectives header: expands / collapses the list.")]
+        [SerializeField] private Button objectiveToggle;
+        [Tooltip("While the backup camera is up the list collapses so nothing covers it.")]
+        [SerializeField] private RearCameraView rearView;
 
         private int shownTenths = -1;
-        private string shownGear;
         private float shownHold = -1f;
         private string shownHint;
         private int shownGaugeVersion = -1;
@@ -78,36 +87,174 @@ namespace UltimateCarParking.UI
         public string GuideText => guideLabel != null ? guideLabel.text : "";
 
         /// <summary>Remembered for the session (restarts and next levels keep the player's choice).</summary>
-        private static bool topDownPreferred;
+        private static int zoomIndex = 1;
+        private static readonly float[] ZoomDistances = { 5.5f, 7f, 10f };
+        private static readonly string[] ZoomNames = { "NEAR", "MID", "FAR" };
+
+        public string ZoomText => zoomLabel != null ? zoomLabel.text : "";
+        public string ObjectiveProgressText => objectiveProgress != null && objectiveProgress.gameObject.activeSelf ? objectiveProgress.text : "";
 
         public string ViewText => viewLabel != null ? viewLabel.text : "";
 
         private void Awake()
         {
             if (viewButton != null) viewButton.onClick.AddListener(ToggleView);
+            if (zoomButton != null) zoomButton.onClick.AddListener(CycleZoom);
+            if (objectiveToggle != null) objectiveToggle.onClick.AddListener(ToggleObjectives);
             ApplyView();
         }
 
+        /// <summary>VIEW button: Chase → Top → Bumper → Cockpit (cars with an interior) → Orbit → Chase. Remembered.</summary>
         public void ToggleView()
         {
-            topDownPreferred = !topDownPreferred;
-            ApplyView();
+            if (vehicleCamera == null) return;
+            vehicleCamera.SetView(vehicleCamera.NextView());
+            UltimateCarParking.Settings.SettingsService.SetCameraView((int)vehicleCamera.View);
+            ApplyView(false);
         }
 
-        private void ApplyView()
+        public static string ViewName(CameraView v) => v switch
         {
-            if (vehicleCamera != null) vehicleCamera.TopDown = topDownPreferred;
-            if (viewLabel != null) viewLabel.text = topDownPreferred ? "VIEW: TOP" : "VIEW: CHASE";
+            CameraView.TopDown => "TOP", CameraView.Bumper => "BUMPER", CameraView.Cockpit => "COCKPIT", CameraView.Orbit => "ORBIT", _ => "CHASE",
+        };
+
+        /// <summary>Chase camera distance: near → mid → far → near.</summary>
+        public void CycleZoom()
+        {
+            zoomIndex = (zoomIndex + 1) % ZoomDistances.Length;
+            if (vehicleCamera != null) vehicleCamera.Distance = ZoomDistances[zoomIndex];
+            UltimateCarParking.Settings.SettingsService.SetChaseDistance(ZoomDistances[zoomIndex]);
+            ApplyView(false);
+        }
+
+        /// <summary>Restores the remembered view and distance (level start) or just refreshes the labels.</summary>
+        private void ApplyView(bool restore = true)
+        {
+            var s = UltimateCarParking.Settings.SettingsService.Current;
+            if (vehicleCamera != null && restore)
+            {
+                vehicleCamera.SetView((CameraView)s.cameraView, instant: true);
+                vehicleCamera.Distance = s.chaseDistance;
+            }
+            float d = vehicleCamera != null ? vehicleCamera.Distance : s.chaseDistance;
+            zoomIndex = d < 6.25f ? 0 : d < 8.5f ? 1 : 2;
+            CameraView v = vehicleCamera != null ? vehicleCamera.View : (CameraView)s.cameraView;
+            bool zoomable = v == CameraView.Chase || v == CameraView.Orbit;
+            if (viewLabel != null) viewLabel.text = ViewName(v);
+            if (zoomLabel != null) zoomLabel.text = zoomable ? ZoomNames[zoomIndex] : "—";
+            if (zoomButton != null) zoomButton.interactable = zoomable;
+        }
+
+        private float savedDistance = -1f;
+
+        /// <summary>Keeps the pinch-zoom distance in the settings (written to disk with the next save).</summary>
+        private void LateUpdate()
+        {
+            LayoutObjectives();
+            if (vehicleCamera == null) return;
+            float d = vehicleCamera.Distance;
+            if (savedDistance < 0f) savedDistance = d;
+            if (Mathf.Abs(d - savedDistance) > 0.1f)
+            {
+                savedDistance = d;
+                UltimateCarParking.Settings.SettingsService.SetChaseDistance(d);
+                ApplyView(false);
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics() => topDownPreferred = false;
+        private static void ResetStatics() { zoomIndex = 1; objectivesExpanded = false; }
+
+        private void OnShiftRefused() => OnNotice("STOP TO CHANGE GEAR", false);
+
+        private UltimateCarParking.Vehicle.CollisionHandler hookedContacts;
+
+        private void HookContacts(LevelData _)
+        {
+            var h = levelManager != null && levelManager.Vehicle != null ? levelManager.Vehicle.GetComponent<UltimateCarParking.Vehicle.CollisionHandler>() : null;
+            if (h == hookedContacts) return;
+            if (hookedContacts != null) hookedContacts.GentleContact -= OnGentle;
+            hookedContacts = h;
+            if (h != null) h.GentleContact += OnGentle;
+        }
+
+        /// <summary>Gentle contact: a quiet note, no flash, no penalty (only when no other message is showing).</summary>
+        private void OnGentle(Collider _)
+        {
+            if (toastGroup == null || toastLabel == null || toastGroup.alpha > 0.05f) return;
+            ShowContactToast("LIGHT TOUCH  ·  NO PENALTY", UiPalette.TextSecondary);
+        }
+
+        private void ShowContactToast(string text, Color color)
+        {
+            toastLabel.text = text;
+            toastLabel.color = color;
+            ContactToasts++;
+            LastContactText = text;
+            if (toastRoutine != null) StopCoroutine(toastRoutine);
+            toastRoutine = StartCoroutine(ToastRoutine());
+        }
+
+        public int ContactToasts { get; private set; }
+        public string LastContactText { get; private set; } = "";
+
+        /// <summary>Remembered for the session: compact (current objective only) by default.</summary>
+        private static bool objectivesExpanded;
+        private bool shownExpanded = true;
+        public bool ObjectivesExpanded => objectivesExpanded;
+        public int VisibleObjectiveRows { get { int n = 0; foreach (var r in rows) if (r.text != null && r.text.transform.parent.gameObject.activeSelf) n++; return n; } }
+
+        public void ToggleObjectives()
+        {
+            objectivesExpanded = !objectivesExpanded;
+            LayoutObjectives(force: true);
+        }
+
+        /// <summary>Compact: only the current objective row; expanded: every row. Collapses while reversing with the camera up.</summary>
+        private void LayoutObjectives(bool force = false)
+        {
+            bool expanded = objectivesExpanded && !(rearView != null && rearView.Showing);
+            if (!force && expanded == shownExpanded) return;
+            shownExpanded = expanded;
+            int current = mission != null ? Mathf.Clamp(mission.CurrentIndex, 0, Mathf.Max(0, rows.Count - 1)) : 0;
+            float rowH = objectiveRowTemplate != null ? objectiveRowTemplate.sizeDelta.y + 6f : 52f;
+            int slot = 0;
+            for (int i = 0; i < rows.Count; i++)
+            {
+                if (rows[i].text == null) continue;
+                var row = (RectTransform)rows[i].text.transform.parent;
+                bool show = expanded || i == current;
+                row.gameObject.SetActive(show);
+                if (show) row.anchoredPosition = new Vector2(0f, -(slot++) * rowH);
+            }
+            if (objectiveProgress != null && objectiveProgress.gameObject.activeSelf)
+            {
+                string t = objectiveProgress.text;
+                int cut = t.IndexOf("  ·  ", System.StringComparison.Ordinal);
+                if (cut >= 0) t = t.Substring(0, cut);
+                objectiveProgress.text = rows.Count > 1 ? t + (expanded ? "  ·  HIDE" : "  ·  SHOW ALL") : t;
+            }
+        }
+
+        private void RenderObjectiveProgress(int done)
+        {
+            if (objectiveProgress == null) return;
+            int total = mission != null && levelManager != null && levelManager.Level != null && levelManager.Level.HasObjectives ? mission.Objectives.Count : 0;
+            objectiveProgress.gameObject.SetActive(total > 0);
+            Transform plate = objectiveProgress.transform.parent != null ? objectiveProgress.transform.parent.Find("ObjectiveHeaderPlate") : null;
+            if (plate != null) plate.gameObject.SetActive(total > 0);
+            if (total > 0) objectiveProgress.text = $"OBJECTIVES  {Mathf.Clamp(done, 0, total)}/{total}";
+            LayoutObjectives(force: true);
+        }
 
         private void OnEnable()
         {
             if (levelManager == null) return;
             levelManager.LevelStarted += OnStarted;
             levelManager.CollisionCountChanged += OnCollision;
+            levelManager.LevelStarted += HookContacts;
+            HookContacts(null);
+            if (controls != null) controls.ShiftRefused += OnShiftRefused;
             if (validator != null) validator.StatusChanged += OnStatus;
             if (mission != null)
             {
@@ -123,6 +270,10 @@ namespace UltimateCarParking.UI
             if (levelManager == null) return;
             levelManager.LevelStarted -= OnStarted;
             levelManager.CollisionCountChanged -= OnCollision;
+            levelManager.LevelStarted -= HookContacts;
+            if (hookedContacts != null) hookedContacts.GentleContact -= OnGentle;
+            hookedContacts = null;
+            if (controls != null) controls.ShiftRefused -= OnShiftRefused;
             if (validator != null) validator.StatusChanged -= OnStatus;
             if (mission != null)
             {
@@ -136,7 +287,8 @@ namespace UltimateCarParking.UI
         {
             if (levelLabel != null) levelLabel.text = $"LEVEL {level.LevelNumber:00}";
             string place = level.Theme != null ? level.Theme.DisplayName.ToUpperInvariant() : level.DisplayName.ToUpperInvariant();
-            if (levelName != null) levelName.text = level.HasObjectives ? MissionTypeInfo.Title(level.MissionType) : place;
+            if (levelName != null) levelName.text = (level.HasObjectives ? MissionTypeInfo.Title(level.MissionType) : place)
+                + (level.Difficulty != ChallengeDifficulty.None ? "  ·  " + DifficultyProfile.Name(level.Difficulty) : "");
             RenderCollisions(levelManager.Collisions);
             OnStatus(validator != null ? validator.Status : ParkingStatus.Outside);
             shownTenths = -1;
@@ -166,6 +318,7 @@ namespace UltimateCarParking.UI
                 rows.Add((dot, text));
                 RenderRow(i, i == mission.CurrentIndex ? RowState.Current : i < mission.CurrentIndex ? RowState.Done : RowState.Pending);
             }
+            RenderObjectiveProgress(mission.CurrentIndex);
         }
 
         private enum RowState { Pending, Current, Done }
@@ -181,11 +334,12 @@ namespace UltimateCarParking.UI
             text.text = state == RowState.Done ? $"<s>{label}</s>  <b>DONE</b>" : label;
         }
 
-        private void OnObjectiveStarted(int index, MissionObjective _) => RenderRow(index, RowState.Current);
+        private void OnObjectiveStarted(int index, MissionObjective _) { RenderRow(index, RowState.Current); LayoutObjectives(force: true); }
 
         private void OnObjectiveCompleted(int index, MissionObjective objective)
         {
             RenderRow(index, RowState.Done);
+            RenderObjectiveProgress(index + 1);
             if (index < rows.Count) StartCoroutine(UiMotion.Scale(rows[index].text.transform.parent, 1.18f, 1f, 0.35f, back: true));
             if (flash != null) flash.Flash(UiPalette.Lime, 0.22f, 0.5f);
             AudioManager.Instance.Play(Sfx.Star, 0.8f);
@@ -208,6 +362,10 @@ namespace UltimateCarParking.UI
 
         private System.Collections.IEnumerator ToastRoutine()
         {
+            // Never over the backup camera: drop below it (and above the sensors) while it is showing.
+            var rt = (RectTransform)toastGroup.transform;
+            float y = rearView != null && rearView.Showing ? 0.405f : 0.62f;
+            rt.anchorMin = new Vector2(rt.anchorMin.x, y); rt.anchorMax = new Vector2(rt.anchorMax.x, y);
             toastGroup.alpha = 1f;
             StartCoroutine(UiMotion.Scale(toastGroup.transform, 1.15f, 1f, 0.25f, back: true));
             yield return new WaitForSecondsRealtime(1.6f);
@@ -250,8 +408,14 @@ namespace UltimateCarParking.UI
         {
             RenderCollisions(count);
             if (collisionPill != null) StartCoroutine(UiMotion.Scale(collisionPill, 1.25f, 1f, 0.35f, back: true));
-            if (flash != null) flash.Flash(UiPalette.Danger, 0.35f);
-            if (vehicleCamera != null) vehicleCamera.Shake(0.14f, 0.28f);
+            // Scrapes get a lighter flash and shake than real impacts.
+            var hits = levelManager.Vehicle != null ? levelManager.Vehicle.GetComponent<UltimateCarParking.Vehicle.CollisionHandler>() : null;
+            bool impact = hits == null || hits.LastSeverity == UltimateCarParking.Vehicle.CollisionHandler.HitSeverity.Impact;
+            if (flash != null) flash.Flash(UiPalette.Danger, impact ? 0.35f : 0.18f);
+            // Counted contacts also say what they were (only when no mission message is showing).
+            if (toastGroup != null && toastLabel != null && toastGroup.alpha < 0.05f)
+                ShowContactToast(impact ? "HIT!" : "SCRAPE", impact ? UiPalette.Danger : UiPalette.Gold);
+            if (vehicleCamera != null) vehicleCamera.Shake(impact ? 0.14f : 0.05f, impact ? 0.28f : 0.18f);
             if (levelManager.Level.HasCollisionLimit && count == levelManager.Level.CollisionLimit)
                 AudioManager.Instance.Play(Sfx.CollisionWarning, 0.8f);
         }
@@ -300,16 +464,6 @@ namespace UltimateCarParking.UI
                 timerLabel.color = level.HasTimeLimit && seconds < 10f ? UiPalette.Danger : UiPalette.TextPrimary;
             }
 
-            if (gearLabel != null && levelManager.Vehicle != null)
-            {
-                string gear = !levelManager.Vehicle.ControlsEnabled ? "P" : levelManager.Vehicle.IsReversing ? "R" : "D";
-                if (gear != shownGear)
-                {
-                    shownGear = gear;
-                    gearLabel.text = gear;
-                    gearLabel.color = gear == "R" ? UiPalette.Gold : UiPalette.Lime;
-                }
-            }
 
             if (mission != null && guideLabel != null && mission.Hint != shownHint)
             {

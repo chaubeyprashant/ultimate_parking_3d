@@ -23,6 +23,13 @@ namespace UltimateCarParking.Missions
         private readonly List<MissionObjective> objectives = new List<MissionObjective>();
         private MissionContext ctx;
         private Transform attemptRoot;
+        private LevelData level;
+        private CollisionHandler hits;
+        private int objImpacts, objScrapes;
+        private float runStart;
+
+        /// <summary>Scorecards of the parks finished in this attempt (Parking score mode only).</summary>
+        public List<ParkingScorecard> Scorecards { get; } = new List<ParkingScorecard>();
 
         public event Action<int, MissionObjective> ObjectiveStarted;
         public event Action<int, MissionObjective> ObjectiveCompleted;
@@ -62,8 +69,11 @@ namespace UltimateCarParking.Missions
                 Debug.LogError("[MissionRunner] No ParkingValidator; missions cannot run.", this);
                 return;
             }
+            this.level = level;
             foreach (MissionObjective o in level.CreateObjectives())
                 if (o != null) objectives.Add(o.CloneForRun());
+            hits = vehicle != null ? vehicle.GetComponent<CollisionHandler>() : null;
+            if (hits != null) hits.PenaltyRegistered += OnPenalty;
             attemptRoot = new GameObject($"Mission_{level.LevelId}").transform;
             ctx = new MissionContext(this, vehicle, validator, zoneMaterial, attemptRoot, sensorAudio);
             if (objectives.Count == 0) Debug.LogError($"[MissionRunner] {level.LevelId} has no objectives.", this);
@@ -74,6 +84,7 @@ namespace UltimateCarParking.Missions
         {
             if (ctx == null || objectives.Count == 0) return;
             IsRunning = true;
+            runStart = Time.time;
             Advance();
         }
 
@@ -109,6 +120,7 @@ namespace UltimateCarParking.Missions
             {
                 MissionObjective done = Current;
                 done.End(ctx);
+                if (level != null && level.ScoreMode == ScoreMode.Parking && done is ParkObjective park) ScorePark(park);
                 if (done is IScoredObjective scored)
                 {
                     Quality = Mathf.Min(Quality, Mathf.Clamp01(scored.Quality));
@@ -140,6 +152,7 @@ namespace UltimateCarParking.Missions
                 Completed?.Invoke();
                 return;
             }
+            objImpacts = objScrapes = 0;
             Current.Begin(ctx);
             SetHint(Current.Hint(ctx));
             ObjectiveStarted?.Invoke(CurrentIndex, Current);
@@ -159,6 +172,31 @@ namespace UltimateCarParking.Missions
 
         private void SetHint(string hint) => Hint = hint ?? "";
 
+        private void OnPenalty(CollisionHandler.Penalty p)
+        {
+            if (!IsRunning) return;
+            if (p.Severity == CollisionHandler.HitSeverity.Impact) objImpacts++; else objScrapes++;
+        }
+
+        /// <summary>Realistic score for a finished park (centring for this car's room in the bay, angle, hits, time, stillness).</summary>
+        private void ScorePark(ParkObjective park)
+        {
+            ParkingValidator v = validator;
+            if (v == null || v.Zone == null || v.WorldFootprint == null || v.LocalFootprint == null) return;
+            Vector3 centre = Vector3.zero;
+            foreach (Vector3 c in v.WorldFootprint) centre += c;
+            centre /= v.WorldFootprint.Length;
+            Vector3 local = Quaternion.Inverse(v.Zone.Rotation) * (centre - v.Zone.Center);
+            float minX = float.MaxValue, maxX = float.MinValue, minZ = float.MaxValue, maxZ = float.MinValue;
+            foreach (Vector3 c in v.LocalFootprint) { minX = Mathf.Min(minX, c.x); maxX = Mathf.Max(maxX, c.x); minZ = Mathf.Min(minZ, c.z); maxZ = Mathf.Max(maxZ, c.z); }
+            ParkingScorecard card = ParkingScorecard.Score(new Vector2(local.x, local.z), new Vector2(maxX - minX, maxZ - minZ), v.Zone.Size,
+                v.HeadingErrorDegrees, v.ActiveRules.angleTolerance, objImpacts, objScrapes, Time.time - runStart, level.TimeLimitSeconds, v.SpeedKmh);
+            Scorecards.Add(card);
+            Quality = Mathf.Min(Quality, card.Overall);
+            ScoreLabel = ScoreLabel.Length == 0 ? card.Label : ScoreLabel + "  " + card.Label;
+            Debug.Log($"[Mission] {park.Title}: {card.Label} (side {card.SideOffset:F2} m, depth {card.DepthOffset:F2} m)");
+        }
+
         private void Clear()
         {
             Stop();
@@ -173,6 +211,10 @@ namespace UltimateCarParking.Missions
             LastNotice = "";
             Quality = 1f;
             ScoreLabel = "";
+            Scorecards.Clear();
+            if (hits != null) hits.PenaltyRegistered -= OnPenalty;
+            hits = null;
+            level = null;
         }
 
         private void OnDestroy() => Clear();

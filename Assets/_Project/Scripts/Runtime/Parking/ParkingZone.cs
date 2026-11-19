@@ -70,8 +70,17 @@ namespace UltimateCarParking.Parking
             overlapCount = 0;   // re-counted by the next trigger callbacks (a body already inside gets OnTriggerEnter next step)
         }
 
+        private ParkingStatus shownStatus;
+        private Color shownColor;
+        private float pulseUntil;
+
+        /// <summary>Current marker status (for the pulse / pop feedback).</summary>
+        public ParkingStatus ShownStatus => shownStatus;
+
         public void ShowStatus(ParkingStatus status)
         {
+            if (status == ParkingStatus.Parked && shownStatus != ParkingStatus.Parked) pulseUntil = Time.time + 0.6f;   // success pop
+            shownStatus = status;
             Color c = status switch
             {
                 ParkingStatus.Parked => parkedColor,
@@ -79,11 +88,32 @@ namespace UltimateCarParking.Parking
                 ParkingStatus.PartiallyInside or ParkingStatus.Misaligned or ParkingStatus.Unpositioned or ParkingStatus.TooFast => occupiedColor,
                 _ => idleColor,
             };
+            shownColor = c;
+            Paint(c);
+        }
+
+        private void Paint(Color c)
+        {
             block ??= new MaterialPropertyBlock();
             block.SetColor(BaseColorId, c);
             block.SetColor(ColorId, c);
             foreach (Renderer r in markers)
                 if (r != null) r.SetPropertyBlock(block);
+        }
+
+        /// <summary>Holding: the lines breathe gently while the hold timer runs. Parked: a short bright pop.</summary>
+        private void Update()
+        {
+            if (shownStatus == ParkingStatus.Holding)
+            {
+                float k = 0.75f + 0.25f * Mathf.Sin(Time.time * 7f);
+                Paint(new Color(shownColor.r * k, shownColor.g * k, shownColor.b * k, shownColor.a));
+            }
+            else if (Time.time < pulseUntil)
+            {
+                float k = 1f + 0.8f * Mathf.Clamp01((pulseUntil - Time.time) / 0.6f);
+                Paint(new Color(Mathf.Min(1f, shownColor.r * k), Mathf.Min(1f, shownColor.g * k), Mathf.Min(1f, shownColor.b * k), shownColor.a));
+            }
         }
 
         private void OnTriggerEnter(Collider other)

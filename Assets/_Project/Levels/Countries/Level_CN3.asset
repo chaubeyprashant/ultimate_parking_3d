@@ -18,13 +18,14 @@ MonoBehaviour:
   missionType: 12
   roadDirection: 0
   condition: 1
+  difficulty: 0
   briefing: "Dusk at the night market. Turn into the lantern-lit lane \u2014 barely
     wider than the car \u2014 pick your way past the cones and barrel, and park dead
     centre at the far end. It is night: your headlights are on. Find the bay by its
     glowing markers."
   objectives:
-  - rid: 2518988173726711840
-  - rid: 2518988173726711841
+  - rid: 2518988183786750012
+  - rid: 2518988183786750013
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -46,6 +47,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 85
   threeStarMaxCollisions: 0
   twoStarTime: 125
@@ -58,7 +60,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711840
+    - rid: 2518988183786750012
       type: {class: NarrowAlleyObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Through the market lane
@@ -68,7 +70,7 @@ MonoBehaviour:
         goodClearance: 0.3
         maxScrapes: 2
         reverseThrough: 0
-    - rid: 2518988173726711841
+    - rid: 2518988183786750013
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park at the end of the lane
@@ -83,6 +85,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         maxOffset: 0.35
         maxDepthOffset: 0.8
         maxAngle: 6

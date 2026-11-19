@@ -18,14 +18,15 @@ MonoBehaviour:
   missionType: 4
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: 'The driving licence exam: cross the start line, parallel park at the
     kerb between the two cars, then drive to the car park and park precisely in the
     marked bay.'
   objectives:
-  - rid: 2518988173726711846
-  - rid: 2518988173726711847
-  - rid: 2518988173726711848
-  - rid: 2518988173726711849
+  - rid: 2518988183786750018
+  - rid: 2518988183786750019
+  - rid: 2518988183786750020
+  - rid: 2518988183786750021
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -47,6 +48,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 150
   threeStarMaxCollisions: 0
   twoStarTime: 200
@@ -59,7 +61,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711846
+    - rid: 2518988183786750018
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Start line
@@ -68,7 +70,7 @@ MonoBehaviour:
         size: {x: 4, y: 8}
         heightTolerance: 1.6
         hint: CROSS THE START LINE
-    - rid: 2518988173726711847
+    - rid: 2518988183786750019
       type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Parallel park at the kerb
@@ -83,11 +85,12 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         kerbSide: 1
         maxKerbGap: 0.45
         kerbStrikeLimit: 2
         strikeCooldown: 0.8
-    - rid: 2518988173726711848
+    - rid: 2518988183786750020
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Turn into the car park
@@ -96,7 +99,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TO THE CAR PARK
-    - rid: 2518988173726711849
+    - rid: 2518988183786750021
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Precision bay
@@ -111,6 +114,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         maxOffset: 0.35
         maxDepthOffset: 0.8
         maxAngle: 6

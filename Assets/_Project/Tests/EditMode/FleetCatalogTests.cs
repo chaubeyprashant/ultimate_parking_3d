@@ -64,12 +64,20 @@ namespace UltimateCarParking.Tests
         [Test]
         public void Inside_A_Class_A_Stronger_Car_Costs_More()
         {
-            foreach (var group in Cars().Where(c => c.Class != CarClass.Starter).GroupBy(c => c.Class))
+            // Cars whose price is locked (FleetPricing.Pinned: the prices players already see) are exempt; new cars still follow the rule.
+            foreach (var group in Cars().Where(c => c.Class != CarClass.Starter && !FleetPricing.Pinned.ContainsKey(c.CarId)).GroupBy(c => c.Class))
             {
                 List<CarData> byScore = group.OrderBy(FleetPricing.Score).ToList();
                 for (int i = 1; i < byScore.Count; i++)
                     Assert.Greater(byScore[i].Price, byScore[i - 1].Price, $"{byScore[i].CarId} scores higher than {byScore[i - 1].CarId} in {group.Key}, so it costs more");
             }
+        }
+
+        [Test]
+        public void Locked_Prices_Are_Unchanged_By_Handling_Work()
+        {
+            foreach (CarData c in Cars())
+                if (FleetPricing.Pinned.TryGetValue(c.CarId, out int price)) Assert.AreEqual(price, c.Price, c.CarId + " price locked");
         }
 
         [Test]
@@ -136,7 +144,8 @@ namespace UltimateCarParking.Tests
                 var h = c.Handling;
                 Assert.That(h.mass, Is.InRange(900f, 3000f), c.CarId + " mass");
                 Assert.That(h.maxForwardSpeedKmh, Is.InRange(45f, 100f), c.CarId + " top speed");
-                Assert.That(h.maxSteerAngle, Is.InRange(30f, 40f), c.CarId + " steering lock");
+                // Monster trucks deliberately turn wide (Phase 2); everything else keeps a parking-friendly lock.
+                Assert.That(h.maxSteerAngle, c.CarId.StartsWith("monster_") ? Is.InRange(24f, 30f) : Is.InRange(26f, 40f), c.CarId + " steering lock");
                 Assert.LessOrEqual(h.highSpeedSteerAngle, h.maxSteerAngle, c.CarId);
                 Assert.That(h.motorTorque / h.mass, Is.InRange(0.8f, 3.2f), c.CarId + " power to weight");
                 Assert.That(h.brakeTorque / h.mass, Is.InRange(1.2f, 3.6f), c.CarId + " braking to weight");

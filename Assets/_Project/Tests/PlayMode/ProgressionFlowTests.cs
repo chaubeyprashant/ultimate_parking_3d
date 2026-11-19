@@ -271,7 +271,7 @@ namespace UltimateCarParking.Tests
             var menu = Object.FindAnyObjectByType<MainMenuController>();
             Assert.IsNotNull(menu);
             var labels = Object.FindObjectsByType<TMPro.TMP_Text>().Select(t => t.text).ToList();
-            Assert.IsTrue(labels.Any(t => System.Text.RegularExpressions.Regex.IsMatch(t, @"\b1\s*/\s*30\s+LEVELS")), "progress shown");
+            Assert.IsTrue(labels.Any(t => System.Text.RegularExpressions.Regex.IsMatch(t, @"\b1\s*/\s*\d+\s+LEVELS")), "progress shown");
             yield return new WaitForSecondsRealtime(1f);   // coin counter rolls
             Assert.IsTrue(Object.FindObjectsByType<TMPro.TMP_Text>().Any(t => t.text == "777"), "coins shown");
             Assert.IsNotNull(Object.FindAnyObjectByType<CarShowroom>().CurrentPreview, "selected car on show");
@@ -284,9 +284,9 @@ namespace UltimateCarParking.Tests
             settings.Close();
             yield return new WaitForSecondsRealtime(0.4f);
 
-            // Missions = the level list.
+            // Missions = the career map (chapters + academy).
             GameObject.Find("MissionsButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
-            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.LevelSelect, 5f, "level select");
+            yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.Career, 5f, "career");
             yield return TestScenes.WaitForTransition();
             GameObject.Find("BackButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             yield return WaitFor(() => SceneManager.GetActiveScene().name == SceneNames.MainMenu, 5f, "back to menu");

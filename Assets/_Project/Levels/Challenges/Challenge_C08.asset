@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Challenge_C08
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: C08
+  displayName: Wet Kerb
+  levelNumber: 38
+  missionType: 2
+  roadDirection: 0
+  condition: 2
+  difficulty: 3
+  briefing: 'Challenge 8, Advanced. Rain: less grip, longer stops. Parallel park
+    at the kerb between the cars, gently.'
+  objectives:
+  - rid: 2518988184230559757
+  theme: {fileID: 0}
+  props:
+  - prefab: {fileID: 1439250360090650116, guid: 712d457dd02e2495ebb95e31ab2070e6, type: 3}
+    position: {x: 1.4000001, y: 0, z: -6.3}
+    yaw: 90
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  - prefab: {fileID: 5275800946364013835, guid: b742458b93436454d9d0a20a65f925e1, type: 3}
+    position: {x: 13.5, y: 0, z: -6.3}
+    yaw: 90
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.6}
+  spawnYaw: 90
+  targetPosition: {x: 7.5, y: 0, z: -6.2}
+  targetYaw: 90
+  targetSize: {x: 2.6, y: 7}
+  timeLimitSeconds: 160
+  collisionLimit: 2
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 128
+  threeStarMaxCollisions: 0
+  twoStarTime: 152
+  twoStarMaxCollisions: 1
+  scoreMode: 2
+  threeStarQuality: 0.85
+  twoStarQuality: 0.6
+  baseCoins: 275
+  coinsPerStar: 80
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559757
+      type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Parallel park in the rain
+        position: {x: 7.5, y: 0, z: -6.2}
+        bayYaw: 90
+        size: {x: 2.6, y: 7}
+        direction: 1
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 8
+          allowEitherDirection: 1
+          maxSpeedKmh: 1.5
+          holdDuration: 1.2
+          requireParkingBrake: 0
+        kerbSide: 1
+        maxKerbGap: 0.4
+        kerbStrikeLimit: 2
+        strikeCooldown: 0.8

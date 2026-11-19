@@ -51,9 +51,11 @@ namespace UltimateCarParking.UI
             if (zone == null) return;
             if (chevron == null) Build();
             chevron.SetParent(zone.transform, false);
-            chevron.gameObject.SetActive(true);
+            chevron.gameObject.SetActive(!Expert);
             Color(UiPalette.Lime);
         }
+
+        private static bool Expert => AssistPolicy.Current == AssistLevel.Expert;
 
         private void Build()
         {
@@ -80,7 +82,7 @@ namespace UltimateCarParking.UI
         private void OnStatus(ParkingStatus status)
         {
             if (chevron == null) return;
-            chevron.gameObject.SetActive(status != ParkingStatus.Parked && status != ParkingStatus.Inactive);
+            chevron.gameObject.SetActive(!Expert && status != ParkingStatus.Parked && status != ParkingStatus.Inactive);
             Color(status == ParkingStatus.Holding ? UiPalette.Lime : status == ParkingStatus.Outside ? UiPalette.Lime : UiPalette.Gold);
         }
 

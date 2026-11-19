@@ -94,7 +94,7 @@ namespace UltimateCarParking.Tests
             string json = "{\"version\":3,\"coins\":1234,\"selectedCarId\":\"sedan\",\"ownedCarIds\":[\"sedan\"],\"levels\":[{\"levelId\":\"IN1\",\"bestStars\":2,\"bestTimeSeconds\":40,\"completions\":1}],\"selectedCountryId\":\"in\",\"unlockedCountryIds\":[\"in\"]}";
             var data = JsonUtility.FromJson<SaveData>(json);
             SaveManager.Migrate(data);
-            Assert.AreEqual(4, data.version);
+            Assert.AreEqual(UltimateCarParking.Save.SaveData.CurrentVersion, data.version, "migrates through to the current version");
             Assert.AreEqual(1234, data.coins);
             Assert.AreEqual(2, data.FindLevel("IN1").bestStars);
             Assert.IsNotNull(data.countryRewardIds);

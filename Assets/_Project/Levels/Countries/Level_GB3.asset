@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 7
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: Turn left into the car park, take the ramp down to level -1, and reverse
     into the free PERMIT HOLDERS bay. Mind the columns.
   objectives:
-  - rid: 2518988173726711826
-  - rid: 2518988173726711827
+  - rid: 2518988184230559790
+  - rid: 2518988184230559791
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 85
   threeStarMaxCollisions: 0
   twoStarTime: 125
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711826
+    - rid: 2518988184230559790
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Down the ramp
@@ -65,7 +67,7 @@ MonoBehaviour:
         size: {x: 5.8, y: 4}
         heightTolerance: 1.6
         hint: DOWN THE RAMP TO LEVEL -1
-    - rid: 2518988173726711827
+    - rid: 2518988184230559791
       type: {class: FloorParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse into the permit bay
@@ -80,5 +82,6 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         floorLabel: LEVEL -1
         floorTolerance: 1.2

@@ -126,12 +126,12 @@ namespace UltimateCarParking.Tests
             yield return Load();
             var hud = Object.FindAnyObjectByType<GameplayHud>();
             var cam = Object.FindAnyObjectByType<VehicleCamera>();
-            Assert.AreEqual("VIEW: CHASE", hud.ViewText);
+            Assert.AreEqual("CHASE", hud.ViewText);
             float chaseHeight = cam.transform.position.y - Car.transform.position.y;
             hud.ToggleView();
             yield return new WaitForSeconds(1.5f);
             Assert.IsTrue(cam.TopDown);
-            Assert.AreEqual("VIEW: TOP", hud.ViewText);
+            Assert.AreEqual("TOP", hud.ViewText);
             float topHeight = cam.transform.position.y - Car.transform.position.y;
             Debug.Log($"[Test] camera height chase {chaseHeight:F1} m, top-down {topHeight:F1} m, pitch {cam.transform.eulerAngles.x:F0}");
             Assert.Greater(topHeight, 10f, "high overhead");

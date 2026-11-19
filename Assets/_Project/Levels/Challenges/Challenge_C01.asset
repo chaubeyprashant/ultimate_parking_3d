@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Challenge_C01
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: C01
+  displayName: Wide Open
+  levelNumber: 31
+  missionType: 0
+  roadDirection: 0
+  condition: 0
+  difficulty: 1
+  briefing: 'Challenge 1, Beginner. A wide bay with guides on. Park in bay 3 either
+    way round and hold still. Your score: how centred and straight you finish, and
+    no hits.'
+  objectives:
+  - rid: 2518988184230559747
+  theme: {fileID: 0}
+  props:
+  - prefab: {fileID: 6016950864663556760, guid: 781a2061277fa42509cc487ec96c1e1c, type: 3}
+    position: {x: -24.5, y: 0, z: 7.7}
+    yaw: 0
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  - prefab: {fileID: 1170038690869043270, guid: b769d425650b744a0b0905c12f777118, type: 3}
+    position: {x: -12.5, y: 0, z: 7.7}
+    yaw: 0
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.6}
+  spawnYaw: 90
+  targetPosition: {x: -18.5, y: 0, z: 7.5}
+  targetYaw: 0
+  targetSize: {x: 3.23, y: 6.3999996}
+  timeLimitSeconds: 150
+  collisionLimit: 5
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 120
+  threeStarMaxCollisions: 1
+  twoStarTime: 142.5
+  twoStarMaxCollisions: 3
+  scoreMode: 2
+  threeStarQuality: 0.75
+  twoStarQuality: 0.5
+  baseCoins: 225
+  coinsPerStar: 60
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559747
+      type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Park in bay 3
+        position: {x: -18.5, y: 0, z: 7.5}
+        bayYaw: 0
+        size: {x: 3.23, y: 6.3999996}
+        direction: 0
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 14
+          allowEitherDirection: 1
+          maxSpeedKmh: 1.5
+          holdDuration: 0.8
+          requireParkingBrake: 0

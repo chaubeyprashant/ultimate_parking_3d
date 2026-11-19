@@ -22,7 +22,8 @@ namespace UltimateCarParking.Tests
         [Test]
         public void Thirty_Levels_In_Three_Themes_Of_Ten()
         {
-            Assert.AreEqual(30, Levels.Count);
+            // The original 30 campaign levels (the Phase 5 challenge chapter follows them; see ParkingScoreTests).
+            Assert.GreaterOrEqual(Levels.Count, 30);
             for (int i = 0; i < 30; i++)
             {
                 LevelData l = Levels.Get(i);
@@ -32,7 +33,7 @@ namespace UltimateCarParking.Tests
                 Assert.AreEqual(i + 1, l.LevelNumber);
                 Assert.AreEqual($"L{i + 1:00}", l.LevelId);
             }
-            Assert.AreEqual(30, All.Select(l => l.LevelId).Distinct().Count(), "unique ids");
+            Assert.AreEqual(All.Count(), All.Select(l => l.LevelId).Distinct().Count(), "unique ids");
         }
 
         [Test]

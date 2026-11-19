@@ -25,6 +25,9 @@ namespace UltimateCarParking.Parking
         [Tooltip("Seconds the car must stay inside, aligned and stopped before the level is complete.")]
         [Min(0f)] public float holdDuration = 1.5f;
 
+        [Tooltip("Finish in P (or with the handbrake on) before the hold counts, like a real driving test.")]
+        public bool requireParkingBrake;
+
         public ParkingRules Clone() => (ParkingRules)MemberwiseClone();
     }
 }

@@ -7,17 +7,19 @@ using UltimateCarParking.Settings;
 
 namespace UltimateCarParking.UI
 {
-    /// <summary>Music, sound and steering-sensitivity sliders. Changes apply live; the save is written on close.</summary>
+    /// <summary>Music and sound sliders, graphics, account, and the DRIVING CONTROLS button (opens <see cref="ControlsPanel"/>).
+    /// Changes apply live; the save is written on close.</summary>
     public sealed class SettingsPanel : MonoBehaviour
     {
         [SerializeField] private CanvasGroup group;
         [SerializeField] private Slider music;
         [SerializeField] private Slider sound;
-        [SerializeField] private Slider sensitivity;
         [SerializeField] private TMP_Text musicValue;
         [SerializeField] private TMP_Text soundValue;
-        [SerializeField] private TMP_Text sensitivityValue;
         [SerializeField] private Button closeButton;
+        [Header("Controls")]
+        [SerializeField] private Button controlsButton;
+        [SerializeField] private ControlsPanel controlsPanel;
         [Header("Graphics")]
         [SerializeField] private Button graphicsButton;
         [SerializeField] private TMP_Text graphicsLabel;
@@ -31,14 +33,14 @@ namespace UltimateCarParking.UI
         [SerializeField] private TMP_Text signOutLabel;
 
         public bool IsOpen => gameObject.activeSelf;
+        public ControlsPanel Controls => controlsPanel;
 
         private void Awake()
         {
-            if (sensitivity != null) { sensitivity.minValue = GameSettings.MinSensitivity; sensitivity.maxValue = GameSettings.MaxSensitivity; }
             if (music != null) music.onValueChanged.AddListener(v => { SettingsService.SetMusicVolume(v); Render(); });
             if (sound != null) sound.onValueChanged.AddListener(v => { SettingsService.SetSoundVolume(v); Render(); });
-            if (sensitivity != null) sensitivity.onValueChanged.AddListener(v => { SettingsService.SetSteeringSensitivity(v); Render(); });
             if (closeButton != null) closeButton.onClick.AddListener(Close);
+            if (controlsButton != null && controlsPanel != null) controlsButton.onClick.AddListener(controlsPanel.Open);
             if (graphicsButton != null) graphicsButton.onClick.AddListener(() =>
             {
                 SettingsService.SetGraphicsMode(QualityModes.NextGraphics(SettingsService.Current.graphicsMode));
@@ -94,7 +96,6 @@ namespace UltimateCarParking.UI
             GameSettings s = SettingsService.Current;
             if (music != null) music.SetValueWithoutNotify(s.musicVolume);
             if (sound != null) sound.SetValueWithoutNotify(s.soundVolume);
-            if (sensitivity != null) sensitivity.SetValueWithoutNotify(s.steeringSensitivity);
             Render();
             gameObject.SetActive(true);
             if (group != null) StartCoroutine(UiMotion.Fade(group, 0f, 1f, 0.2f));
@@ -103,6 +104,7 @@ namespace UltimateCarParking.UI
         public void Close()
         {
             if (!gameObject.activeSelf) return;
+            if (controlsPanel != null) controlsPanel.Close();
             SettingsService.Commit();
             gameObject.SetActive(false);
         }
@@ -131,7 +133,6 @@ namespace UltimateCarParking.UI
             GameSettings s = SettingsService.Current;
             if (musicValue != null) musicValue.text = $"{Mathf.RoundToInt(s.musicVolume * 100f)}%";
             if (soundValue != null) soundValue.text = $"{Mathf.RoundToInt(s.soundVolume * 100f)}%";
-            if (sensitivityValue != null) sensitivityValue.text = $"{s.steeringSensitivity:0.0}x";
         }
     }
 }

@@ -59,7 +59,10 @@ namespace UltimateCarParking.CameraSystem
             cam.nearClipPlane = 0.05f;
             cam.farClipPlane = 80f;
             cam.depth = -10f;
-            texture = new RenderTexture(resolution.x, resolution.y, 16, RenderTextureFormat.ARGB32) { name = "RearView", antiAliasing = 1 };
+            // Sharper image on phones that can afford it; the camera still renders only while the view is up.
+            Vector2Int res = UltimateCarParking.Quality.QualityService.ActiveTier == UltimateCarParking.Quality.QualityTier.High ? new Vector2Int(960, 540)
+                : UltimateCarParking.Quality.QualityService.ActiveTier == UltimateCarParking.Quality.QualityTier.Low ? new Vector2Int(512, 288) : new Vector2Int(800, 450);   // mid tier: sharper than the old 640 x 360
+            texture = new RenderTexture(res.x, res.y, 16, RenderTextureFormat.ARGB32) { name = "RearView", antiAliasing = 1, filterMode = FilterMode.Bilinear };
             cam.targetTexture = texture;
             UniversalAdditionalCameraData data = cam.GetUniversalAdditionalCameraData();
             data.renderShadows = false;

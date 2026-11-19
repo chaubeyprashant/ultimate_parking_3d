@@ -65,10 +65,10 @@ namespace UltimateCarParking.EditorTools
         {
             Car("Sedan Body", "Car_RealSedan", "sedan", "Harbor Sedan", "Starter. Stable, short, and free.", CarClass.Starter, 0, true, Fwd(1400f, 1600f, 62f, 34f)),
             Car("Hatchback Body", "Car_RealHatch", "hatch", "Volt Hatch", "Light nose. Easy in tight bays.", CarClass.Economy, 800, false, Fwd(1100f, 1500f, 58f, 38f)),
-            Car("Coupe Body", "Car_RealCoupe", "coupe", "Vesper Coupe", "Low rear-drive coupe. Sharp brakes.", CarClass.Performance, 4200, false, Rwd(1320f, 2400f, 86f, 32f)),
+            Car("Coupe Body", "Car_RealCoupe", "coupe", "Vesper Coupe", "Low rear-drive coupe. Sharp brakes.", CarClass.Performance, 4200, false, Rwd(1320f, 2350f, 86f, 32f)),
             Car("Sport body", "Car_RealSport", "sport", "Apex GT", "Fastest road car in the licensed fleet.", CarClass.Premium, 7500, false, Rwd(1280f, 2800f, 98f, 30f)),
-            Car("Wagon Body", "Car_RealWagon", "wagon", "Lumen Wagon", "Long roof, all-wheel drive, planted.", CarClass.Standard, 2800, false, Awd(1680f, 2100f, 72f, 33f)),
-            Car("SUV Body", "Car_RealSuv", "suv", "Ridge SUV", "Tall all-wheel drive. Watch the width.", CarClass.Premium, 5200, false, Awd(1980f, 2600f, 68f, 32f)),
+            Car("Wagon Body", "Car_RealWagon", "wagon", "Lumen Wagon", "Long roof, all-wheel drive, planted.", CarClass.Standard, 2800, false, Awd(1680f, 2650f, 72f, 33f)),
+            Car("SUV Body", "Car_RealSuv", "suv", "Ridge SUV", "Tall all-wheel drive. Watch the width.", CarClass.Premium, 5200, false, Awd(1980f, 4500f, 72f, 32f)),
         };
 
         private static FleetCar Car(string body, string file, string id, string name, string tagline, CarClass cls, int price, bool starter, VehicleHandling handling) =>

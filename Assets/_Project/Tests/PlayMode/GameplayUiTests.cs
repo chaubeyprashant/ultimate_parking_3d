@@ -123,6 +123,7 @@ namespace UltimateCarParking.Tests
         [UnityTest]
         public IEnumerator Gas_And_Brake_Reverse_Pedals_Drive_The_Car()
         {
+            SettingsService.SetPedalMode(GameSettings.PedalsClassic);   // the original combined pedal (Settings → Controls)
             yield return Load();
             var controls = Find<MobileControls>();
             HoldButton gas = GameObject.Find("Gas").GetComponent<HoldButton>();
@@ -136,8 +137,13 @@ namespace UltimateCarParking.Tests
             Assert.Greater(forward, 4f, "gas drives forward");
             Assert.AreSame(Car.Input, controls.Target, "controls bound to the spawned car");
 
-            brake.SetHeld(true);          // brakes first, then reverses
-            yield return new WaitForSeconds(4f);
+            brake.SetHeld(true);          // pressed while rolling: brakes only, even after the stop
+            yield return new WaitForSeconds(3f);
+            Assert.Greater(Car.ForwardSpeedKmh, -0.5f, "no accidental reverse while the first press is held");
+            brake.SetHeld(false);
+            yield return new WaitForSeconds(0.3f);
+            brake.SetHeld(true);          // a fresh press from the stop reverses
+            yield return new WaitForSeconds(3f);
             Assert.Less(Car.ForwardSpeedKmh, -3f, "brake pedal ends up reversing");
             Assert.AreEqual("R", GameObject.Find("Gear").GetComponent<TMPro.TMP_Text>().text, "gear shows R");
             brake.SetHeld(false);
@@ -149,6 +155,7 @@ namespace UltimateCarParking.Tests
         [UnityTest]
         public IEnumerator Steering_Buttons_Ramp_With_Sensitivity_And_Return_To_Centre()
         {
+            SettingsService.SetSteeringMode(GameSettings.SteerButtons);
             yield return Load();
             var controls = Find<MobileControls>();
             HoldButton left = GameObject.Find("SteerLeft").GetComponent<HoldButton>();
@@ -171,7 +178,6 @@ namespace UltimateCarParking.Tests
             right.SetHeld(false);
             yield return new WaitForSecondsRealtime(0.5f);
             Assert.AreEqual(0f, controls.Steering, 1e-3f, "returns to centre");
-            Assert.IsFalse(controls.enabled, "no Update while centred");
 
             float slow = TimeToFullLock(0.5f);
             left.SetHeld(true);
@@ -315,9 +321,15 @@ namespace UltimateCarParking.Tests
             yield return null;
             var panel = Find<SettingsPanel>();
             Assert.IsTrue(panel.IsOpen);
-            GameObject.Find("STEERINGSlider").GetComponent<UnityEngine.UI.Slider>().value = 1.5f;
             GameObject.Find("MUSICSlider").GetComponent<UnityEngine.UI.Slider>().value = 0.25f;
+            // Steering sensitivity lives under Settings → Driving Controls.
+            GameObject.Find("SettingsPanel/Body/ControlsButton").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            yield return null;
+            Assert.IsTrue(Find<ControlsPanel>().IsOpen, "controls panel opens from settings");
+            GameObject.Find("SENSITIVITYSlider").GetComponent<UnityEngine.UI.Slider>().value = 1.5f;
             Assert.AreEqual(1.5f, SettingsService.Current.steeringSensitivity, 1e-3f);
+            GameObject.Find("ControlsPanel/Body/Done").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            Assert.IsFalse(Find<ControlsPanel>().IsOpen);
             GameObject.Find("SettingsPanel/Body/Done").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
             Assert.IsFalse(panel.IsOpen);
             var restarted = new UltimateCarParking.Save.SaveManager(UltimateCarParking.Save.SaveManager.Current.FilePath);

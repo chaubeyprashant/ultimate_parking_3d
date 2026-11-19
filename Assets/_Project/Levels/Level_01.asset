@@ -18,10 +18,11 @@ MonoBehaviour:
   missionType: 0
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: Lesson 1. Drive down the training lane and park in bay 4 - nose first
     or backwards, your choice. Stop inside the lines and hold still.
   objectives:
-  - rid: 2518988173726711808
+  - rid: 2518988184230559744
   theme: {fileID: 0}
   props:
   - prefab: {fileID: 6016950864663556760, guid: 781a2061277fa42509cc487ec96c1e1c, type: 3}
@@ -68,6 +69,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.2
+    requireParkingBrake: 0
   threeStarTime: 40
   threeStarMaxCollisions: 0
   twoStarTime: 70
@@ -80,7 +82,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711808
+    - rid: 2518988184230559744
       type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park in bay 4
@@ -95,3 +97,4 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0

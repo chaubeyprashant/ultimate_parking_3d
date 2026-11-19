@@ -18,10 +18,11 @@ MonoBehaviour:
   missionType: 9
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: 'Valet duty at the hotel: pull up at the stand, take the keys, then park
     the guest''s car smoothly. Keep under 18 km/h.'
   objectives:
-  - rid: 2518988173726711961
+  - rid: 2518988183786750133
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -43,6 +44,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 80
   threeStarMaxCollisions: 0
   twoStarTime: 110
@@ -55,7 +57,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711961
+    - rid: 2518988183786750133
       type: {class: ValetParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Valet the guest's car
@@ -70,6 +72,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0
         standPosition: {x: 18, y: 0, z: 17}
         standYaw: 0
         standSize: {x: 3.2, y: 6.5}

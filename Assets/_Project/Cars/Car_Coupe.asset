@@ -24,8 +24,8 @@ MonoBehaviour:
     driveType: 1
     mass: 1320
     centerOfMass: {x: 0, y: 0.26, z: -0.04}
-    motorTorque: 2400
-    reverseTorque: 1200
+    motorTorque: 2350
+    reverseTorque: 1175
     maxForwardSpeedKmh: 86
     maxReverseSpeedKmh: 20
     brakeTorque: 4120
@@ -33,3 +33,21 @@ MonoBehaviour:
     maxSteerAngle: 32
     highSpeedSteerAngle: 9
     steerSpeed: 125
+    suspensionTravel: 0.16
+    springHz: 2
+    dampingRatio: 0.66
+    tireGrip: 1.6
+    sideGrip: 2
+    antiRoll: 10000
+    steerReturnSpeed: 175
+    launchAccel: 4.2
+  specs:
+    zeroTo20: 1.47
+    stopFrom40: 7.2
+    wetStopFrom40: 8.6
+    turnRadius: 4.39
+    speedAfter35: 57
+    length: 4.2391934
+    width: 1.8442221
+    parkingDifficulty: 2
+    strength: Firm sporty chassis.

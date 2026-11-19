@@ -24,8 +24,8 @@ MonoBehaviour:
     driveType: 2
     mass: 1680
     centerOfMass: {x: 0, y: 0.4, z: 0.02}
-    motorTorque: 2100
-    reverseTorque: 1260
+    motorTorque: 2650
+    reverseTorque: 1590.0001
     maxForwardSpeedKmh: 72
     maxReverseSpeedKmh: 16
     brakeTorque: 4344
@@ -33,3 +33,21 @@ MonoBehaviour:
     maxSteerAngle: 33
     highSpeedSteerAngle: 11
     steerSpeed: 100
+    suspensionTravel: 0.22
+    springHz: 1.5
+    dampingRatio: 0.62
+    tireGrip: 1.55
+    sideGrip: 1.85
+    antiRoll: 8500
+    steerReturnSpeed: 155
+    launchAccel: 3.2
+  specs:
+    zeroTo20: 1.67
+    stopFrom40: 7.2
+    wetStopFrom40: 8.7
+    turnRadius: 4.67
+    speedAfter35: 51
+    length: 4.3826437
+    width: 1.9099607
+    parkingDifficulty: 3
+    strength: 'AWD: best budget car in rain and snow.'

@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 11
   roadDirection: 1
   condition: 2
+  difficulty: 0
   briefing: 'Keep left along the riverside road and parallel park at the left kerb
     between the two cars. Finish within 0.45 m of the kerb; three kerb strikes fail.
     Heavy rain: the road is wet, so brake earlier and steer gently.'
   objectives:
-  - rid: 2518988173726711864
+  - rid: 2518988183786750036
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 70
   threeStarMaxCollisions: 0
   twoStarTime: 105
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711864
+    - rid: 2518988183786750036
       type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Parallel park at the kerb
@@ -71,6 +73,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         kerbSide: -1
         maxKerbGap: 0.45
         kerbStrikeLimit: 2

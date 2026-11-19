@@ -23,6 +23,8 @@ namespace UltimateCarParking.Missions
         SlipperySurface,
         NightParking,
         RestrictedVisibility,
+        ObstacleCourse,
+        HeavyVehicle,
     }
 
     /// <summary>Display names for <see cref="MissionType"/> (a lookup table, not behaviour).</summary>
@@ -32,7 +34,7 @@ namespace UltimateCarParking.Missions
         {
             "STANDARD PARKING", "REVERSE PARKING", "PARALLEL PARKING", "PRECISION PARKING", "PARKING EXAM",
             "TIMED PARKING", "NARROW ROUTE", "MULTI-STOREY RAMP", "MOVING TRAFFIC", "VALET PARKING",
-            "MULTI-STAGE", "SLIPPERY SURFACE", "NIGHT PARKING", "LIMITED VIEW",
+            "MULTI-STAGE", "SLIPPERY SURFACE", "NIGHT PARKING", "LIMITED VIEW", "OBSTACLE COURSE", "HEAVY VEHICLE",
         };
 
         public static string Title(MissionType type)

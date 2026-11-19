@@ -47,6 +47,8 @@ namespace UltimateCarParking.UI
         [Header("Upgrades (Engine, Brakes, Steering)")]
         [SerializeField] private Button[] upgradeButtons = new Button[3];
         [SerializeField] private TMP_Text[] upgradeLabels = new TMP_Text[3];
+        [Header("Spec sheet + compare")]
+        [SerializeField] private GarageSpecsPanel specsPanel;
 
         private readonly List<Image> dots = new List<Image>();
         private int index;
@@ -154,6 +156,7 @@ namespace UltimateCarParking.UI
                 if (upgradeButtons[i] != null) upgradeButtons[i].interactable = owned && level < CarUpgrades.MaxLevel;
             }
             coins?.Refresh();
+            if (specsPanel != null) specsPanel.Show(car, garage.SelectedCar);   // also after buying / selecting (IN USE, compare target)
         }
 
         private void OnAction()

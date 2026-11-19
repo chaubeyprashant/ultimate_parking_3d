@@ -135,6 +135,11 @@ namespace UltimateCarParking.Parking
             if (condition != null && !condition.IsMet(this, out string hint)) { ConditionHint = hint ?? ""; return ParkingStatus.Unpositioned; }
             ConditionHint = "";
             if (SpeedKmh > r.maxSpeedKmh) return ParkingStatus.TooFast;
+            if (r.requireParkingBrake && (vehicle.Input == null || !vehicle.Input.Handbrake))
+            {
+                ConditionHint = "SHIFT TO P OR PULL THE HANDBRAKE";
+                return ParkingStatus.Unpositioned;
+            }
             return ParkingStatus.Holding;
         }
 

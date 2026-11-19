@@ -18,6 +18,10 @@ namespace UltimateCarParking.Progression
         /// <summary>Country bonus paid by the last completion (World Tour), if any.</summary>
         public WorldTour.CountryReward? LastCountryReward { get; private set; }
         public event Action<WorldTour.CountryReward> CountryRewardGranted;
+        [Tooltip("Career chapters: chapter / mastery rewards are paid after a completion that earns them.")]
+        [SerializeField] private Career.CareerCatalog career;
+        /// <summary>Career rewards paid by the last completion (empty when none).</summary>
+        public System.Collections.Generic.List<Career.CareerReward> LastCareerRewards { get; private set; } = new System.Collections.Generic.List<Career.CareerReward>();
 
         private void Awake()
         {
@@ -50,6 +54,8 @@ namespace UltimateCarParking.Progression
                     Debug.Log($"[Progress] {country.DisplayName} bonus: +{cr.CompletionCoins} completion, +{cr.PerfectCoins} all stars");
                 }
             }
+            LastCareerRewards = career != null ? Career.CareerService.ClaimRewards(save.Data, career) : new System.Collections.Generic.List<Career.CareerReward>();
+            foreach (var cr in LastCareerRewards) Debug.Log($"[Progress] Career: {cr.Label}");
             save.Save();
             LastReward = reward;
             Debug.Log($"[Progress] {result.LevelId}: +{reward.Coins} coins ({(reward.FirstCompletion ? "first clear" : "replay")}), " +

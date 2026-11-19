@@ -105,6 +105,8 @@ namespace UltimateCarParking.Save
             data.countryRewardIds ??= new System.Collections.Generic.List<string>();
             data.carUpgrades ??= new System.Collections.Generic.List<CarUpgradeState>();
             data.carUpgrades.RemoveAll(u => u == null || string.IsNullOrEmpty(u.carId));
+            data.careerRewardIds ??= new System.Collections.Generic.List<string>();
+            data.careerRewardIds.RemoveAll(string.IsNullOrEmpty);
             if (data.coins < 0) data.coins = 0;
 
             if (data.version > SaveData.CurrentVersion)
@@ -122,6 +124,10 @@ namespace UltimateCarParking.Save
             // Version 3 → 4: country rewards + car upgrades (empty lists filled in above). Rewards for countries
             // already finished in an older save are paid the next time one of their missions is completed.
             if (data.version < 4) data.version = 4;
+            // Version 4 → 5: career reward ids + best score per level (defaults above; 0 = no score yet). Career unlocks are
+            // derived from existing stars, and rewards for chapters an older save already finished are paid the next
+            // time the career screen opens or a mission is completed. Coins, cars and stars are untouched.
+            if (data.version < 5) data.version = 5;
         }
 
         private static SaveData TryRead(string path)

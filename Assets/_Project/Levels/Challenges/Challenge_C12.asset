@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a910a13ac384418fa1b9717b550f7ad, type: 3}
+  m_Name: Challenge_C12
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.Levels.LevelData
+  levelId: C12
+  displayName: Driving Exam
+  levelNumber: 42
+  missionType: 4
+  roadDirection: 0
+  condition: 0
+  difficulty: 4
+  briefing: 'Challenge 12, Expert. The driving test: keep under 20 km/h, stop fully
+    at the stop line, follow the lane, then reverse into bay R4 and finish in P or
+    with the handbrake on. More than two faults fails.'
+  objectives:
+  - rid: 2518988184230559763
+  - rid: 2518988184230559764
+  theme: {fileID: 0}
+  props:
+  - prefab: {fileID: 2953890994042640683, guid: 8f37b4c6bcfb040cba0b24ea34e530c1, type: 3}
+    position: {x: -6, y: 0, z: -4.6}
+    yaw: 0
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  - prefab: {fileID: 8178506789514452328, guid: 844af8d21f2bc4047aa44b903ff4ce50, type: 3}
+    position: {x: 15.5, y: 0, z: 7.85}
+    yaw: 180
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  - prefab: {fileID: 4899006501924866020, guid: 5135fc86fac604995b30d95601e31794, type: 3}
+    position: {x: 21.5, y: 0, z: 7.85}
+    yaw: 180
+    scale: {x: 0, y: 0, z: 0}
+    variant: 0
+  environmentPrefab: {fileID: 5755700065256630794, guid: 53f9da00075594034b31737cd2fa1eac, type: 3}
+  environmentAddress: 
+  forcedCar: {fileID: 0}
+  cameraHeight: 0
+  cameraDistance: 0
+  spawnPosition: {x: -35, y: 0, z: -1.6}
+  spawnYaw: 90
+  targetPosition: {x: 18.5, y: 0, z: 7.5}
+  targetYaw: 180
+  targetSize: {x: 2.58, y: 5.7999997}
+  timeLimitSeconds: 240
+  collisionLimit: 1
+  overrideParkingRules: 0
+  parkingRules:
+    edgeMargin: 0.05
+    angleTolerance: 10
+    allowEitherDirection: 1
+    maxSpeedKmh: 2
+    holdDuration: 1.5
+    requireParkingBrake: 0
+  threeStarTime: 192
+  threeStarMaxCollisions: 0
+  twoStarTime: 228
+  twoStarMaxCollisions: 0
+  scoreMode: 2
+  threeStarQuality: 0.88
+  twoStarQuality: 0.65
+  baseCoins: 300
+  coinsPerStar: 90
+  references:
+    version: 2
+    RefIds:
+    - rid: 2518988184230559763
+      type: {class: ExamRouteObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Follow the exam route
+        gates:
+        - position: {x: -22, y: 0, z: -1.6}
+          yaw: 90
+          size: {x: 3.6, y: 2}
+          stop: 0
+        - position: {x: -7, y: 0, z: -1.6}
+          yaw: 90
+          size: {x: 3.6, y: 3}
+          stop: 1
+        - position: {x: 8, y: 0, z: -1.6}
+          yaw: 90
+          size: {x: 3.6, y: 2}
+          stop: 0
+        speedLimitKmh: 20
+        speedingGrace: 1
+        stopSeconds: 1
+        maxFaults: 2
+        heightTolerance: 1.6
+    - rid: 2518988184230559764
+      type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
+      data:
+        title: Reverse into bay R4
+        position: {x: 18.5, y: 0, z: 7.5}
+        bayYaw: 0
+        size: {x: 2.58, y: 5.7999997}
+        direction: 2
+        overrideRules: 1
+        rules:
+          edgeMargin: 0.04
+          angleTolerance: 6
+          allowEitherDirection: 1
+          maxSpeedKmh: 1.5
+          holdDuration: 1.5
+          requireParkingBrake: 1
+        maxRearGap: 0.7

@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 0
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: Drive through Mumbai's busy market street, keeping left, and park in
     the marked kerbside space past the stalls.
   objectives:
-  - rid: 2518988173726711811
-  - rid: 2518988173726711812
+  - rid: 2518988184230559775
+  - rid: 2518988184230559776
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 55
   threeStarMaxCollisions: 0
   twoStarTime: 85
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711811
+    - rid: 2518988184230559775
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Drive through the market
@@ -65,7 +67,7 @@ MonoBehaviour:
         size: {x: 10.5, y: 4}
         heightTolerance: 1.6
         hint: DRIVE THROUGH THE MARKET - KEEP LEFT
-    - rid: 2518988173726711812
+    - rid: 2518988184230559776
       type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park in the marked space
@@ -80,3 +82,4 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0

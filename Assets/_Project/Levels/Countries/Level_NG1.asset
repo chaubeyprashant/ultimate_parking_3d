@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 6
   roadDirection: 0
   condition: 0
+  difficulty: 0
   briefing: "Turn into the market lane \u2014 barely wider than the car \u2014 squeeze
     past the cones and park at the end."
   objectives:
-  - rid: 2518988173726711965
-  - rid: 2518988173726711966
+  - rid: 2518988183786750137
+  - rid: 2518988183786750138
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 90
   threeStarMaxCollisions: 0
   twoStarTime: 130
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711965
+    - rid: 2518988183786750137
       type: {class: NarrowAlleyObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Down the lane
@@ -66,7 +68,7 @@ MonoBehaviour:
         goodClearance: 0.3
         maxScrapes: 2
         reverseThrough: 0
-    - rid: 2518988173726711966
+    - rid: 2518988183786750138
       type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park at the end
@@ -81,3 +83,4 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1
+          requireParkingBrake: 0

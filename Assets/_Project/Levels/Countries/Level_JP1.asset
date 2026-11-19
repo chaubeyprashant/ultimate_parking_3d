@@ -18,11 +18,12 @@ MonoBehaviour:
   missionType: 3
   roadDirection: 1
   condition: 0
+  difficulty: 0
   briefing: "Tokyo-size bays: 2.4 m wide. Turn left into the coin parking lot and
     reverse the compact hatch into the free bay, centred and straight \u2014 the
     Japanese way."
   objectives:
-  - rid: 2518988173726711828
+  - rid: 2518988184230559792
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -44,6 +45,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 70
   threeStarMaxCollisions: 0
   twoStarTime: 100
@@ -56,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711828
+    - rid: 2518988184230559792
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse into the coin bay
@@ -71,6 +73,7 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         maxOffset: 0.22
         maxDepthOffset: 0.8
         maxAngle: 4

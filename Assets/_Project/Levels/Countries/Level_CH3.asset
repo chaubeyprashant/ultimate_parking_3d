@@ -18,12 +18,13 @@ MonoBehaviour:
   missionType: 13
   roadDirection: 0
   condition: 4
+  difficulty: 0
   briefing: 'Turn into the car park and reverse into the free bay between the two
     cars, finishing within 0.7 m of the back wall. Lake fog: you can only see a short
     way ahead. Park precisely.'
   objectives:
-  - rid: 2518988173726711921
-  - rid: 2518988173726711922
+  - rid: 2518988183786750093
+  - rid: 2518988183786750094
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -45,6 +46,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 65
   threeStarMaxCollisions: 0
   twoStarTime: 95
@@ -57,7 +59,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711921
+    - rid: 2518988183786750093
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Turn into the car park
@@ -66,7 +68,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TURN INTO THE CAR PARK
-    - rid: 2518988173726711922
+    - rid: 2518988183786750094
       type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse into the free bay
@@ -81,4 +83,5 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         maxRearGap: 0.7

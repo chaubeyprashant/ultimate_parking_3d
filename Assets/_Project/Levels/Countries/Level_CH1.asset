@@ -18,13 +18,14 @@ MonoBehaviour:
   missionType: 11
   roadDirection: 0
   condition: 3
+  difficulty: 0
   briefing: 'The Parkhaus ticket gate opens on a timer. Wait for it, drive through
     and down the ramp to level -1, and park in the free bay. Alpine snow: grip is
     very low. Use gentle steering and braking.'
   objectives:
-  - rid: 2518988173726711916
-  - rid: 2518988173726711917
-  - rid: 2518988173726711918
+  - rid: 2518988183786750088
+  - rid: 2518988183786750089
+  - rid: 2518988183786750090
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -46,6 +47,7 @@ MonoBehaviour:
     allowEitherDirection: 1
     maxSpeedKmh: 2
     holdDuration: 1.5
+    requireParkingBrake: 0
   threeStarTime: 90
   threeStarMaxCollisions: 0
   twoStarTime: 130
@@ -58,7 +60,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988173726711916
+    - rid: 2518988183786750088
       type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Through the ticket gate
@@ -68,7 +70,7 @@ MonoBehaviour:
         size: {x: 6, y: 4}
         heightTolerance: 1.6
         maxBarrierHits: 1
-    - rid: 2518988173726711917
+    - rid: 2518988183786750089
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Down the ramp
@@ -77,7 +79,7 @@ MonoBehaviour:
         size: {x: 5.8, y: 4}
         heightTolerance: 1.6
         hint: DOWN THE RAMP TO LEVEL -1
-    - rid: 2518988173726711918
+    - rid: 2518988183786750090
       type: {class: FloorParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Park on level -1
@@ -92,5 +94,6 @@ MonoBehaviour:
           allowEitherDirection: 1
           maxSpeedKmh: 2
           holdDuration: 1.2
+          requireParkingBrake: 0
         floorLabel: LEVEL -1
         floorTolerance: 1.2
