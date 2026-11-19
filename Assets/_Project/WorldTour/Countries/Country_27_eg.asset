@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0162ac2543e41d6af31177c35ed306, type: 3}
+  m_Name: Country_27_eg
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.WorldTour.CountryData
+  countryId: eg
+  displayName: Egypt
+  region: 3
+  flag: {fileID: 21300000, guid: f634c8b5d1385448ba0b2d22e9d40fe2, type: 3}
+  latLon: {x: 26.8, y: 30.8}
+  arenaName: Cairo
+  environmentLabel: Cairo city arena
+  description: Cairo's lots buzz day and night. 3 missions in a dedicated city arena.
+  missionLabel: NARROW ROUTE
+  preview: {fileID: 21300000, guid: 0416cb737095342b59e6d5986658838c, type: 3}
+  levels:
+  - {fileID: 11400000, guid: fc0eeb5ef0a6a4c1aa7df1b1a288496d, type: 2}
+  - {fileID: 11400000, guid: a2a302e48fd95441aa7d72aa2562b4be, type: 2}
+  - {fileID: 11400000, guid: cff795d96e0f840c597303406e17287d, type: 2}
+  missionCatalog: {fileID: 11400000, guid: 97a65054b5038413a8cf8969d4431b59, type: 2}
+  arena:
+    source: 0
+    key: 
+  completionCoins: 500
+  perfectCoins: 750
+  unlock:
+    unlockedByDefault: 0
+    requirePreviousCountry: 1
+    requiredCountryIds: []
+    minTourStars: 0
+    minCompletedCountries: 0
+  roadDirection: 0
+  traffic:
+    parkedCarDensity: 0.7
+    movingTraffic: 0
+    movingTrafficDensity: 0
+    trafficSpeedKmh: 20
+    pedestrians: 0
+  weather:
+    preset: 0
+    sunColor: {r: 1, g: 0.96, b: 0.9, a: 1}
+    sunIntensity: 1.25
+    sunEuler: {x: 50, y: -35, z: 0}
+    ambientSky: {r: 0.62, g: 0.68, b: 0.78, a: 1}
+    ambientEquator: {r: 0.45, g: 0.46, b: 0.47, a: 1}
+    ambientGround: {r: 0.22, g: 0.21, b: 0.2, a: 1}
+    fog: 0
+    fogColor: {r: 0.6, g: 0.65, b: 0.7, a: 1}
+    fogDensity: 0.01
+    roadWetness: 0
+    precipitation: 0

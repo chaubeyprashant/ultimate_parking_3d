@@ -8,7 +8,7 @@ source "$(dirname "$0")/unity_common.sh"
 METHOD=BuildAndroid; OUT="$PROJECT/Builds/UltimateCarParking3D.aab"
 if [[ "${1:-}" == "apk" ]]; then METHOD=BuildAndroidApk; OUT="$PROJECT/Builds/UltimateCarParking3D.apk"; fi
 if [[ "${SKIP_UNITY:-0}" != "1" ]]; then
-  run_unity "$LOGS/build.log" -executeMethod UltimateCarParking.EditorTools.BuildScript.$METHOD
+  run_unity "$LOGS/build.log" -buildTarget Android -executeMethod UltimateCarParking.EditorTools.BuildScript.$METHOD
   code=$?
   echo "== build exit $code"
   grep -E "error CS|invalid dependencies|\[Build\]|\[Delivery\]|BUILD FAILED" "$LOGS/build.log" | sort -u | head -20

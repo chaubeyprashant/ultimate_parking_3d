@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0162ac2543e41d6af31177c35ed306, type: 3}
+  m_Name: Country_13_de
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.WorldTour.CountryData
+  countryId: de
+  displayName: Germany
+  region: 1
+  flag: {fileID: 21300000, guid: e2de379a38c184219bca71602f0228c4, type: 3}
+  latLon: {x: 52.4, y: 13}
+  arenaName: Berlin
+  environmentLabel: Berlin city arena
+  description: Berlin expects every car exactly in line. 3 missions in a dedicated
+    city arena.
+  missionLabel: PARKING EXAM
+  preview: {fileID: 21300000, guid: b56f5a6470ea54ab0b12d9bc27d9b7c7, type: 3}
+  levels:
+  - {fileID: 11400000, guid: 004766601c7624c9f9d1266ef0d55b22, type: 2}
+  - {fileID: 11400000, guid: 10979a0dab846443fa3744c30bc6a360, type: 2}
+  - {fileID: 11400000, guid: 5f8cea164edbb4ffe8752df67c28c6db, type: 2}
+  missionCatalog: {fileID: 11400000, guid: 04bd0b278f3094a3d855b7e8158e5ed1, type: 2}
+  arena:
+    source: 0
+    key: 
+  completionCoins: 500
+  perfectCoins: 750
+  unlock:
+    unlockedByDefault: 0
+    requirePreviousCountry: 1
+    requiredCountryIds: []
+    minTourStars: 0
+    minCompletedCountries: 0
+  roadDirection: 0
+  traffic:
+    parkedCarDensity: 0.7
+    movingTraffic: 0
+    movingTrafficDensity: 0
+    trafficSpeedKmh: 20
+    pedestrians: 0
+  weather:
+    preset: 0
+    sunColor: {r: 1, g: 0.96, b: 0.9, a: 1}
+    sunIntensity: 1.25
+    sunEuler: {x: 50, y: -35, z: 0}
+    ambientSky: {r: 0.62, g: 0.68, b: 0.78, a: 1}
+    ambientEquator: {r: 0.45, g: 0.46, b: 0.47, a: 1}
+    ambientGround: {r: 0.22, g: 0.21, b: 0.2, a: 1}
+    fog: 0
+    fogColor: {r: 0.6, g: 0.65, b: 0.7, a: 1}
+    fogDensity: 0.01
+    roadWetness: 0
+    precipitation: 0

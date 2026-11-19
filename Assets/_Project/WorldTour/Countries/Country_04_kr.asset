@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0162ac2543e41d6af31177c35ed306, type: 3}
+  m_Name: Country_04_kr
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.WorldTour.CountryData
+  countryId: kr
+  displayName: South Korea
+  region: 0
+  flag: {fileID: 21300000, guid: 5b84eb3dde1df4875bb7408455907dbc, type: 3}
+  latLon: {x: 36.5, y: 127.8}
+  arenaName: Seoul
+  environmentLabel: Seoul city arena
+  description: Seoul's tight bays reward careful driving. 3 missions in a dedicated
+    city arena.
+  missionLabel: REVERSE PARKING
+  preview: {fileID: 21300000, guid: 30b59a7177c2145a2a2928de58e91ba4, type: 3}
+  levels:
+  - {fileID: 11400000, guid: b57ae1b8d72c944b5a10ccf0d23b8a95, type: 2}
+  - {fileID: 11400000, guid: bcf98d387ae324496a9d0725a29d3c7d, type: 2}
+  - {fileID: 11400000, guid: 901e8f255563f426b8f3c03415ca41d3, type: 2}
+  missionCatalog: {fileID: 11400000, guid: e4c7871365a41466bb0f89cc8d94682b, type: 2}
+  arena:
+    source: 0
+    key: 
+  completionCoins: 500
+  perfectCoins: 750
+  unlock:
+    unlockedByDefault: 0
+    requirePreviousCountry: 1
+    requiredCountryIds: []
+    minTourStars: 0
+    minCompletedCountries: 0
+  roadDirection: 0
+  traffic:
+    parkedCarDensity: 0.7
+    movingTraffic: 0
+    movingTrafficDensity: 0
+    trafficSpeedKmh: 20
+    pedestrians: 0
+  weather:
+    preset: 0
+    sunColor: {r: 1, g: 0.96, b: 0.9, a: 1}
+    sunIntensity: 1.25
+    sunEuler: {x: 50, y: -35, z: 0}
+    ambientSky: {r: 0.62, g: 0.68, b: 0.78, a: 1}
+    ambientEquator: {r: 0.45, g: 0.46, b: 0.47, a: 1}
+    ambientGround: {r: 0.22, g: 0.21, b: 0.2, a: 1}
+    fog: 0
+    fogColor: {r: 0.6, g: 0.65, b: 0.7, a: 1}
+    fogDensity: 0.01
+    roadWetness: 0
+    precipitation: 0

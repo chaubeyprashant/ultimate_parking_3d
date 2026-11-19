@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d0162ac2543e41d6af31177c35ed306, type: 3}
+  m_Name: Country_26_za
+  m_EditorClassIdentifier: UltimateCarParking.Runtime::UltimateCarParking.WorldTour.CountryData
+  countryId: za
+  displayName: South Africa
+  region: 3
+  flag: {fileID: 21300000, guid: 67a0e4656eee04b218cd5fada16bdbbe, type: 3}
+  latLon: {x: -29, y: 25}
+  arenaName: Cape Town
+  environmentLabel: Cape Town arena (generic)
+  description: Johannesburg's lots are big and busy. 3 missions in a dedicated city
+    arena.
+  missionLabel: PARALLEL PARKING
+  preview: {fileID: 21300000, guid: a6960bfe8d3f44a05b4ea55e1610a7b7, type: 3}
+  levels:
+  - {fileID: 11400000, guid: 0b670304f53df4cb0b218dad9de20591, type: 2}
+  - {fileID: 11400000, guid: c9158132541714f18a92e713ce71771c, type: 2}
+  - {fileID: 11400000, guid: 5386999857d6d4ee29131223ab57b718, type: 2}
+  missionCatalog: {fileID: 11400000, guid: 63da179b42c3547a598ee99398bdf675, type: 2}
+  arena:
+    source: 0
+    key: 
+  completionCoins: 500
+  perfectCoins: 750
+  unlock:
+    unlockedByDefault: 0
+    requirePreviousCountry: 1
+    requiredCountryIds: []
+    minTourStars: 0
+    minCompletedCountries: 0
+  roadDirection: 1
+  traffic:
+    parkedCarDensity: 0.7
+    movingTraffic: 0
+    movingTrafficDensity: 0
+    trafficSpeedKmh: 20
+    pedestrians: 0
+  weather:
+    preset: 0
+    sunColor: {r: 1, g: 0.96, b: 0.9, a: 1}
+    sunIntensity: 1.25
+    sunEuler: {x: 50, y: -35, z: 0}
+    ambientSky: {r: 0.62, g: 0.68, b: 0.78, a: 1}
+    ambientEquator: {r: 0.45, g: 0.46, b: 0.47, a: 1}
+    ambientGround: {r: 0.22, g: 0.21, b: 0.2, a: 1}
+    fog: 0
+    fogColor: {r: 0.6, g: 0.65, b: 0.7, a: 1}
+    fogDensity: 0.01
+    roadWetness: 0
+    precipitation: 0

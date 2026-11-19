@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.google.ads.mobile": {
+      "version": "file:GoogleTarballs/com.google.ads.mobile-11.7.0-edm1.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.unity.modules.androidjni": "1.0.0",
+        "com.google.external-dependency-manager": "1.2.190"
+      }
+    },
     "com.google.external-dependency-manager": {
       "version": "file:GoogleTarballs/com.google.external-dependency-manager-1.2.190.tgz",
       "depth": 0,
@@ -249,6 +258,12 @@
       "dependencies": {}
     },
     "com.unity.modules.jsonserialize": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.particlesystem": {
       "version": "1.0.0",
       "depth": 0,
       "source": "builtin",
