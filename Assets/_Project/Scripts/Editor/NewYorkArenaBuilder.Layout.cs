@@ -388,7 +388,7 @@ namespace UltimateCarParking.EditorTools
         private static readonly string[] Fleet = { "sedan", "hatchback", "suv", "compact", "wagon", "minivan", "coupe", "pickup", "offroad" };
         private static GameObject NycCar(int k) => (k % 7) switch
         {
-            0 => P("Taxi_Yellow"), 2 => P("Sedan_Fairheaven"), 4 => P("Sedan_Negotiator"), 6 => P("Coupe_Phoenix"),
+            0 => P("Taxi_Yellow"), 2 => P("Sedan_Fairheaven"), 3 => P("Muscle_Duke"), 4 => P("Sedan_Negotiator"), 5 => P("Rancher_Lifted"), 6 => P("Coupe_Phoenix"),
             _ => Parked(Fleet[k % Fleet.Length]),
         };
 

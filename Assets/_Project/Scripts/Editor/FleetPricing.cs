@@ -26,15 +26,11 @@ namespace UltimateCarParking.EditorTools
         /// <summary>Market class of each car (a judgement about the vehicle: small budget cars, family and work cars, sporty or rugged cars, flagships).</summary>
         public static readonly Dictionary<string, CarClass> Classes = new Dictionary<string, CarClass>
         {
-            // The ten car-pack bodies (sedan, hatch, compact, coupe, sport, wagon, suv, offroad, pickup, minivan) carry the class set in RealCarFactory.
-            ["lasley67"] = CarClass.Economy,
-            ["kiri86"] = CarClass.Standard, ["kiri94"] = CarClass.Standard, ["canyon75"] = CarClass.Standard, ["lct95"] = CarClass.Standard,
-            ["doutrive78"] = CarClass.Performance,
-            ["lightbody85"] = CarClass.Premium, ["lightbody90"] = CarClass.Premium,
+            // The six car-pack bodies (sedan, hatch, coupe, sport, wagon, suv) carry the class set in RealCarFactory.
             // Sports and muscle cars, rally-tuned and premium SUVs.
-            ["phoenix455_71"] = CarClass.Premium, ["fairheaven_lt_80"] = CarClass.Premium, ["negotiator_80"] = CarClass.Premium, ["duke_69"] = CarClass.Premium,
+            ["phoenix455_71"] = CarClass.Premium, ["fairheaven_lt_80"] = CarClass.Premium, 
             ["chapman_73"] = CarClass.Premium, ["tiara_gt_83"] = CarClass.Premium, ["asti_stradale_89"] = CarClass.Premium, ["roadster_00"] = CarClass.Premium,
-            ["bokaroo_67"] = CarClass.Premium, ["urban_10"] = CarClass.Premium, ["rancher_80_lifted"] = CarClass.Premium,
+            ["bokaroo_67"] = CarClass.Premium, ["urban_10"] = CarClass.Premium, 
             // Supercars.
             ["saba_v12_95"] = CarClass.Elite, ["exterminator_00"] = CarClass.Elite, ["f1_velocity"] = CarClass.Elite, ["monster_goliath"] = CarClass.Elite, ["monster_mammoth"] = CarClass.Elite, ["cheetah_84"] = CarClass.Elite,
         };

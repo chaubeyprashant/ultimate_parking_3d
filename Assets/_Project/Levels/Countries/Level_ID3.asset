@@ -21,8 +21,8 @@ MonoBehaviour:
   briefing: The mall car park's gate opens on a timer. Wait for it, drive through,
     then take the free bay within 30 seconds; every knock costs 3.
   objectives:
-  - rid: 2518988132493033536
-  - rid: 2518988132493033537
+  - rid: 2518988173726711872
+  - rid: 2518988173726711873
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988132493033536
+    - rid: 2518988173726711872
       type: {class: BarrierGateObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Through the gate
@@ -66,7 +66,7 @@ MonoBehaviour:
         size: {x: 10, y: 4}
         heightTolerance: 1.6
         maxBarrierHits: 1
-    - rid: 2518988132493033537
+    - rid: 2518988173726711873
       type: {class: TimedParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Beat the clock

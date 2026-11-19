@@ -22,8 +22,8 @@ MonoBehaviour:
     room to turn in the loading yard, and reverse into the free dock bay. Tailgate
     within 0.5 m of the dock.
   objectives:
-  - rid: 2518988132493033482
-  - rid: 2518988132493033483
+  - rid: 2518988173991215106
+  - rid: 2518988173991215107
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -57,7 +57,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988132493033482
+    - rid: 2518988173991215106
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Turn into the loading alley
@@ -66,7 +66,7 @@ MonoBehaviour:
         size: {x: 6.4, y: 4}
         heightTolerance: 1.6
         hint: TURN RIGHT INTO THE LOADING ALLEY
-    - rid: 2518988132493033483
+    - rid: 2518988173991215107
       type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse up to the dock

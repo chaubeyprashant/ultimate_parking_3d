@@ -55,7 +55,7 @@ namespace UltimateCarParking.EditorTools
 
         public static GameObject Make(string arena, Spec s)
         {
-            string src = $"{SourceRoot}/{s.source}";
+            string src = s.source.StartsWith("Assets/") ? s.source : $"{SourceRoot}/{s.source}";   // full asset paths allowed (garage models reused as scenery)
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(src);
             if (source == null) { Debug.LogError($"[ArenaProps] missing {src}"); return null; }
             Directory.CreateDirectory($"{PrefabRoot}/{arena}");

@@ -25,9 +25,9 @@ namespace UltimateCarParking.Tests
         }
 
         [Test]
-        public void The_Original_Five_Keep_Their_Ids_So_Old_Saves_Still_Work()
+        public void The_Kept_Original_Cars_Keep_Their_Ids_So_Old_Saves_Still_Work()
         {
-            foreach (string id in new[] { "sedan", "hatch", "sport", "suv", "pickup" })
+            foreach (string id in new[] { "sedan", "hatch", "sport", "suv", "wagon" })
                 Assert.IsNotNull(Catalog.FindById(id), id);
             Assert.AreEqual(0, Catalog.FindById("sedan").Price, "the starter stays free");
             Assert.AreEqual("sedan", Catalog.Default.CarId);

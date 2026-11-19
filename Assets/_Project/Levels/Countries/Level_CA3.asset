@@ -21,10 +21,10 @@ MonoBehaviour:
   briefing: 'The road test: cross the start line, parallel park at the kerb, then
     drive to the car park and park precisely in the bay.'
   objectives:
-  - rid: 2518988132493033601
-  - rid: 2518988132493033602
-  - rid: 2518988132493033603
-  - rid: 2518988132493033604
+  - rid: 2518988173726711937
+  - rid: 2518988173726711938
+  - rid: 2518988173726711939
+  - rid: 2518988173726711940
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988132493033601
+    - rid: 2518988173726711937
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Start line
@@ -67,7 +67,7 @@ MonoBehaviour:
         size: {x: 4, y: 8}
         heightTolerance: 1.6
         hint: CROSS THE START LINE
-    - rid: 2518988132493033602
+    - rid: 2518988173726711938
       type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Parallel park at the kerb
@@ -86,7 +86,7 @@ MonoBehaviour:
         maxKerbGap: 0.45
         kerbStrikeLimit: 2
         strikeCooldown: 0.8
-    - rid: 2518988132493033603
+    - rid: 2518988173726711939
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Turn into the car park
@@ -95,7 +95,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TO THE CAR PARK
-    - rid: 2518988132493033604
+    - rid: 2518988173726711940
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Precision bay

@@ -27,7 +27,7 @@ namespace UltimateCarParking.Tests
 #endif
         }
 
-        private static IEnumerable<string> CarIds() => new[] { "sedan", "hatch", "sport", "suv", "pickup" };
+        private static IEnumerable<string> CarIds() => new[] { "sedan", "hatch", "sport", "suv", "wagon" };
 
         [SetUp]
         public void SetUp() => TestScenes.UseTemporarySave();

@@ -59,6 +59,9 @@ namespace UltimateCarParking.EditorTools
                 new F.Spec { name = "Pickup_Doutrive", source = "NewYork/nyc_pickup_doutrive.glb", yaw = 90f, fit = F.Fit.Length, size = 4.9f, colliderHeightCap = 1.7f, strip = new[] { "Interior" } },
                 new F.Spec { name = "Pickup_Lightbody", source = "NewYork/nyc_pickup_lightbody85.glb", yaw = 90f, fit = F.Fit.Length, size = 5.2f, colliderHeightCap = 1.8f, strip = new[] { "Interior" } },
                 new F.Spec { name = "Utility_Truck", source = "NewYork/nyc_pickup_lightbody90.glb", yaw = 90f, fit = F.Fit.Length, size = 5.6f, colliderHeightCap = 1.9f, strip = new[] { "Interior" } },
+                // Garage-only classics reused as street parking (same CC BY 4.0 series as the cars above).
+                new F.Spec { name = "Muscle_Duke", source = "Assets/_Project/ThirdParty/Vehicles/Premium/duke_69.glb", yaw = 90f, fit = F.Fit.Length, size = 5.1f, colliderHeightCap = 1.4f, strip = new[] { "Interior" } },
+                new F.Spec { name = "Rancher_Lifted", source = "Assets/_Project/ThirdParty/Vehicles/Premium/rancher_80_lifted.glb", yaw = 90f, fit = F.Fit.Length, size = 4.8f, colliderHeightCap = 2.0f, strip = new[] { "Interior" } },
                 // Street furniture
                 new F.Spec { name = "Hydrant", source = "NewYork/nyc_hydrant.glb", fit = F.Fit.Height, size = 0.85f },
                 new F.Spec { name = "Parking_Meter", source = "NewYork/nyc_parking_meter.glb", fit = F.Fit.Height, size = 1.4f },

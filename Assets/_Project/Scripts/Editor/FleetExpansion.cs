@@ -44,22 +44,6 @@ namespace UltimateCarParking.EditorTools
         private static IEnumerable<Entry> Fleet()
         {
             const VehicleController.DriveType Fwd = VehicleController.DriveType.FrontWheelDrive, Rwd = VehicleController.DriveType.RearWheelDrive, Awd = VehicleController.DriveType.AllWheelDrive;
-            yield return new Entry { Id = "kiri86", Name = "Kiri '86", Tagline = "A lightweight 80s coupe. Quick to turn.", ModelPath = Arenas + "Japan/jp_car_kiri86.glb", Price = 1200, TargetLength = 4.1f,
-                Handling = H(Rwd, 1150f, 1680f, 64f, 2700f, 34f, 12f, 125f) };
-            yield return new Entry { Id = "kiri94", Name = "Kiri '94", Tagline = "A 90s sports coupe with sharp steering.", ModelPath = Arenas + "Japan/jp_car_kiri94.glb", Price = 2400, TargetLength = 4.2f,
-                Handling = H(Rwd, 1200f, 1930f, 68f, 2950f, 34f, 11f, 120f) };
-            yield return new Entry { Id = "lasley67", Name = "Lasley '67", Tagline = "A tiny 60s classic. Easy to place in the tightest bay.", ModelPath = Arenas + "London/ldn_car_lasley.glb", Price = 3500, TargetLength = 3.5f,
-                Handling = H(Rwd, 1500f, 2300f, 68f, 3200f, 32f, 10f, 100f) };
-            yield return new Entry { Id = "lct95", Name = "LCT 3000 '95", Tagline = "A boxy delivery van: tall, wide at the back, grippy on all four wheels.", ModelPath = Arenas + "Japan/jp_car_lct95.glb", Price = 5000, TargetLength = 4.4f,
-                Handling = H(Awd, 1350f, 2250f, 66f, 3300f, 33f, 10.5f, 115f) };
-            yield return new Entry { Id = "canyon75", Name = "Canyon Taxi '75", Tagline = "A big city cab. Steady and wide.", ModelPath = Arenas + "NewYork/nyc_taxi.glb", Price = 7000, TargetLength = 5.0f, ExtraScale = 0.9f,
-                Handling = H(Rwd, 1700f, 2400f, 60f, 3200f, 32f, 10f, 100f) };
-            yield return new Entry { Id = "doutrive78", Name = "Doutrive '78", Tagline = "A rugged pickup with a roll cage.", ModelPath = Arenas + "NewYork/nyc_pickup_doutrive.glb", Price = 8500, TargetLength = 5.1f,
-                Handling = H(Rwd, 1750f, 3000f, 64f, 3500f, 33f, 10f, 100f, 0.4f) };
-            yield return new Entry { Id = "lightbody85", Name = "Lightbody Lifted '85", Tagline = "Lifted on big tyres. Four-wheel drive power.", ModelPath = Arenas + "NewYork/nyc_pickup_lightbody85.glb", Price = 10000, TargetLength = 5.2f, ExtraScale = 0.9f,
-                Handling = H(Awd, 2200f, 4000f, 66f, 4400f, 32f, 10f, 92f, 0.46f) };
-            yield return new Entry { Id = "lightbody90", Name = "Lightbody Utility '90", Tagline = "The heavy-duty work truck. Strong and wide.", ModelPath = Arenas + "NewYork/nyc_pickup_lightbody90.glb", Price = 12000, TargetLength = 5.3f, ExtraScale = 0.95f,
-                Handling = H(Rwd, 2400f, 4600f, 66f, 4900f, 32f, 10f, 90f, 0.44f) };
 
             // --- Premium sports and muscle cars, rally-tuned, premium SUVs (Zhabotinsky low-poly series, CC BY 4.0) ---
             const string P = Premium;
@@ -71,18 +55,12 @@ namespace UltimateCarParking.EditorTools
                 Handling = H(Rwd, 1250f, 2950f, 77f, 3500f, 33f, 10.5f, 122f, 0.3f) };
             yield return new Entry { Id = "tiara_gt_83", Name = "Tiara GT '83 Tuned", Tagline = "Rally-tuned with four-wheel grip.", ModelPath = P + "tiara_gt_83.glb", AutoFit = true,
                 Handling = H(Awd, 1350f, 3300f, 75f, 3700f, 33f, 10.5f, 118f, 0.3f) };
-            yield return new Entry { Id = "duke_69", Name = "Duke '69", Tagline = "A big-block muscle car with a long, low nose.", ModelPath = P + "duke_69.glb", AutoFit = true,
-                Handling = H(Rwd, 1450f, 3250f, 74f, 3600f, 32f, 10f, 108f) };
-            yield return new Entry { Id = "negotiator_80", Name = "Negotiator '80", Tagline = "A heavy, powerful grand tourer.", ModelPath = P + "negotiator_80.glb", AutoFit = true,
-                Handling = H(Rwd, 1500f, 3300f, 74f, 3700f, 32f, 10f, 106f) };
             yield return new Entry { Id = "fairheaven_lt_80", Name = "Fairheaven LT '80", Tagline = "A plush, wide luxury coupe with serious power.", ModelPath = P + "fairheaven_lt_80.glb", AutoFit = true,
                 Handling = H(Rwd, 1550f, 3200f, 72f, 3600f, 32f, 10f, 104f) };
             yield return new Entry { Id = "phoenix455_71", Name = "Phoenix 455 '71", Tagline = "The classic muscle icon. Loud, quick and heavy.", ModelPath = P + "phoenix455_71.glb", AutoFit = true,
                 Handling = H(Rwd, 1600f, 3500f, 76f, 3800f, 32f, 10f, 104f) };
             yield return new Entry { Id = "bokaroo_67", Name = "Bokaroo '67", Tagline = "A classic four-wheel-drive explorer.", ModelPath = P + "bokaroo_67.glb", AutoFit = true,
                 Handling = H(Awd, 1850f, 3400f, 66f, 4000f, 33f, 10.5f, 98f, 0.42f) };
-            yield return new Entry { Id = "rancher_80_lifted", Name = "Rancher '80 Lifted", Tagline = "Lifted, tough and built for any road.", ModelPath = P + "rancher_80_lifted.glb", AutoFit = true,
-                Handling = H(Awd, 2050f, 3500f, 64f, 4100f, 32f, 10f, 94f, 0.46f) };
             yield return new Entry { Id = "urban_10", Name = "Urban '10", Tagline = "A modern premium SUV. Smooth, quick and grippy.", ModelPath = P + "urban_10.glb", AutoFit = true,
                 Handling = H(Awd, 2000f, 3600f, 70f, 4200f, 33f, 10.5f, 100f, 0.42f) };
 
@@ -176,6 +154,9 @@ namespace UltimateCarParking.EditorTools
                 var c = AssetDatabase.LoadAssetAtPath<CarData>(AssetDatabase.GUIDToAssetPath(guid));
                 if (c != null && c.CarId != "real_sedan" && !cars.Contains(c)) cars.Add(c);
             }
+            // The garage holds exactly the listed cars: drop any that were removed from the lineup (old data assets stay on disk for arenas and saves).
+            var allowed = new HashSet<string>(RealCarFactory.FleetIds.Concat(Fleet().Select(e => e.Id)));
+            cars.RemoveAll(c => !allowed.Contains(c.CarId));
             List<CarData> sorted = cars.OrderBy(c => c.OwnedByDefault ? 0 : 1).ThenBy(c => c.Price).ThenBy(c => c.DisplayName).ToList();
             list.arraySize = sorted.Count;
             for (int i = 0; i < sorted.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = sorted[i];
