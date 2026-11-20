@@ -38,6 +38,7 @@ namespace UltimateCarParking.Conditions
             if (condition == RoadCondition.Clear)
             {
                 if (car != null) car.SetSurfaceGrip(1f);
+                Ambience(condition);
                 return;
             }
             Active = condition;
@@ -61,6 +62,56 @@ namespace UltimateCarParking.Conditions
             follow = cameraTransform;
             if (p.Precip != Conditions.Precipitation.None) BuildPrecipitation(p);
             if (p.Headlights && car != null) BuildBeam(car.transform);
+            // Lights on in the dark, rain and fog; ambience; wet or snowy road surface.
+            if (car != null && (p.Headlights || condition == RoadCondition.Rain || condition == RoadCondition.Fog || condition == RoadCondition.Snow))
+                UltimateCarParking.Vehicle.VehicleLights.On(car.gameObject).Headlights = true;
+            Ambience(condition);
+            if (condition == RoadCondition.Rain || condition == RoadCondition.Snow) Surface(condition);
+        }
+
+        // ------------------------------------------------------------ ambience and road surface
+
+        private AudioSource ambience;
+        private readonly System.Collections.Generic.List<(Renderer r, int i)> surfaced = new System.Collections.Generic.List<(Renderer, int)>();
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor"), SmoothId = Shader.PropertyToID("_Smoothness");
+        public AudioClip AmbienceClip => ambience != null ? ambience.clip : null;
+        public int WetSurfaces => surfaced.Count;
+
+        private void Ambience(RoadCondition c)
+        {
+            Audio.AudioLibrary lib = Audio.AudioManager.Instance.Library;
+            if (lib == null) return;
+            AudioClip clip = c == RoadCondition.Rain ? lib.ambienceRain : c == RoadCondition.Snow || c == RoadCondition.Fog ? lib.ambienceWind : lib.ambienceCity;
+            if (clip == null) return;
+            if (ambience == null) { ambience = gameObject.AddComponent<AudioSource>(); ambience.loop = true; ambience.playOnAwake = false; ambience.spatialBlend = 0f; }
+            ambience.clip = clip;
+            float level = c == RoadCondition.Rain ? 0.32f : c == RoadCondition.Snow ? 0.22f : c == RoadCondition.Fog ? 0.12f : 0.08f;
+            ambience.volume = level * Settings.SettingsService.Current.soundVolume;
+            ambience.Play();
+        }
+
+        /// <summary>Wet road: darker and glossy. Snow: paler and matte. Only ground materials (road, asphalt, concrete, pavement), by property block.</summary>
+        private void Surface(RoadCondition c)
+        {
+            var block = new MaterialPropertyBlock();
+            foreach (MeshRenderer r in FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None))
+            {
+                if (!r.gameObject.isStatic && r.GetComponentInParent<Rigidbody>() != null) continue;   // cars and moving props stay as they are
+                Material[] mats = r.sharedMaterials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    Material m = mats[i];
+                    if (m == null || !m.HasProperty(BaseColorId)) continue;
+                    string n = m.name.ToLowerInvariant();
+                    if (!(n.Contains("road") || n.Contains("asphalt") || n.Contains("concrete") || n.Contains("pavement") || n.Contains("ground"))) continue;
+                    Color col = m.GetColor(BaseColorId);
+                    block.Clear();
+                    if (c == RoadCondition.Rain) { block.SetColor(BaseColorId, col * 0.72f); block.SetFloat(SmoothId, 0.82f); }
+                    else { block.SetColor(BaseColorId, Color.Lerp(col, new Color(0.92f, 0.94f, 0.97f), 0.38f)); block.SetFloat(SmoothId, 0.15f); }
+                    r.SetPropertyBlock(block, i);
+                    surfaced.Add((r, i));
+                }
+            }
         }
 
         /// <summary>Restores the scene's own light, fog and sky and removes every effect.</summary>
@@ -80,6 +131,10 @@ namespace UltimateCarParking.Conditions
             if (skyCopy != null) { Destroy(skyCopy); skyCopy = null; }
             if (precip != null) { Destroy(precip.gameObject); precip = null; }
             if (beam != null) { Destroy(beam); beam = null; }
+            if (ambience != null) ambience.Stop();
+            var empty = new MaterialPropertyBlock();
+            foreach (var (r, i) in surfaced) if (r != null) r.SetPropertyBlock(empty, i);
+            surfaced.Clear();
             if (vehicle != null) vehicle.SetSurfaceGrip(1f);
             vehicle = null; follow = null;
             Active = RoadCondition.Clear;

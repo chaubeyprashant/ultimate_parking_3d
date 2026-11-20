@@ -50,6 +50,13 @@ namespace UltimateCarParking.EditorTools
             lib.levelSuccess = Clip("level_success");
             lib.levelFail = Clip("level_fail");
             lib.musicLoop = Clip("music_loop");
+            lib.horn = Clip("horn");
+            lib.indicatorTick = Clip("indicator_tick");
+            lib.engineStart = Clip("engine_start");
+            lib.tireSqueal = Clip("tire_squeal");
+            lib.ambienceRain = Clip("ambience_rain");
+            lib.ambienceWind = Clip("ambience_wind");
+            lib.ambienceCity = Clip("ambience_city");
             EditorUtility.SetDirty(lib);
             AssetDatabase.SaveAssets();
             Debug.Log("[Bootstrap] Audio library written");
@@ -59,7 +66,8 @@ namespace UltimateCarParking.EditorTools
         {
             var lib = AssetDatabase.LoadAssetAtPath<AudioLibrary>(LibraryPath);
             return lib != null && lib.engineLoop && lib.brakeSqueal && lib.collision && lib.collisionWarning && lib.buttonClick
-                   && lib.rewardStar && lib.rewardCoin && lib.levelSuccess && lib.levelFail && lib.musicLoop;
+                   && lib.rewardStar && lib.rewardCoin && lib.levelSuccess && lib.levelFail && lib.musicLoop
+                   && lib.horn && lib.indicatorTick && lib.engineStart && lib.tireSqueal && lib.ambienceRain && lib.ambienceWind && lib.ambienceCity;
         }
     }
 }

@@ -142,6 +142,7 @@ namespace UltimateCarParking.EditorTools
                 NewZealandArenaBuilder.Build();    // Auckland (generic stand-in)
             }
             ConditionsAssets.Generate();         // rain / snow / headlight beam textures + materials (Resources, so they ship)
+            CustomizationAssets.Generate();      // Phase 7: lamp glow + plate materials (Resources)
             MissionConditions.ApplyAll();        // night, rain, snow and fog missions (needs the arenas' levels)
             WorldTourBuilder.Build();            // World Tour: 30 countries, previews (needs the campaign levels)
             if (AssetDatabase.LoadAssetAtPath<GameObject>(RealPropFactory.CarPack) != null)
@@ -850,7 +851,7 @@ namespace UltimateCarParking.EditorTools
             foreach (System.Type t in new[] { typeof(UltimateCarParking.UI.GameplayUiController), typeof(UltimateCarParking.UI.GameplayHud),
                          typeof(UltimateCarParking.UI.MobileControls), typeof(UltimateCarParking.UI.ParkingGuide), typeof(UltimateCarParking.UI.SettingsPanel),
                          typeof(UltimateCarParking.UI.ControlsPanel), typeof(UltimateCarParking.UI.ControlLayout), typeof(UltimateCarParking.UI.SpeedGauge),
-                         typeof(UltimateCarParking.UI.SteeringWheel), typeof(UltimateCarParking.UI.ParkAssistView), typeof(UltimateCarParking.UI.HudLayout) })
+                         typeof(UltimateCarParking.UI.SteeringWheel), typeof(UltimateCarParking.UI.ParkAssistView), typeof(UltimateCarParking.UI.HudLayout), typeof(UltimateCarParking.UI.VehicleButtons) })
             {
                 var comp = Object.FindAnyObjectByType(t, FindObjectsInactive.Include) as MonoBehaviour;
                 Check(comp != null, $"Gameplay {t.Name}");

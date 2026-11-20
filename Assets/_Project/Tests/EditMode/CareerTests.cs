@@ -87,7 +87,7 @@ namespace UltimateCarParking.Tests
                     "\"countryRewardIds\":[\"in\"]}");
                 SaveData d = new SaveManager(path).Data;
                 Assert.AreEqual(SaveData.CurrentVersion, d.version);
-                Assert.AreEqual(5, d.version);
+                Assert.GreaterOrEqual(d.version, 5, "migrates through version 5 (and on to the current version)");
                 Assert.AreEqual(5432, d.coins);
                 CollectionAssert.AreEqual(new[] { "sedan", "suv" }, d.ownedCarIds);
                 Assert.AreEqual("suv", d.selectedCarId);

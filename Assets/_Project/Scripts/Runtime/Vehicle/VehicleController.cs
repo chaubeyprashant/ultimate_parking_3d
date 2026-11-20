@@ -124,6 +124,9 @@ namespace UltimateCarParking.Vehicle
         /// <summary>When false the car ignores input and holds the brakes (e.g. level complete, paused).</summary>
         public bool ControlsEnabled { get; set; } = true;
 
+        /// <summary>Engine running (start / stop button). Off: no drive torque; brakes, steering and handbrake still work.</summary>
+        public bool EngineOn { get; set; } = true;
+
         private void Awake()
         {
             body = GetComponent<Rigidbody>();
@@ -166,7 +169,7 @@ namespace UltimateCarParking.Vehicle
             bool handbrake = false;
             if (ControlsEnabled && input != null)
             {
-                throttle = input.Throttle;
+                throttle = EngineOn ? input.Throttle : 0f;
                 steering = input.Steering;
                 brake = input.Brake;
                 handbrake = input.Handbrake;

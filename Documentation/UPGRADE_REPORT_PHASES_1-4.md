@@ -151,3 +151,16 @@ Objective types: standard, reverse, parallel, precision, timed, valet, multi-sto
 - HUD size setting (85–115 %), compact objectives (current one, tap SHOW ALL; collapses while the rear camera is up), responsive layout (controls shrink to at most 70 % on narrow screens; speedometer and sensors centred in the gap; top-centre column narrows), thin light edges on the main panels.
 - Layout check (editor, canvas emulation): 30 layouts — 16:9, 20:9, 19.5:9 with a notch, 16:10, 4:3 × right/left-handed × default / largest / smallest sizes — every essential element inside the safe area, no overlaps (after fixing the 32 overlaps the check first found).
 - Not yet checked on a real phone screen.
+
+---
+
+# Phase 7: vehicle customisation and immersion
+
+- Garage CUSTOMIZE panel: paint (12 colours + factory), finish (gloss / metallic / matte), rims (chrome, gloss black, gunmetal, gold, bronze), window tint (light / dark / limo), headlight colour, custom plate text (2–8 characters). Live preview on the turntable, two-tap purchase (BUY → CONFIRM), free re-fit of bought options, free reset to factory. Prices 150–700 coins (a full custom look < 3,500). Saved per car (save version 6, automatic migration).
+- Applied by MaterialPropertyBlock per material slot: no material instances; shared materials untouched (parked scenery cars keep their look).
+- Measured on all 20 cars: paint, tint and rims on 19; Velocity F1 paint only (no glass; its wheels share a plain material).
+- Working lights on every car (headlights, tail / brake, reverse, indicators, hazards), horn (hold), engine start / stop (off: no drive, brakes still work).
+- Synthesised audio (no downloads; existing clips byte-identical): horn, indicator tick, engine start, tyre squeal from real sideways slip, rain / wind / city ambience.
+- Weather: automatic headlights at night / rain / fog / snow; wet or snowy ground surfaces (72 surfaces in the rain test level).
+- Not done: animated doors / bonnet / boot (models are single merged meshes), decals.
+- Tests: EditMode 203 / 203; PlayMode customisation and related suites 41 / 41; HUD layouts 30 / 30.

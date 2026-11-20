@@ -33,7 +33,7 @@ namespace UltimateCarParking.Tests
         private static readonly string[] Essentials =
         {
             "PauseButton", "LevelBlock", "TimerPill", "HitsPill", "ViewButton", "ZoomButton", "ObjectiveProgress", "Objectives/Objective1",
-            "Guide", "RearCamera", "Speedometer", "ParkAssist", "SteerZone", "PedalZone",
+            "Guide", "RearCamera", "Speedometer", "ParkAssist", "SteerZone", "PedalZone", "VehicleButtons",
         };
 
         private static Rect CanvasRect(RectTransform r, RectTransform canvas)

@@ -22,6 +22,9 @@ namespace UltimateCarParking.UI
 
         public GameObject CurrentPreview => current;
 
+        /// <summary>Live preview of a look on the turntable car (not saved).</summary>
+        public void Preview(CarLook look) { if (current != null) CarLookApplier.On(current).Apply(look); }
+
         /// <summary>Adds drag rotation (degrees); decays smoothly.</summary>
         public void AddSpin(float degrees) => spinVelocity += degrees;
 
@@ -30,6 +33,8 @@ namespace UltimateCarParking.UI
             if (car == null || car.ModelPrefab == null) return;
             ShowPrefab(car.ModelPrefab, car.CarId, direction);
             if (car.PaintMaterial != null && current != null && current.TryGetComponent(out CarPaint paint)) paint.Apply(car.PaintMaterial);
+            if (current != null && UltimateCarParking.Save.SaveManager.Current != null)
+                CarLookApplier.On(current).Apply(CustomizationService.Look(UltimateCarParking.Save.SaveManager.Current.Data, car.CarId));
         }
 
         /// <summary>Shows a mesh prefab with physics and driving scripts switched off.</summary>

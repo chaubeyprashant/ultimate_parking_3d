@@ -394,6 +394,12 @@ namespace UltimateCarParking.EditorTools
             WireArray(ctrl, "upgradeButtons", upgradeButtons);
             WireArray(ctrl, "upgradeLabels", upgradeLabels);
             Wire(ctrl, "specsPanel", specsPanel);
+
+            // Customisation (Phase 7): button under the spec sheet, panel on the right with a live preview on the turntable.
+            Button customize = PillButton(safe, "CustomizeButton", "CUSTOMIZE", true, Vector2.zero, new Vector2(500f, 72f), 30f);
+            Place((RectTransform)customize.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-60f, -616f), new Vector2(500f, 72f));
+            CustomizePanel cp = BuildCustomizePanel(safe, ctrl, showroom);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(customize.onClick, cp.Open);
             Wire(garageGo.AddComponent<BackNavigation>(), "targetScene", SceneNames.MainMenu);
 
             EditorSceneManager.SaveScene(scene, ProjectBootstrapper.ScenePathOf(SceneNames.Garage));

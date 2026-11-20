@@ -271,6 +271,9 @@ namespace UltimateCarParking.Levels
                 carData.ApplyTo(car);
                 // Garage upgrades on top of the car's own handling (a stock car gets identical values).
                 if (SaveManager.Current != null) controller.ApplyHandling(CarUpgrades.Upgraded(SaveManager.Current.Data, carData));
+                // Phase 7: working lights and the player's customised look (factory for cars never customised).
+                UltimateCarParking.Vehicle.VehicleLights.On(controller.gameObject);
+                if (SaveManager.Current != null) CarLookApplier.On(controller.gameObject).Apply(CustomizationService.Look(SaveManager.Current.Data, carData.CarId));
             }
             if (!car.TryGetComponent(out CollisionHandler collisions))
             {

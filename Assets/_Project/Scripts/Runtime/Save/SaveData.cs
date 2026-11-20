@@ -11,7 +11,7 @@ namespace UltimateCarParking.Save
     [Serializable]
     public sealed class SaveData
     {
-        public const int CurrentVersion = 5;   // 2: + settings, 3: + World Tour selection/unlocks, 4: + country rewards, car upgrades, 5: + career rewards, best scores
+        public const int CurrentVersion = 6;   // 2: + settings, 3: + World Tour selection/unlocks, 4: + country rewards, car upgrades, 5: + career rewards, best scores, 6: + car looks
 
         public int version = CurrentVersion;
         public int coins;
@@ -29,6 +29,8 @@ namespace UltimateCarParking.Save
         public List<CarUpgradeState> carUpgrades = new List<CarUpgradeState>();
         /// <summary>Career chapter rewards already paid: chapter id (completion) and id + "*" (mastery). Version 5.</summary>
         public List<string> careerRewardIds = new List<string>();
+        /// <summary>Per-car customisation (paint, finish, rims, tint, headlights, plate, bought options). Version 6.</summary>
+        public List<Cars.CarLook> carLooks = new List<Cars.CarLook>();
         /// <summary>Ad frequency state (see AdPolicy). Missing in older saves = defaults.</summary>
         public AdState ads = new AdState();
         public long lastSavedUtcTicks;

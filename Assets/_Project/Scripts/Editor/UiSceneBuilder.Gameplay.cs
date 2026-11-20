@@ -83,6 +83,23 @@ namespace UltimateCarParking.EditorTools
             // Camera controls under the hits pill: VIEW (chase / top-down) and ZOOM (near / mid / far).
             Button viewButton = HudChip(hud, "ViewButton", "CameraIcon", "CHASE", new Vector2(-170f, -134f), new Vector2(170f, 64f), out TMP_Text viewLabel);
             Button zoomButton = HudChip(hud, "ZoomButton", "ZoomIcon", "MID", new Vector2(-40f, -134f), new Vector2(122f, 64f), out TMP_Text zoomLabel);
+            // Car controls: lights, indicators, hazards (row 1); engine and horn (row 2).
+            RectTransform carControls = Group(hud, "VehicleButtons", new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-40f, -212f), new Vector2(330f, 124f));
+            Button rightInd = HudChip(carControls, "IndicatorRight", "ChevronRight", "", new Vector2(0f, 0f), new Vector2(60f, 56f), out _);
+            Button hazard = HudChip(carControls, "Hazard", null, "HAZARD", new Vector2(-68f, 0f), new Vector2(98f, 56f), out _);
+            Button leftInd = HudChip(carControls, "IndicatorLeft", "ChevronLeft", "", new Vector2(-174f, 0f), new Vector2(60f, 56f), out _);
+            Button lightsBtn = HudChip(carControls, "Headlights", null, "LIGHTS", new Vector2(-242f, 0f), new Vector2(88f, 56f), out _);
+            Button engineBtn = HudChip(carControls, "Engine", null, "ENGINE ON", new Vector2(-124f, -66f), new Vector2(206f, 56f), out _);
+            Image hornBg = Img(carControls, "Horn", "Pill", UiPalette.Surface.WithAlpha(0.8f), raycast: true);
+            Place(hornBg.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(0f, -66f), new Vector2(116f, 56f));
+            TMP_Text hornLabel = Label(hornBg.rectTransform, "Label", "HORN", true, 22f, UiPalette.TextPrimary, TextAlignmentOptions.Center, 4f);
+            Fill(hornLabel.rectTransform, 0, 0, 0, 0);
+            var hornHold = hornBg.gameObject.AddComponent<HoldButton>();
+            Wire(hornHold, "target", hornBg);
+            var vb = carControls.gameObject.AddComponent<VehicleButtons>();
+            Wire(vb, "levelManager", manager);
+            Wire(vb, "lightsButton", lightsBtn); Wire(vb, "leftButton", leftInd); Wire(vb, "hazardButton", hazard);
+            Wire(vb, "rightButton", rightInd); Wire(vb, "engineButton", engineBtn); Wire(vb, "horn", hornHold);
 
             // Backup camera panel (top centre, under the guide pill), shown while reversing.
             Image rearFrame = Img(hud, "RearCamera", null, new Color(0.03f, 0.035f, 0.04f, 0.92f));
@@ -306,6 +323,11 @@ namespace UltimateCarParking.EditorTools
             WireArray(hudLayout, "centreColumn", guide.transform, gaugeBg.transform, rearFrame.transform);
             WireArray(hudLayout, "bottomCentre", speedo.transform, hud.Find("ParkAssist"), hud.Find("AlignHint"));
             Wire(hudLayout, "controls", layout);
+            var so2 = new SerializedObject(hudLayout);
+            so2.FindProperty("rightReserve").floatValue = 375f;     // corner widgets now include the car-control chips
+            var cw = so2.FindProperty("cornerWidgets");
+            cw.arraySize++; cw.GetArrayElementAtIndex(cw.arraySize - 1).objectReferenceValue = carControls;
+            so2.ApplyModifiedPropertiesWithoutUndo();
 
             // ---------------- panels
             RectTransform panels = NewRect(safe, "Panels");

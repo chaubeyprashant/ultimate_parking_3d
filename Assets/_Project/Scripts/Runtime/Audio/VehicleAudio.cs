@@ -37,7 +37,17 @@ namespace UltimateCarParking.Audio
             engine.loop = true;
             engine.playOnAwake = false;
             engine.spatialBlend = 0f;
+            tires = gameObject.AddComponent<AudioSource>();
+            tires.loop = true; tires.playOnAwake = false; tires.spatialBlend = 0f; tires.volume = 0f;
+            wheels = GetComponentsInChildren<WheelCollider>();
         }
+
+        private AudioSource tires;
+        private WheelCollider[] wheels;
+        public AudioSource Tires => tires;
+
+        /// <summary>Strongest sideways tyre slip this frame (0 = rolling straight). Above ~0.25 the tyres audibly scrub.</summary>
+        public float SideSlip { get; private set; }
 
         private void OnEnable()
         {
@@ -48,12 +58,14 @@ namespace UltimateCarParking.Audio
                 engine.clip = lib.engineLoop;
                 engine.Play();
             }
+            if (lib != null && lib.tireSqueal != null) { tires.clip = lib.tireSqueal; tires.Play(); }
         }
 
         private void OnDisable()
         {
             if (collisions != null) collisions.PenaltyRegistered -= OnPenalty;
             if (engine != null) engine.Stop();
+            if (tires != null) tires.Stop();
         }
 
         private void OnPenalty(CollisionHandler.Penalty p)
@@ -69,7 +81,16 @@ namespace UltimateCarParking.Audio
             float pitchTarget = Mathf.Lerp(idlePitch, maxPitch, speed01) + throttle * 0.18f;
             float k = 1f - Mathf.Exp(-6f * Time.deltaTime);
             engine.pitch = Mathf.Lerp(engine.pitch, pitchTarget, k);
+            // Load: the note rises with pedal before speed builds and drops back on lift-off (deceleration).
             engine.volume = Mathf.Lerp(idleVolume, maxVolume, Mathf.Max(speed01, throttle)) * SettingsService.Current.soundVolume;
+            if (!vehicle.EngineOn) engine.volume = 0f;
+            float slip = 0f;
+            if (wheels != null)
+                foreach (WheelCollider w in wheels)
+                    if (w != null && w.GetGroundHit(out WheelHit h)) slip = Mathf.Max(slip, Mathf.Abs(h.sidewaysSlip));
+            SideSlip = slip;
+            float squeal = vehicle.SpeedKmh > 6f ? Mathf.InverseLerp(0.25f, 0.6f, slip) : 0f;
+            tires.volume = Mathf.Lerp(tires.volume, squeal * 0.45f * SettingsService.Current.soundVolume, 1f - Mathf.Exp(-10f * Time.deltaTime));
 
             bool braking = input != null && vehicle.ControlsEnabled &&
                            (input.Brake > 0.5f || input.Handbrake || (vehicle.ForwardSpeedKmh > 2f && input.Throttle < -0.5f) ||

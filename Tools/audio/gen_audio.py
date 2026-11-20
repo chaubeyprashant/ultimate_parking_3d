@@ -117,8 +117,73 @@ def music():
         out[i] += 0.035 * hat[i] * math.exp(-beat * 30)
     return lowpass(out, 5000)
 
+# --- Phase 7 (customisation & immersion). Appended after the originals so their output is unchanged.
+def horn():
+    # two-tone car horn (~415 + 523 Hz), square-ish with soft edges, 0.5 s seamless (integer cycles at 41.5 Hz grid)
+    n = int(SR * 0.5); out = []
+    for i in range(n):
+        t = i / SR; s = 0.0
+        for f in (416.0, 524.0):   # whole cycles in 0.5 s: a click-free loop
+            ph = 2 * math.pi * f * t
+            s += math.sin(ph) + 0.45 * math.sin(3 * ph) + 0.22 * math.sin(5 * ph)
+        out.append(s * 0.4)
+    return lowpass(out, 3200)
+
+def indicator():
+    # relay tick: short click with a tiny tonal body
+    n = int(SR * 0.06); out = []
+    noise = highpass([rng.uniform(-1, 1) for _ in range(n)], 2000)
+    for i in range(n):
+        t = i / SR
+        out.append((0.6 * noise[i] + 0.5 * math.sin(2 * math.pi * 1900 * t)) * math.exp(-t * 140))
+    return out
+
+def engine_start():
+    # starter motor whirr (rising), then the engine catches into a short idle burst
+    n = int(SR * 1.3); out = []
+    noise = lowpass([rng.uniform(-1, 1) for _ in range(n)], 1200)
+    for i in range(n):
+        t = i / SR
+        if t < 0.65:
+            f = 18 + 30 * t; whirr = math.sin(2 * math.pi * 220 * t) * (0.5 + 0.5 * math.sin(2 * math.pi * f * t))
+            out.append(0.35 * whirr + 0.25 * noise[i])
+        else:
+            u = t - 0.65; ph = 2 * math.pi * (55 + 25 * math.exp(-u * 5)) * u
+            body = 0.9 * math.sin(ph) + 0.5 * math.sin(2 * ph) + 0.3 * math.sin(3 * ph)
+            out.append((body + 0.3 * noise[i]) * min(1.0, u * 20) * (0.55 + 0.45 * math.exp(-u * 3)))
+    return lowpass(out, 1600)
+
+def tire_loop():
+    # tyre squeal, 1 s seamless: band-limited noise around 1.4 kHz with a slow warble (integer Hz)
+    n = SR; nz = [rng.uniform(-1, 1) for _ in range(n)]
+    band = highpass(lowpass(nz, 2200), 900); out = []
+    for i in range(n):
+        t = i / SR
+        out.append(band[i] * (0.7 + 0.3 * math.sin(2 * math.pi * 6 * t)) + 0.25 * math.sin(2 * math.pi * 1400 * t + 2 * math.sin(2 * math.pi * 3 * t)))
+    return out
+
+def noise_loop(seconds, cut_lo, cut_hi, mod_hz, mod_depth, drops=0):
+    # seamless ambience loop: filtered noise, crossfaded head and tail, optional droplets
+    n = int(SR * seconds); nz = [rng.uniform(-1, 1) for _ in range(n)]
+    x = lowpass(nz, cut_hi)
+    if cut_lo > 0: x = highpass(x, cut_lo)
+    out = [v * (1 - mod_depth + mod_depth * (0.5 + 0.5 * math.sin(2 * math.pi * mod_hz * i / SR))) for i, v in enumerate(x)]
+    for _ in range(drops):
+        at = rng.randrange(0, n - 2000); f = rng.uniform(2500, 5200)
+        for k in range(1500): out[at + k] += 0.35 * math.sin(2 * math.pi * f * k / SR) * math.exp(-k / 180)
+    fade = int(SR * 0.25)
+    for i in range(fade):
+        a = i / fade; out[i] = out[i] * a + out[n - fade + i] * (1 - a)
+    return out[: n - fade]
+
+def rain_loop(): return noise_loop(4.0, 400, 6000, 0.5, 0.15, drops=60)
+def wind_loop(): return noise_loop(6.0, 0, 500, 1.0 / 6.0, 0.6)
+def city_loop(): return noise_loop(6.0, 60, 900, 1.0 / 3.0, 0.3)
+
 os.makedirs(OUT, exist_ok=True)
 for name, fn in [("engine_loop", engine), ("brake_squeal", brake), ("collision", collision), ("ui_click", click),
                  ("reward_star", star), ("reward_coin", coin), ("level_success", success), ("level_fail", fail),
-                 ("collision_warn", collision_warn), ("music_loop", music)]:
+                 ("collision_warn", collision_warn), ("music_loop", music),
+                 ("horn", horn), ("indicator_tick", indicator), ("engine_start", engine_start), ("tire_squeal", tire_loop),
+                 ("ambience_rain", rain_loop), ("ambience_wind", wind_loop), ("ambience_city", city_loop)]:
     write(name, fn(), peak=0.7 if name == "music_loop" else 0.89)

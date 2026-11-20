@@ -107,6 +107,9 @@ namespace UltimateCarParking.Save
             data.carUpgrades.RemoveAll(u => u == null || string.IsNullOrEmpty(u.carId));
             data.careerRewardIds ??= new System.Collections.Generic.List<string>();
             data.careerRewardIds.RemoveAll(string.IsNullOrEmpty);
+            data.carLooks ??= new System.Collections.Generic.List<Cars.CarLook>();
+            data.carLooks.RemoveAll(l => l == null || string.IsNullOrEmpty(l.carId));
+            foreach (var l in data.carLooks) l.owned ??= new System.Collections.Generic.List<string>();
             if (data.coins < 0) data.coins = 0;
 
             if (data.version > SaveData.CurrentVersion)
@@ -128,6 +131,8 @@ namespace UltimateCarParking.Save
             // derived from existing stars, and rewards for chapters an older save already finished are paid the next
             // time the career screen opens or a mission is completed. Coins, cars and stars are untouched.
             if (data.version < 5) data.version = 5;
+            // Version 5 → 6: car looks (empty list above; every car starts with its factory look). Nothing else changes.
+            if (data.version < 6) data.version = 6;
         }
 
         private static SaveData TryRead(string path)

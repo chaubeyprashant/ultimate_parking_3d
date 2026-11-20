@@ -11,6 +11,15 @@ namespace UltimateCarParking.Audio
         public AudioClip brakeSqueal;
         public AudioClip collision;
         public AudioClip collisionWarning;
+        public AudioClip horn;
+        public AudioClip indicatorTick;
+        public AudioClip engineStart;
+        public AudioClip tireSqueal;
+
+        [Header("Ambience")]
+        public AudioClip ambienceRain;
+        public AudioClip ambienceWind;
+        public AudioClip ambienceCity;
 
         [Header("UI and rewards")]
         public AudioClip buttonClick;

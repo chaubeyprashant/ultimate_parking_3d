@@ -3,7 +3,7 @@ using UltimateCarParking.Settings;
 
 namespace UltimateCarParking.Audio
 {
-    public enum Sfx { Click, Star, Coin, Success, Fail, Collision, CollisionWarning, Brake }
+    public enum Sfx { Click, Star, Coin, Success, Fail, Collision, CollisionWarning, Brake, EngineStart }
 
     /// <summary>
     /// App-wide 2D audio: one music source and a small pool of one-shot sources, volumes from the player's settings.
@@ -115,6 +115,7 @@ namespace UltimateCarParking.Audio
                 Sfx.Collision => library.collision,
                 Sfx.CollisionWarning => library.collisionWarning,
                 Sfx.Brake => library.brakeSqueal,
+                Sfx.EngineStart => library.engineStart,
                 _ => null,
             };
         }
