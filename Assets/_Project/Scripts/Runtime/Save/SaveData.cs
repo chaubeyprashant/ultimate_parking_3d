@@ -11,7 +11,7 @@ namespace UltimateCarParking.Save
     [Serializable]
     public sealed class SaveData
     {
-        public const int CurrentVersion = 6;   // 2: + settings, 3: + World Tour selection/unlocks, 4: + country rewards, car upgrades, 5: + career rewards, best scores, 6: + car looks
+        public const int CurrentVersion = 7;   // 2: + settings, 3: + World Tour selection/unlocks, 4: + country rewards, car upgrades, 5: + career rewards, best scores, 6: + car looks, 7: + Easy / Hard progress
 
         public int version = CurrentVersion;
         public int coins;
@@ -94,6 +94,16 @@ namespace UltimateCarParking.Save
         public int completions;
         /// <summary>Best mission score 0..1 (quality / parking scorecard); 0 = none recorded. Version 5.</summary>
         public float bestQuality;
+        /// <summary>Easy and Hard results (version 7). The fields above are Medium, which is how all older progress was earned.</summary>
+        public int easyStars, hardStars;
+        public float easyTimeSeconds = -1f, hardTimeSeconds = -1f;
+        public float easyQuality, hardQuality;
+        public int easyCompletions, hardCompletions;
+
+        public int StarsAt(Levels.Difficulty d) => d == Levels.Difficulty.Easy ? easyStars : d == Levels.Difficulty.Hard ? hardStars : bestStars;
+        public float TimeAt(Levels.Difficulty d) => d == Levels.Difficulty.Easy ? easyTimeSeconds : d == Levels.Difficulty.Hard ? hardTimeSeconds : bestTimeSeconds;
+        public float QualityAt(Levels.Difficulty d) => d == Levels.Difficulty.Easy ? easyQuality : d == Levels.Difficulty.Hard ? hardQuality : bestQuality;
+        public int BestOfAll => System.Math.Max(bestStars, System.Math.Max(easyStars, hardStars));
 
         public bool Completed => bestStars > 0;
     }

@@ -127,18 +127,23 @@ namespace UltimateCarParking.Levels
         public Vector3 TargetPosition => targetPosition;
         public Quaternion TargetRotation => Quaternion.Euler(0f, targetYaw, 0f);
         public Vector2 TargetSize => targetSize;
-        public float TimeLimitSeconds => timeLimitSeconds;
+        // Time, hits, star times and coins follow the player's mission difficulty (Medium = as designed; see PlayDifficulty).
+        public float TimeLimitSeconds => timeLimitSeconds * PlayDifficulty.TimeFactor(PlayDifficulty.Current);
         public bool HasTimeLimit => timeLimitSeconds > 0f;
-        public int CollisionLimit => collisionLimit;
-        public bool HasCollisionLimit => collisionLimit >= 0;
+        public int CollisionLimit => PlayDifficulty.CollisionLimit(collisionLimit, PlayDifficulty.Current);
+        public bool HasCollisionLimit => CollisionLimit >= 0;
         public ParkingRules ParkingRulesOverride => overrideParkingRules ? parkingRules : null;
-        public StarThresholds Stars => new StarThresholds(threeStarTime, threeStarMaxCollisions, twoStarTime, twoStarMaxCollisions,
+        public StarThresholds Stars => new StarThresholds(threeStarTime * PlayDifficulty.TimeFactor(PlayDifficulty.Current), threeStarMaxCollisions,
+            twoStarTime * PlayDifficulty.TimeFactor(PlayDifficulty.Current), twoStarMaxCollisions,
             scoreMode, threeStarQuality, twoStarQuality);
         public ScoreMode ScoreMode => scoreMode;
-        public int BaseCoins => baseCoins;
-        public int CoinsPerStar => coinsPerStar;
+        public int BaseCoins => PlayDifficulty.Coins(baseCoins, PlayDifficulty.Current);
+        public int CoinsPerStar => PlayDifficulty.Coins(coinsPerStar, PlayDifficulty.Current);
 
-        public int CoinsFor(int stars) => stars <= 0 ? 0 : baseCoins + coinsPerStar * Mathf.Clamp(stars, 1, 3);
+        public int CoinsFor(int stars) => stars <= 0 ? 0 : BaseCoins + CoinsPerStar * Mathf.Clamp(stars, 1, 3);
+
+        /// <summary>Coins for a first clear at a given difficulty (mission card preview).</summary>
+        public int CoinsFor(int stars, Difficulty d) => stars <= 0 ? 0 : PlayDifficulty.Coins(baseCoins, d) + PlayDifficulty.Coins(coinsPerStar, d) * Mathf.Clamp(stars, 1, 3);
 
         private void OnValidate()
         {

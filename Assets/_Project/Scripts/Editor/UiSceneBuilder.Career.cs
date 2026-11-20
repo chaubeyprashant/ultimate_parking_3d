@@ -104,6 +104,11 @@ namespace UltimateCarParking.EditorTools
             TMP_Text dBest = Label(detBg.rectTransform, "Best", "", true, 20f, UiPalette.TextPrimary, TextAlignmentOptions.BottomLeft, 3f);
             Place(dBest.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(28f, 18f), new Vector2(780f, 30f));
             Button play = PillButton(detBg.rectTransform, "PlayButton", "PLAY", true, new Vector2(850f, 70f), new Vector2(300f, 110f), 44f);
+            // Difficulty picker above PLAY (Easy ×0.75 coins, Medium as designed, Hard ×1.5).
+            var diffButtons = new Button[3];
+            string[] diffNames = { "EASY", "MEDIUM", "HARD" };
+            for (int i = 0; i < 3; i++)
+                diffButtons[i] = PillButton(detBg.rectTransform, "Difficulty" + diffNames[i], diffNames[i], true, new Vector2(850f + i * 102f, 190f), new Vector2(96f, 46f), 18f);
 
             // Reward pop-up
             Image popBg = Img(safe, "RewardPopup", "RoundRect", UiPalette.Surface);
@@ -138,6 +143,7 @@ namespace UltimateCarParking.EditorTools
             Wire(ctrl, "detailBest", dBest);
             Wire(ctrl, "playButton", play);
             Wire(ctrl, "playLabel", play.GetComponentInChildren<TMP_Text>());
+            WireArray(ctrl, "difficultyButtons", diffButtons);
             Wire(ctrl, "rewardPopup", popGroup);
             Wire(ctrl, "rewardText", popText);
             Wire(ctrl, "rewardOk", popOk);

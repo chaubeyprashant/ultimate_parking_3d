@@ -44,6 +44,8 @@ namespace UltimateCarParking.UI
         [SerializeField] private TMP_Text detailBest;
         [SerializeField] private Button playButton;
         [SerializeField] private TMP_Text playLabel;
+        [Tooltip("EASY, MEDIUM, HARD (in that order).")]
+        [SerializeField] private Button[] difficultyButtons = new Button[0];
         [Header("Rewards")]
         [SerializeField] private CanvasGroup rewardPopup;
         [SerializeField] private TMP_Text rewardText;
@@ -61,6 +63,7 @@ namespace UltimateCarParking.UI
         public string ChapterTitleText => chapterTitle != null ? chapterTitle.text : "";
         public string DetailBestText => detailBest != null ? detailBest.text : "";
         public string PlayText => playLabel != null ? playLabel.text : "";
+        public Difficulty SelectedDifficulty => PlayDifficulty.Current;
         private SaveData Save => SaveManager.Current.Data;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -70,6 +73,11 @@ namespace UltimateCarParking.UI
         {
             if (backButton != null) backButton.onClick.AddListener(() => ScreenTransition.LoadScene(SceneNames.MainMenu));
             if (playButton != null) playButton.onClick.AddListener(Play);
+            for (int i = 0; i < difficultyButtons.Length; i++)
+            {
+                var d = (Difficulty)i;
+                if (difficultyButtons[i] != null) difficultyButtons[i].onClick.AddListener(() => SetDifficulty(d));
+            }
             if (rewardOk != null) rewardOk.onClick.AddListener(() => { if (rewardPopup != null) { rewardPopup.alpha = 0f; rewardPopup.blocksRaycasts = false; } });
             if (chapterTemplate != null) chapterTemplate.gameObject.SetActive(false);
             if (missionTemplate != null) missionTemplate.gameObject.SetActive(false);
@@ -233,16 +241,45 @@ namespace UltimateCarParking.UI
             detailName.text = l.DisplayName.ToUpperInvariant();
             detailMeta.text = selectedChapter < 0 ? "DRIVING ACADEMY" : Meta(l) + (l.Condition != Conditions.RoadCondition.Clear ? "  ·  " + l.Condition.ToString().ToUpperInvariant() : "");
             detailBriefing.text = l.Briefing;
+            Difficulty d = PlayDifficulty.Current;
             LevelProgress p = Save.FindLevel(l.LevelId);
-            if (p == null || !p.Completed) detailBest.text = open ? "NOT PLAYED YET" : "LOCKED: FINISH THE MISSION BEFORE IT";
+            int stars = p != null ? p.StarsAt(d) : 0;
+            string tag = PlayDifficulty.Name(d) + ":  ";
+            if (!open) detailBest.text = "LOCKED: FINISH THE MISSION BEFORE IT";
+            else if (stars <= 0) detailBest.text = $"{tag}NOT CLEARED  ·  FIRST CLEAR UP TO {l.CoinsFor(3, d):N0} COINS";
             else
             {
-                string score = p.bestQuality > 0f && l.ScoreMode != ScoreMode.TimeAndCollisions ? $"BEST SCORE {Mathf.RoundToInt(p.bestQuality * 100f)}%  ·  " : "";
-                detailBest.text = $"{score}BEST TIME {p.bestTimeSeconds:0.0}s  ·  {p.bestStars}/3 STARS";
+                float q = p.QualityAt(d);
+                string score = q > 0f && l.ScoreMode != ScoreMode.TimeAndCollisions ? $"BEST SCORE {Mathf.RoundToInt(q * 100f)}%  ·  " : "";
+                detailBest.text = $"{tag}{score}BEST TIME {p.TimeAt(d):0.0}s  ·  {stars}/3 STARS";
             }
+            PaintDifficulty(open);
             playLabel.text = !open ? "LOCKED" : done ? "REPLAY" : "PLAY";
             playButton.interactable = open;
             if (details != null && details.alpha < 1f && isActiveAndEnabled) StartCoroutine(UiMotion.Fade(details, details.alpha, 1f, 0.2f));
+        }
+
+        /// <summary>Picks Easy / Medium / Hard for missions (remembered) and refreshes the card.</summary>
+        public void SetDifficulty(Difficulty d)
+        {
+            PlayDifficulty.Current = d;
+            AudioManager.Instance.Play(Sfx.Click, 0.6f);
+            if (selectedMission >= 0) SelectMission(selectedMission); else PaintDifficulty(true);
+        }
+
+        private void PaintDifficulty(bool open)
+        {
+            Difficulty cur = PlayDifficulty.Current;
+            for (int i = 0; i < difficultyButtons.Length; i++)
+            {
+                Button b = difficultyButtons[i];
+                if (b == null) continue;
+                bool on = (int)cur == i;
+                b.interactable = open;
+                b.GetComponent<Image>().color = on ? UiPalette.Lime : UiPalette.SurfaceRaised;
+                TMP_Text t = b.GetComponentInChildren<TMP_Text>();
+                if (t != null) t.color = on ? UiPalette.TextOnLime : UiPalette.TextPrimary;
+            }
         }
 
         public void Play()

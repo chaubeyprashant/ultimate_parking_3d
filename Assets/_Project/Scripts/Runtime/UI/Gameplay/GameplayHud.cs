@@ -182,7 +182,8 @@ namespace UltimateCarParking.UI
         private void OnGentle(Collider _)
         {
             if (toastGroup == null || toastLabel == null || toastGroup.alpha > 0.05f) return;
-            ShowContactToast("LIGHT TOUCH  ·  NO PENALTY", UiPalette.TextSecondary);
+            bool forgiven = hookedContacts != null && hookedContacts.LastTouchForgiven;
+            ShowContactToast(forgiven ? "BUMP  ·  NO PENALTY ON EASY" : "LIGHT TOUCH  ·  NO PENALTY", forgiven ? UiPalette.Gold : UiPalette.TextSecondary);
         }
 
         private void ShowContactToast(string text, Color color)
@@ -288,7 +289,8 @@ namespace UltimateCarParking.UI
             if (levelLabel != null) levelLabel.text = $"LEVEL {level.LevelNumber:00}";
             string place = level.Theme != null ? level.Theme.DisplayName.ToUpperInvariant() : level.DisplayName.ToUpperInvariant();
             if (levelName != null) levelName.text = (level.HasObjectives ? MissionTypeInfo.Title(level.MissionType) : place)
-                + (level.Difficulty != ChallengeDifficulty.None ? "  ·  " + DifficultyProfile.Name(level.Difficulty) : "");
+                + (level.Difficulty != ChallengeDifficulty.None ? "  ·  " + DifficultyProfile.Name(level.Difficulty) : "")
+                + "  ·  " + PlayDifficulty.Name(PlayDifficulty.Current);
             RenderCollisions(levelManager.Collisions);
             OnStatus(validator != null ? validator.Status : ParkingStatus.Outside);
             shownTenths = -1;

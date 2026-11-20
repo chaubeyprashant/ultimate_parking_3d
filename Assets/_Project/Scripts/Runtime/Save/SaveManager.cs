@@ -133,6 +133,12 @@ namespace UltimateCarParking.Save
             if (data.version < 5) data.version = 5;
             // Version 5 → 6: car looks (empty list above; every car starts with its factory look). Nothing else changes.
             if (data.version < 6) data.version = 6;
+            // Version 6 → 7: Easy / Hard results per level (zero = not played). Existing stars stay as Medium.
+            if (data.version < 7)
+            {
+                foreach (var l in data.levels) { if (l.easyStars == 0 && l.easyTimeSeconds == 0f) l.easyTimeSeconds = -1f; if (l.hardStars == 0 && l.hardTimeSeconds == 0f) l.hardTimeSeconds = -1f; }
+                data.version = 7;
+            }
         }
 
         private static SaveData TryRead(string path)

@@ -36,8 +36,13 @@ namespace UltimateCarParking.Progression
     {
         public const float ReplayBaseFraction = 0.2f;
 
+        /// <summary>Best stars at any difficulty (unlocks, career, totals).</summary>
         public static int BestStars(SaveData data, LevelData level) =>
-            level == null ? 0 : data?.FindLevel(level.LevelId)?.bestStars ?? 0;
+            level == null ? 0 : data?.FindLevel(level.LevelId)?.BestOfAll ?? 0;
+
+        /// <summary>Stars at one difficulty (mission card).</summary>
+        public static int StarsAt(SaveData data, LevelData level, Difficulty d) =>
+            level == null ? 0 : data?.FindLevel(level.LevelId)?.StarsAt(d) ?? 0;
 
         public static float BestTime(SaveData data, LevelData level) =>
             level == null ? -1f : data?.FindLevel(level.LevelId)?.bestTimeSeconds ?? -1f;
@@ -82,18 +87,35 @@ namespace UltimateCarParking.Progression
             if (data == null || level == null || !result.Success || result.Stars <= 0) return default;
 
             LevelProgress p = data.GetOrAddLevel(level.LevelId);
-            int previous = p.bestStars;
-            bool first = p.completions == 0 && previous == 0;
+            Difficulty d = PlayDifficulty.Current;
+            int previous = p.StarsAt(d);
+            int doneAt = d == Difficulty.Easy ? p.easyCompletions : d == Difficulty.Hard ? p.hardCompletions : p.completions;
+            bool first = doneAt == 0 && previous == 0;
             int stars = Mathf.Clamp(result.Stars, 1, 3);
 
             int coins = first
                 ? level.CoinsFor(stars)
                 : level.CoinsPerStar * Mathf.Max(0, stars - previous) + Mathf.RoundToInt(level.BaseCoins * ReplayBaseFraction);
 
-            p.bestStars = Mathf.Max(previous, stars);
-            if (p.bestTimeSeconds < 0f || result.ElapsedSeconds < p.bestTimeSeconds) p.bestTimeSeconds = result.ElapsedSeconds;
-            p.bestQuality = Mathf.Max(p.bestQuality, Mathf.Clamp01(result.Quality));
-            p.completions++;
+            float q = Mathf.Clamp01(result.Quality);
+            switch (d)
+            {
+                case Difficulty.Easy:
+                    p.easyStars = Mathf.Max(previous, stars);
+                    if (p.easyTimeSeconds < 0f || result.ElapsedSeconds < p.easyTimeSeconds) p.easyTimeSeconds = result.ElapsedSeconds;
+                    p.easyQuality = Mathf.Max(p.easyQuality, q); p.easyCompletions++;
+                    break;
+                case Difficulty.Hard:
+                    p.hardStars = Mathf.Max(previous, stars);
+                    if (p.hardTimeSeconds < 0f || result.ElapsedSeconds < p.hardTimeSeconds) p.hardTimeSeconds = result.ElapsedSeconds;
+                    p.hardQuality = Mathf.Max(p.hardQuality, q); p.hardCompletions++;
+                    break;
+                default:
+                    p.bestStars = Mathf.Max(previous, stars);
+                    if (p.bestTimeSeconds < 0f || result.ElapsedSeconds < p.bestTimeSeconds) p.bestTimeSeconds = result.ElapsedSeconds;
+                    p.bestQuality = Mathf.Max(p.bestQuality, q); p.completions++;
+                    break;
+            }
             data.coins += coins;
             return new LevelReward(coins, stars, previous, first);
         }

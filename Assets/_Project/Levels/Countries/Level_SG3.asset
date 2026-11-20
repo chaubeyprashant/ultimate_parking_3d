@@ -22,10 +22,10 @@ MonoBehaviour:
   briefing: 'The marina driving test: cross the start line, parallel park at the
     kerb on the left, then park precisely in the car park bay.'
   objectives:
-  - rid: 2518988184527044688
-  - rid: 2518988184527044689
-  - rid: 2518988184527044690
-  - rid: 2518988184527044691
+  - rid: 2518988191574261840
+  - rid: 2518988191574261841
+  - rid: 2518988191574261842
+  - rid: 2518988191574261843
   theme: {fileID: 0}
   props: []
   environmentPrefab: {fileID: 0}
@@ -60,7 +60,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988184527044688
+    - rid: 2518988191574261840
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Start line
@@ -69,7 +69,7 @@ MonoBehaviour:
         size: {x: 4, y: 8}
         heightTolerance: 1.6
         hint: CROSS THE START LINE
-    - rid: 2518988184527044689
+    - rid: 2518988191574261841
       type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Parallel park at the kerb
@@ -89,7 +89,7 @@ MonoBehaviour:
         maxKerbGap: 0.45
         kerbStrikeLimit: 2
         strikeCooldown: 0.8
-    - rid: 2518988184527044690
+    - rid: 2518988191574261842
       type: {class: CheckpointObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Into the car park
@@ -98,7 +98,7 @@ MonoBehaviour:
         size: {x: 8, y: 4}
         heightTolerance: 1.6
         hint: TO THE CAR PARK
-    - rid: 2518988184527044691
+    - rid: 2518988191574261843
       type: {class: PrecisionParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Precision bay

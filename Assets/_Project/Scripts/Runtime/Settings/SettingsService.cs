@@ -28,6 +28,7 @@ namespace UltimateCarParking.Settings
         public static void SetChaseDistance(float v) => Apply(s => s.chaseDistance = v);
         public static void SetAssistMode(int v) => Apply(s => s.assistMode = v);
         public static void SetAssistSounds(bool v) => Apply(s => s.assistSounds = v);
+        public static void SetPlayDifficulty(int v) => Apply(s => s.playDifficulty = v);
 
         /// <summary>Writes the save file (call when a settings screen closes, not on every slider tick).</summary>
         public static void Commit() => SaveManager.Current.Save();

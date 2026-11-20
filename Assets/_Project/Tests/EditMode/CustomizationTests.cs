@@ -78,7 +78,7 @@ namespace UltimateCarParking.Tests
             {
                 File.WriteAllText(path, "{\"version\":5,\"coins\":2000,\"ownedCarIds\":[\"sedan\",\"hatch\"],\"selectedCarId\":\"hatch\",\"careerRewardIds\":[\"ch1\"]}");
                 var save = new SaveManager(path);
-                Assert.AreEqual(6, save.Data.version);
+                Assert.AreEqual(SaveData.CurrentVersion, save.Data.version);
                 Assert.AreEqual(2000, save.Data.coins);
                 Assert.IsNotNull(save.Data.carLooks);
                 CollectionAssert.Contains(save.Data.careerRewardIds, "ch1");

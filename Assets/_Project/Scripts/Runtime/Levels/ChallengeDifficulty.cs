@@ -45,6 +45,8 @@ namespace UltimateCarParking.Levels
         public static AssistLevel Effective(LevelData level)
         {
             var chosen = (AssistLevel)UnityEngine.Mathf.Clamp(SettingsService.Current.assistMode, 0, 2);
+            AssistLevel playCap = PlayDifficulty.AssistCap(PlayDifficulty.Current);   // Hard: assistance off
+            if ((int)playCap > (int)chosen) chosen = playCap;
             if (level == null || level.Difficulty == ChallengeDifficulty.None) return chosen;
             AssistLevel cap = DifficultyProfile.For(level.Difficulty).MaxAssist;
             return (int)chosen > (int)cap ? chosen : cap;   // higher enum value = less assistance

@@ -52,10 +52,16 @@ namespace UltimateCarParking.Missions
         /// <summary>Subclasses with an extra condition return true so the validator calls <see cref="IsMet"/>.</summary>
         protected virtual bool HasCondition => false;
 
+        [NonSerialized] private bool difficultyApplied;
+
         public override void Begin(MissionContext ctx)
         {
+            // Mission difficulty (once per attempt: Resume calls Begin again on the same clone).
+            Levels.Difficulty d = Levels.PlayDifficulty.Current;
+            if (!difficultyApplied) { size = Levels.PlayDifficulty.Bay(size, d); difficultyApplied = true; }
             zone = ctx.CreateZone("Bay_" + title, position, ZoneRotation, size);
             ParkingRules r = (overrideRules ? rules : ctx.Validator.DefaultRules).Clone();
+            r.angleTolerance *= Levels.PlayDifficulty.AngleFactor(d);
             r.allowEitherDirection = direction == ParkDirection.Either;
             ctx.Validator.Bind(zone, ctx.Vehicle, r, HasCondition ? this : null);
             ctx.Validator.SetArmed(true);

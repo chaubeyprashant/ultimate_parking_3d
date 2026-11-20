@@ -52,6 +52,8 @@ namespace UltimateCarParking.Settings
         public int assistMode = AssistStandard;
         [Tooltip("Parking sensor beeps.")]
         public bool assistSounds = true;
+        [Tooltip("Mission difficulty last picked on a mission card: 0 Easy, 1 Medium (as designed), 2 Hard.")]
+        public int playDifficulty = 1;
 
         public static string AssistName(int mode) => mode == AssistBeginner ? "BEGINNER" : mode == AssistExpert ? "EXPERT" : "STANDARD";
 
@@ -90,6 +92,7 @@ namespace UltimateCarParking.Settings
             cameraView = Mathf.Clamp(cameraView, 0, 4);
             chaseDistance = Mathf.Clamp(chaseDistance <= 0f ? 7f : chaseDistance, MinChaseDistance, MaxChaseDistance);
             assistMode = Mathf.Clamp(assistMode, AssistBeginner, AssistExpert);
+            playDifficulty = Mathf.Clamp(playDifficulty, 0, 2);
         }
     }
 }

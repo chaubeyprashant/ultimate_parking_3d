@@ -46,6 +46,22 @@ namespace UltimateCarParking.Vehicle
         [Tooltip("After a counted contact, contacts with anything else within this many seconds are the same incident (one crash into a car made of several colliders counts once).")]
         [SerializeField, Min(0f)] private float incidentWindow = 0.4f;
 
+        /// <summary>
+        /// Contacts slower than this (m/s, about 4 km/h) are light touches: a note on screen, never a collision. Older
+        /// prefabs serialise a lower minImpactSpeed; the higher of the two applies.
+        /// </summary>
+        public const float TouchSpeed = 1.2f;
+        /// <summary>From this speed (m/s, about 9 km/h) a collision is an impact rather than a scrape.</summary>
+        public const float HardImpactSpeed = 2.5f;
+
+        public float TouchThreshold => Mathf.Max(minImpactSpeed, TouchSpeed);
+
+        /// <summary>When true (Easy difficulty) every contact is a touch: nothing counts, nothing fails.</summary>
+        public static bool Forgiving => Levels.PlayDifficulty.Current == Levels.Difficulty.Easy;
+
+        /// <summary>True when the latest touch was a real bump that only went unpunished because of Easy.</summary>
+        public bool LastTouchForgiven { get; private set; }
+
         private float lastCountedTime = -99f;
 
         /// <summary>Severity of the most recent counted contact.</summary>
@@ -90,11 +106,13 @@ namespace UltimateCarParking.Vehicle
             if (other == null || ((1 << other.gameObject.layer) & ignoredLayers.value) != 0) return;
 
             float impact = collision.relativeVelocity.magnitude;
-            if (impact < minImpactSpeed)
+            bool forgiven = impact >= TouchThreshold && Forgiving;
+            if (impact < TouchThreshold || forgiven)
             {
                 if (impact > 0.05f && SideContact(collision))
                 {
                     GentleTouches++;
+                    LastTouchForgiven = forgiven;
                     if (!lastGentle.TryGetValue(other, out float t) || Time.time - t > 1f) { lastGentle[other] = Time.time; GentleContact?.Invoke(other); }
                 }
                 return;
@@ -124,7 +142,7 @@ namespace UltimateCarParking.Vehicle
             lastHitTime[other] = now;
             if (now - lastCountedTime < incidentWindow) return;   // same crash, another collider of the same thing
             lastCountedTime = now;
-            LastSeverity = impact >= impactSpeed ? HitSeverity.Impact : HitSeverity.Scrape;
+            LastSeverity = impact >= Mathf.Max(impactSpeed, HardImpactSpeed) ? HitSeverity.Impact : HitSeverity.Scrape;
             CollisionCount++;
             PenaltyRegistered?.Invoke(new Penalty(other, point, impact, CollisionCount, LastSeverity));
         }
