@@ -17,6 +17,16 @@ namespace UltimateCarParking.Ads
         public const string RealInterstitial = "ca-app-pub-2773109772362951/8651215789";
         public const string RealBanner = "ca-app-pub-2773109772362951/5849792628";
 
+        /// <summary>
+        /// AdMob test devices: these phones get real ad units served as labelled "Test Ad"s, so the developer can tap them
+        /// without invalid-traffic risk. Players' phones are unaffected. Codes come from the phone's log line
+        /// "Use RequestConfiguration.Builder().setTestDeviceIds(...)".
+        /// </summary>
+        public static readonly string[] TestDeviceIds =
+        {
+            "84BBBC162B7D6877F1D78FFFBBD6A735",   // developer's Galaxy A33 (RZCT929739K)
+        };
+
         public static bool UsingRealIds => RealRewarded.Length > 0 && RealInterstitial.Length > 0 && RealBanner.Length > 0 && RealAppId.Length > 0;
         public static string AppId => UsingRealIds ? RealAppId : TestAppId;
         public static string Rewarded => UsingRealIds ? RealRewarded : TestRewarded;

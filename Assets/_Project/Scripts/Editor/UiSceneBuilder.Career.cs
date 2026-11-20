@@ -108,7 +108,11 @@ namespace UltimateCarParking.EditorTools
             var diffButtons = new Button[3];
             string[] diffNames = { "EASY", "MEDIUM", "HARD" };
             for (int i = 0; i < 3; i++)
-                diffButtons[i] = PillButton(detBg.rectTransform, "Difficulty" + diffNames[i], diffNames[i], true, new Vector2(850f + i * 102f, 190f), new Vector2(96f, 46f), 18f);
+            {
+                diffButtons[i] = PillButton(detBg.rectTransform, "Difficulty" + diffNames[i], diffNames[i], true, new Vector2(830f + i * 116f, 184f), new Vector2(108f, 58f), 22f);
+                TMP_Text dl = diffButtons[i].GetComponentInChildren<TMP_Text>();
+                dl.enableAutoSizing = true; dl.fontSizeMax = 22f; dl.fontSizeMin = 20f; dl.characterSpacing = 2f;
+            }
 
             // Reward pop-up
             Image popBg = Img(safe, "RewardPopup", "RoundRect", UiPalette.Surface);

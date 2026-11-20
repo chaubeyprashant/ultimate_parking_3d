@@ -117,6 +117,19 @@ namespace UltimateCarParking.Tests
         }
 
         [Test]
+        public void A_Mission_Cleared_Only_On_Easy_Or_Hard_Counts_As_Completed()
+        {
+            var s = new SaveData();
+            s.GetOrAddLevel("E").easyStars = 1;
+            s.GetOrAddLevel("H").hardStars = 2;
+            s.GetOrAddLevel("N");
+            Assert.IsTrue(s.FindLevel("E").Completed);
+            Assert.IsTrue(s.FindLevel("H").Completed);
+            Assert.IsFalse(s.FindLevel("N").Completed);
+            Assert.AreEqual(2, UltimateCarParking.Ads.AdPolicy.CompletedLevels(s));
+        }
+
+        [Test]
         public void A_Light_Touch_Is_Not_A_Collision()
         {
             Assert.GreaterOrEqual(CollisionHandler.TouchSpeed, 1f, "touches up to ~4 km/h never count");

@@ -13,8 +13,8 @@ namespace UltimateCarParking.UI
     public sealed class ControlsPanel : MonoBehaviour
     {
         [SerializeField] private CanvasGroup group;
-        [SerializeField] private Button steeringButton;
-        [SerializeField] private TMP_Text steeringLabel;
+        [Tooltip("WHEEL, LEFT / RIGHT, TILT (GameSettings.SteeringChoices order).")]
+        [SerializeField] private Button[] steeringOptions = new Button[0];
         [SerializeField] private Button pedalsButton;
         [SerializeField] private TMP_Text pedalsLabel;
         [SerializeField] private Button handButton;
@@ -48,7 +48,11 @@ namespace UltimateCarParking.UI
             Range(opacity, GameSettings.MinControlOpacity, 1f, v => SettingsService.SetControlOpacity(v));
             Range(height, 0f, 1f, v => SettingsService.SetControlsRaise(v));
             Range(hudSize, GameSettings.MinHudScale, GameSettings.MaxHudScale, v => SettingsService.SetHudScale(v));
-            Click(steeringButton, () => SettingsService.SetSteeringMode((SettingsService.Current.steeringMode + 1) % 3));
+            for (int i = 0; i < steeringOptions.Length && i < GameSettings.SteeringChoices.Length; i++)
+            {
+                int mode = GameSettings.SteeringChoices[i];
+                Click(steeringOptions[i], () => SettingsService.SetSteeringMode(mode));
+            }
             Click(pedalsButton, () => SettingsService.SetPedalMode(1 - SettingsService.Current.pedalMode));
             Click(handButton, () => SettingsService.SetLeftHanded(!SettingsService.Current.leftHanded));
             Click(calibrateButton, Calibrate);
@@ -109,7 +113,14 @@ namespace UltimateCarParking.UI
         {
             GameSettings s = SettingsService.Current;
             if (s.steeringMode == GameSettings.SteerTilt) TiltInput.Enable(true);   // warm the sensor so calibration reads at once
-            if (steeringLabel != null) steeringLabel.text = "STEERING: " + GameSettings.SteeringName(s.steeringMode);
+            for (int i = 0; i < steeringOptions.Length && i < GameSettings.SteeringChoices.Length; i++)
+            {
+                if (steeringOptions[i] == null) continue;
+                bool on = GameSettings.SteeringChoices[i] == s.steeringMode;
+                steeringOptions[i].GetComponent<Image>().color = on ? UiPalette.Lime : UiPalette.SurfaceRaised;
+                TMP_Text t = steeringOptions[i].GetComponentInChildren<TMP_Text>();
+                if (t != null) t.color = on ? UiPalette.TextOnLime : UiPalette.TextPrimary;
+            }
             if (pedalsLabel != null) pedalsLabel.text = "PEDALS: " + (s.pedalMode == GameSettings.PedalsGears ? "GEARS P-R-D" : "SIMPLE");
             if (handLabel != null) handLabel.text = s.leftHanded ? "LAYOUT: LEFT-HANDED" : "LAYOUT: RIGHT-HANDED";
             if (sensitivityValue != null) sensitivityValue.text = $"{s.steeringSensitivity:0.0}x";
@@ -121,7 +132,7 @@ namespace UltimateCarParking.UI
             if (beepsLabel != null) beepsLabel.text = s.assistSounds ? "SENSOR BEEPS: ON" : "SENSOR BEEPS: OFF";
             bool tilt = s.steeringMode == GameSettings.SteerTilt;
             if (calibrateButton != null) calibrateButton.interactable = tilt;
-            if (calibrateLabel != null) calibrateLabel.text = tilt ? "SET STRAIGHT AHEAD (TILT)" : "TILT CALIBRATION (TILT MODE ONLY)";
+            if (calibrateLabel != null) calibrateLabel.text = tilt ? "SET STRAIGHT AHEAD" : "CALIBRATE (TILT ONLY)";
         }
     }
 }

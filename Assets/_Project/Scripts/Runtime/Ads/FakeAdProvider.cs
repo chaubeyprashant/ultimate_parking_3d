@@ -16,6 +16,9 @@ namespace UltimateCarParking.Ads
 
         public void Initialize(Action onReady) => onReady?.Invoke();
 
+        public int RewardedRequests { get; private set; }
+        public void LoadRewarded() => RewardedRequests++;
+
         public void ShowRewarded(Action<bool> done)
         {
             RewardedShown++;

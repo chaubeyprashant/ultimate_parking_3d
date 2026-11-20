@@ -63,6 +63,16 @@ namespace UltimateCarParking.Ads
         public static bool CanOfferRewarded(AdPlacement placement) =>
             Provider.Ready && Provider.RewardedLoaded && Policy.CanOfferRewarded(placement, Completed);
 
+        /// <summary>The policy allows offering this placement (whether or not an ad has loaded yet).</summary>
+        public static bool RewardedAllowed(AdPlacement placement) => Policy.CanOfferRewarded(placement, Completed);
+
+        /// <summary>Makes sure the SDK is starting and a rewarded ad is on its way (no-op when one is loaded).</summary>
+        public static void RequestRewarded()
+        {
+            Initialize();
+            if (Provider.Ready) Provider.LoadRewarded();
+        }
+
         /// <summary>Shows a rewarded ad; <paramref name="done"/> gets true only if it was watched to the end.</summary>
         public static void ShowRewarded(AdPlacement placement, Action<bool> done)
         {

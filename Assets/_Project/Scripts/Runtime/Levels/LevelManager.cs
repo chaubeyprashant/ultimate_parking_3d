@@ -57,7 +57,8 @@ namespace UltimateCarParking.Levels
         public bool ContinueUsed { get; private set; }
 
         /// <summary>A time-up failure that can still be continued.</summary>
-        public bool CanContinueAfterTimeUp => State == LevelState.Failed && !ContinueUsed
+        /// <summary>Every time-up can be continued with +30 s (one rewarded ad each time), as often as the player likes.</summary>
+        public bool CanContinueAfterTimeUp => State == LevelState.Failed
             && LastResult.HasValue && LastResult.Value.FailReason == FailReason.TimeUp;
 
         public bool HasNextLevel => loader != null && loader.Catalog != null && Level != null && loader.Catalog.Next(Level) != null;

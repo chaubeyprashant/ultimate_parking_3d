@@ -24,111 +24,63 @@ namespace UltimateCarParking.Tests
 
         private void Minutes(double m) => now = now.AddMinutes(m);
 
-        // ---- interstitial gating
+        // ---- interstitial gating: every 2nd win, 2 minutes apart from any full-screen ad
 
         [Test]
-        public void No_Interstitial_Before_Four_Completed_Levels()
+        public void Interstitial_After_Every_Second_Win_From_The_Start()
         {
-            state.levelsSinceInterstitial = 10;
-            Assert.IsFalse(policy.CanShowInterstitial(3));
-            Assert.IsTrue(policy.CanShowInterstitial(4));
-        }
-
-        [Test]
-        public void Interstitial_Needs_Three_Levels_Since_The_Last_One()
-        {
-            policy.RecordInterstitialShown();
-            Minutes(30);
-            policy.RecordLevelCompleted(); policy.RecordLevelCompleted();
-            Assert.IsFalse(policy.CanShowInterstitial(20), "only 2 levels since the last");
             policy.RecordLevelCompleted();
-            Assert.IsTrue(policy.CanShowInterstitial(20));
+            Assert.IsFalse(policy.CanShowInterstitial(1), "not after the first win");
+            policy.RecordLevelCompleted();
+            Assert.IsTrue(policy.CanShowInterstitial(2), "after the second win");
+            policy.RecordInterstitialShown();
+            Assert.AreEqual(0, state.levelsSinceInterstitial);
+            Minutes(5);
+            policy.RecordLevelCompleted();
+            Assert.IsFalse(policy.CanShowInterstitial(3), "one win since the last ad");
+            policy.RecordLevelCompleted();
+            Assert.IsTrue(policy.CanShowInterstitial(4), "two wins since the last ad");
         }
 
         [Test]
-        public void Interstitial_Needs_Four_Minutes_Since_The_Last_One()
+        public void Never_Two_Full_Screen_Ads_Within_Two_Minutes()
         {
+            state.levelsSinceInterstitial = 5;
             policy.RecordInterstitialShown();
             state.levelsSinceInterstitial = 5;
-            Minutes(3.9);
-            Assert.IsFalse(policy.CanShowInterstitial(20));
-            Minutes(0.2);
-            Assert.IsTrue(policy.CanShowInterstitial(20));
-        }
-
-        [Test]
-        public void Interstitial_Waits_Three_Minutes_After_A_Rewarded_View()
-        {
-            state.levelsSinceInterstitial = 5;
-            policy.RecordRewardedShown(AdPlacement.DoubleCoins);
-            Minutes(2.5);
-            Assert.IsFalse(policy.CanShowInterstitial(20));
+            Minutes(1.5);
+            Assert.IsFalse(policy.CanShowInterstitial(20), "too soon after the last interstitial");
             Minutes(1);
             Assert.IsTrue(policy.CanShowInterstitial(20));
+            policy.RecordRewardedShown(AdPlacement.ContinueTime);
+            Assert.IsFalse(policy.CanShowInterstitial(20), "not straight after a rewarded ad");
+            Minutes(2.5);
+            Assert.IsTrue(policy.CanShowInterstitial(20));
         }
 
         [Test]
-        public void Interstitials_Are_Capped_At_Six_Per_Day_And_Reset_Tomorrow()
+        public void No_Daily_Cap_Or_Fail_Pause_Any_More()
         {
-            for (int i = 0; i < AdPolicy.InterstitialsPerDay; i++)
+            for (int i = 0; i < 12; i++)
             {
-                state.levelsSinceInterstitial = 5;
-                Minutes(10);
+                state.levelsSinceInterstitial = 2;
+                Minutes(3);
                 Assert.IsTrue(policy.CanShowInterstitial(20), "ad " + i);
                 policy.RecordInterstitialShown();
             }
-            state.levelsSinceInterstitial = 5;
-            Minutes(10);
-            Assert.IsFalse(policy.CanShowInterstitial(20), "daily cap reached");
-            now = now.AddDays(1);
-            Assert.IsTrue(policy.CanShowInterstitial(20), "new day");
-        }
-
-        [Test]
-        public void Three_Fails_On_One_Level_Pause_Interstitials_For_Ten_Minutes()
-        {
-            state.levelsSinceInterstitial = 5;
             policy.RecordLevelFailed("L1"); policy.RecordLevelFailed("L1"); policy.RecordLevelFailed("L1");
-            Minutes(9);
-            Assert.IsFalse(policy.CanShowInterstitial(20));
-            Minutes(2);
-            Assert.IsTrue(policy.CanShowInterstitial(20));
-        }
-
-        [Test]
-        public void Fails_On_Different_Levels_Do_Not_Count_As_Struggling()
-        {
-            state.levelsSinceInterstitial = 5;
-            policy.RecordLevelFailed("L1"); policy.RecordLevelFailed("L2"); policy.RecordLevelFailed("L3");
-            Assert.IsTrue(policy.CanShowInterstitial(20));
-        }
-
-        [Test]
-        public void Winning_Clears_The_Fail_Streak()
-        {
-            state.levelsSinceInterstitial = 5;
-            policy.RecordLevelFailed("L1"); policy.RecordLevelFailed("L1"); policy.RecordLevelFailed("L1");
-            policy.RecordLevelCompleted();
-            Assert.AreEqual(0, state.consecutiveFails);
-            Assert.IsTrue(policy.CanShowInterstitial(20));
-        }
-
-        [Test]
-        public void Showing_An_Interstitial_Resets_The_Level_Counter()
-        {
-            state.levelsSinceInterstitial = 5;
-            policy.RecordInterstitialShown();
-            Assert.AreEqual(0, state.levelsSinceInterstitial);
+            state.levelsSinceInterstitial = 2; Minutes(3);
+            Assert.IsTrue(policy.CanShowInterstitial(20), "fails never show an ad themselves; the next win may");
         }
 
         // ---- rewarded and banner
 
         [Test]
-        public void No_Rewarded_Offers_Or_Banner_In_The_First_Three_Levels()
+        public void Rewarded_Offers_And_Banner_From_The_First_Mission()
         {
-            Assert.IsFalse(policy.CanOfferRewarded(AdPlacement.DoubleCoins, 2));
-            Assert.IsFalse(policy.CanOfferRewarded(AdPlacement.ContinueTime, 0));
-            Assert.IsFalse(policy.CanShowBanner(2));
+            Assert.IsTrue(policy.CanOfferRewarded(AdPlacement.ContinueTime, 0), "+30 s on time-out from the first mission");
+            Assert.IsTrue(policy.CanOfferRewarded(AdPlacement.DoubleCoins, 0));
+            Assert.IsTrue(policy.CanShowBanner(0), "banner from the start");
             Assert.IsTrue(policy.CanOfferRewarded(AdPlacement.DoubleCoins, 3));
             Assert.IsTrue(policy.CanShowBanner(3));
         }
@@ -306,11 +258,11 @@ namespace UltimateCarParking.Tests
         }
 
         [Test]
-        public void New_Players_See_No_Banner()
+        public void New_Players_See_The_Banner_From_The_Start()
         {
             SaveManager.Current.Data.levels.Clear();
             AdService.ShowBanner();
-            Assert.IsFalse(fake.BannerVisible);
+            Assert.IsTrue(fake.BannerVisible);
         }
 
         [Test]

@@ -34,11 +34,12 @@ namespace UltimateCarParking.UI
         private readonly System.Collections.Generic.Dictionary<RectTransform, Vector2> basePos = new System.Collections.Generic.Dictionary<RectTransform, Vector2>();
 
         /// <summary>Widgets scale about their corner AND keep proportional spacing, so neighbours never grow into each other.</summary>
-        private void ScaleAt(RectTransform r, float scale, float? x = null)
+        private void ScaleAt(RectTransform r, float scale, float? x = null, float? positionScale = null)
         {
             if (!basePos.TryGetValue(r, out Vector2 p)) { p = r.anchoredPosition; basePos[r] = p; }
             r.localScale = new Vector3(scale, scale, 1f);
-            r.anchoredPosition = new Vector2(x ?? p.x * scale, p.y * scale);
+            float ps = positionScale ?? scale;
+            r.anchoredPosition = new Vector2(x ?? p.x * ps, p.y * ps);
         }
 
         public float AppliedHudScale { get; private set; } = 1f;
@@ -61,12 +62,19 @@ namespace UltimateCarParking.UI
             Narrow = w < 1700f;
             // Narrow screens keep corner widgets at most at 100 % so the centre column still fits.
             AppliedHudScale = Narrow ? Mathf.Min(hud, 1f) : hud;
-            foreach (RectTransform r in cornerWidgets) if (r != null) ScaleAt(r, AppliedHudScale);
+            foreach (RectTransform r in cornerWidgets)
+            {
+                if (r == null) continue;
+                // On narrow (4:3 tablet) screens the car-control cluster gives up a little size so the rear camera fits beside it.
+                // (shrunk about its own corner: it stays below the camera chips).
+                if (Narrow && r.name == "VehicleButtons") ScaleAt(r, AppliedHudScale * 0.82f, null, AppliedHudScale);
+                else ScaleAt(r, AppliedHudScale);
+            }
 
             // Top-centre column: whatever width is left between the corner widgets.
             // The column is centred, so it must clear the wider of the two corner groups on both sides.
             float free = w - 2f * Mathf.Max(leftReserve, rightReserve) * AppliedHudScale - 40f;
-            CentreScale = Mathf.Clamp(free / centreColumnWidth, 0.7f, 1f);
+            CentreScale = Mathf.Clamp(free / centreColumnWidth, 0.6f, 1f);
             foreach (RectTransform r in centreColumn) if (r != null) r.localScale = new Vector3(CentreScale, CentreScale, 1f);
 
             // Bottom: the control zones keep a gap for the speedometer.

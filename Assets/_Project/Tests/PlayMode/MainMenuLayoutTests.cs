@@ -116,5 +116,38 @@ namespace UltimateCarParking.Tests
             Assert.Greater(min, 0.98f);
             Assert.Greater(max - min, 0.001f, "it moves");
         }
+    
+        [UnityTest]
+        public IEnumerator Settings_Panel_Rows_Do_Not_Overlap()
+        {
+            yield return OpenMenu();
+            var panel = Object.FindAnyObjectByType<SettingsPanel>(FindObjectsInactive.Include);
+            Assert.IsNotNull(panel);
+            panel.Open();
+            yield return null;
+            RectTransform body = panel.transform.Find("Body") as RectTransform;
+            Assert.IsNotNull(body, "settings body");
+            var items = body.Cast<Transform>().Select(t => (RectTransform)t)
+                .Where(r => r.gameObject.activeSelf && r.name != "Edge" && r.name != "Accent").ToList();
+            const float slack = 12f;   // a caption box may brush its slider's track; real overlaps are far larger
+            for (int a = 0; a < items.Count; a++)
+            {
+                UnityEngine.Rect ra = Local(body, items[a]);
+                Assert.IsTrue(body.rect.Contains(ra.min + Vector2.one * slack) && body.rect.Contains(ra.max - Vector2.one * slack), items[a].name + " inside the panel");
+                for (int b = a + 1; b < items.Count; b++)
+                {
+                    UnityEngine.Rect rb = Local(body, items[b]);
+                    bool overlap = ra.xMin + slack < rb.xMax && rb.xMin + slack < ra.xMax && ra.yMin + slack < rb.yMax && rb.yMin + slack < ra.yMax;
+                    Assert.IsFalse(overlap, $"{items[a].name} overlaps {items[b].name}");
+                }
+            }
+        }
+
+        private static UnityEngine.Rect Local(RectTransform space, RectTransform r)
+        {
+            var c = new Vector3[4]; r.GetWorldCorners(c);
+            Vector3 min = space.InverseTransformPoint(c[0]), max = space.InverseTransformPoint(c[2]);
+            return UnityEngine.Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
     }
 }

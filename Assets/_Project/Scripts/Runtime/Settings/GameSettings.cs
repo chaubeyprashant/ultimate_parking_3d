@@ -57,7 +57,10 @@ namespace UltimateCarParking.Settings
 
         public static string AssistName(int mode) => mode == AssistBeginner ? "BEGINNER" : mode == AssistExpert ? "EXPERT" : "STANDARD";
 
-        public static string SteeringName(int mode) => mode == SteerButtons ? "BUTTONS" : mode == SteerTilt ? "TILT" : "WHEEL";
+        public static string SteeringName(int mode) => mode == SteerButtons ? "LEFT / RIGHT" : mode == SteerTilt ? "TILT" : "WHEEL";
+
+        /// <summary>Steering choices in the order the Controls panel shows them.</summary>
+        public static readonly int[] SteeringChoices = { SteerWheel, SteerButtons, SteerTilt };
 
         /// <summary>Puts every control option back to its default (audio and graphics are left alone).</summary>
         public void ResetControls()

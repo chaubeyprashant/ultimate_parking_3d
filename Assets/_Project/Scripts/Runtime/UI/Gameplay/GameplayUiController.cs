@@ -195,17 +195,43 @@ namespace UltimateCarParking.UI
             if (completeCoins != null) completeCoins.text = $"+{coins}";
             lastCoins = coins;
             if (doubleCoinsButton != null)
-                doubleCoinsButton.gameObject.SetActive(coins > 0 && AdService.CanOfferRewarded(AdPlacement.DoubleCoins));
+            {
+                bool offer = coins > 0 && AdService.RewardedAllowed(AdPlacement.DoubleCoins);
+                doubleCoinsButton.gameObject.SetActive(offer);
+                if (offer) { doubleCoinsButton.interactable = AdService.CanOfferRewarded(AdPlacement.DoubleCoins); StartCoroutine(DoubleOffer()); }
+            }
+        }
+
+        public static string DoubleCoinsText(int coins) => $"WATCH AD: DOUBLE COINS  +{coins}";
+
+        /// <summary>While the result screen is up: the double-coins button shows the bonus and waits for the ad (loading → ready).</summary>
+        private IEnumerator DoubleOffer()
+        {
+            TMP_Text label = doubleCoinsButton.GetComponentInChildren<TMP_Text>();
+            float nextRequest = 0f;
+            while (doubleCoinsButton != null && doubleCoinsButton.gameObject.activeInHierarchy && lastCoins > 0)
+            {
+                if (!watchingAd)
+                {
+                    bool ready = AdService.CanOfferRewarded(AdPlacement.DoubleCoins);
+                    doubleCoinsButton.interactable = ready;
+                    if (label != null) { label.text = ready ? DoubleCoinsText(lastCoins) : ContinueLoadingText; label.alpha = ready ? 1f : 0.6f; }
+                    if (!ready && Time.unscaledTime >= nextRequest) { AdService.RequestRewarded(); nextRequest = Time.unscaledTime + 5f; }
+                }
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
         }
 
         private int lastCoins;
 
         private void WatchDoubleCoins()
         {
-            if (doubleCoinsButton == null || lastCoins <= 0) return;
+            if (doubleCoinsButton == null || lastCoins <= 0 || !AdService.CanOfferRewarded(AdPlacement.DoubleCoins)) return;
             doubleCoinsButton.interactable = false;
+            watchingAd = true;
             AdService.ShowRewarded(AdPlacement.DoubleCoins, watched =>
             {
+                watchingAd = false;
                 if (watched)
                 {
                     AdService.AddCoins(lastCoins);
@@ -235,19 +261,51 @@ namespace UltimateCarParking.UI
             AdService.NotifyLevelFailed(r.LevelId);
             if (continueButton != null)
             {
-                continueButton.interactable = true;
-                continueButton.gameObject.SetActive(levelManager.CanContinueAfterTimeUp && AdService.CanOfferRewarded(AdPlacement.ContinueTime));
+                // Time-up always offers the +30 s continue (when the ad rules allow it); if the ad is still loading the
+                // button says so and becomes tappable the moment it arrives.
+                bool offer = levelManager.CanContinueAfterTimeUp && AdService.RewardedAllowed(AdPlacement.ContinueTime);
+                continueButton.gameObject.SetActive(offer);
+                if (offer) { continueButton.interactable = AdService.CanOfferRewarded(AdPlacement.ContinueTime); }
             }
             Show(failPanel);
+            // Started after the panel is shown: the loop runs while the fail screen is up.
+            if (continueButton != null && continueButton.gameObject.activeSelf) StartCoroutine(ContinueOffer());
             if (failPanel != null) StartCoroutine(UiMotion.Shake((RectTransform)failPanel.transform, 10f, 0.3f));
+        }
+
+        public const string ContinueReadyText = "WATCH AD: +30 SECONDS", ContinueLoadingText = "LOADING AD…";
+        private bool watchingAd;
+
+        /// <summary>While the fail screen is up: keeps the continue button in step with the ad (loading → ready).</summary>
+        private IEnumerator ContinueOffer()
+        {
+            TMP_Text label = continueButton.GetComponentInChildren<TMP_Text>();
+            float nextRequest = 0f;
+            while (continueButton != null && FailShown && levelManager.CanContinueAfterTimeUp)
+            {
+                if (!watchingAd)
+                {
+                    bool ready = AdService.CanOfferRewarded(AdPlacement.ContinueTime);
+                    continueButton.interactable = ready;
+                    if (label != null)
+                    {
+                        label.text = ready ? ContinueReadyText : ContinueLoadingText;
+                        label.alpha = ready ? 1f : 0.6f;
+                    }
+                    if (!ready && Time.unscaledTime >= nextRequest) { AdService.RequestRewarded(); nextRequest = Time.unscaledTime + 5f; }
+                }
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
         }
 
         private void WatchContinue()
         {
-            if (continueButton == null || !levelManager.CanContinueAfterTimeUp) return;
+            if (continueButton == null || !levelManager.CanContinueAfterTimeUp || !AdService.CanOfferRewarded(AdPlacement.ContinueTime)) return;
             continueButton.interactable = false;
+            watchingAd = true;
             AdService.ShowRewarded(AdPlacement.ContinueTime, watched =>
             {
+                watchingAd = false;
                 if (watched && levelManager.ContinueAfterTimeUp(AdPolicy.ContinueSeconds))
                 {
                     Hide(failPanel);

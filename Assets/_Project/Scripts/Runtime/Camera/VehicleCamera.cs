@@ -12,7 +12,7 @@ namespace UltimateCarParking.CameraSystem
     /// <summary>
     /// Driving camera with five views:
     /// <list type="bullet">
-    /// <item>Chase: behind and above the car's flattened heading, SmoothDamp follow, pulls in when a wall is in the way.</item>
+    /// <item>Chase: behind and above the car's flattened heading, SmoothDamp follow, pulls in when a wall is in the way. One-finger drag on open screen looks around the car; it eases back behind after 2 s.</item>
     /// <item>Top-down: high overhead, slightly behind, for lining up bays.</item>
     /// <item>Bumper: low at the front bumper looking ahead.</item>
     /// <item>Cockpit: driver's eye inside the car (only cars with a modelled interior).</item>
@@ -84,6 +84,10 @@ namespace UltimateCarParking.CameraSystem
         private Vector3 fromPos;
         private Quaternion fromRot;
         private float orbitYaw, orbitPitch = 22f;
+        // Chase look-around: one-finger drag on open screen turns the camera around the car; it eases back behind the
+        // car once the player has let go for LookReturnDelay seconds.
+        private float lookYaw, lookPitch, lastLookTime = -99f;
+        public const float LookReturnDelay = 2f;
 
         // Car measurements (local space), refreshed on SetTarget.
         private float carLength = 4.4f, carHeight = 1.5f, carWidth = 1.8f, frontZ = 2.2f, centreZ;
@@ -159,6 +163,7 @@ namespace UltimateCarParking.CameraSystem
             view = next;
             transitionLeft = instant ? 0f : transitionSeconds;
             if (view == CameraView.Orbit) { orbitYaw = 0f; orbitPitch = 22f; }
+            lookYaw = lookPitch = 0f;
             ApplyLens();
             if (instant) SnapToTarget();
         }
@@ -179,6 +184,16 @@ namespace UltimateCarParking.CameraSystem
         }
 
         public float OrbitYaw => orbitYaw;
+        public float LookYaw => lookYaw;
+        public float LookPitch => lookPitch;
+
+        /// <summary>Chase view: turns the camera around the car (degrees). Used by touch / mouse drag and tests.</summary>
+        public void Look(float yawDegrees, float pitchDegrees)
+        {
+            lookYaw = Mathf.Clamp(lookYaw + yawDegrees, -180f, 180f);
+            lookPitch = Mathf.Clamp(lookPitch + pitchDegrees, -20f, 55f);
+            lastLookTime = Time.unscaledTime;
+        }
 
         public void SetTarget(Transform newTarget, bool snap = true)
         {
@@ -234,6 +249,12 @@ namespace UltimateCarParking.CameraSystem
                 if (Mathf.Abs(scroll) > 0.01f) Zoom(-Mathf.Sign(scroll) * zoomStep);
             }
             ReadTouches();
+            if (Time.unscaledTime - lastLookTime > LookReturnDelay && (lookYaw != 0f || lookPitch != 0f))
+            {
+                float k = 1f - Mathf.Exp(-3f * dt);   // ease back behind the car
+                lookYaw = Mathf.Abs(lookYaw) < 0.2f ? 0f : Mathf.Lerp(lookYaw, 0f, k);
+                lookPitch = Mathf.Abs(lookPitch) < 0.2f ? 0f : Mathf.Lerp(lookPitch, 0f, k);
+            }
 
             heading = Vector3.Slerp(heading, Flatten(target.forward, heading), 1f - Mathf.Exp(-headingSharpness * dt));
             Pose desired = DesiredPose();
@@ -299,7 +320,17 @@ namespace UltimateCarParking.CameraSystem
                 default:
                 {
                     float h = height * Mathf.Lerp(1f, size, 0.7f) + Mathf.Max(0f, carHeight - 1.5f) * 0.6f;
-                    Vector3 p = ResolveObstacles(target.position + Vector3.up * h - heading * (distance * size));
+                    Vector3 basePos = target.position + Vector3.up * h - heading * (distance * size);
+                    if (lookYaw != 0f || lookPitch != 0f)
+                    {
+                        // Same distance from the look point, turned by the player's drag (elevation kept between 3° and 80°).
+                        Vector3 rel = basePos - LookPoint;
+                        float r = rel.magnitude;
+                        float elev = Mathf.Clamp(Mathf.Asin(Mathf.Clamp(rel.y / Mathf.Max(r, 1e-3f), -1f, 1f)) * Mathf.Rad2Deg + lookPitch, 3f, 80f) * Mathf.Deg2Rad;
+                        Vector3 flat = Quaternion.Euler(0f, lookYaw, 0f) * Flatten(rel, -heading);
+                        basePos = LookPoint + (flat * Mathf.Cos(elev) + Vector3.up * Mathf.Sin(elev)) * r;
+                    }
+                    Vector3 p = ResolveObstacles(basePos);
                     return new Pose(p, LookRotationAt(p));
                 }
             }
@@ -384,6 +415,10 @@ namespace UltimateCarParking.CameraSystem
             lastPinch = -1f;
             if (free == 1 && view == CameraView.Orbit && dragDelta.sqrMagnitude > 0f)
                 Orbit(dragDelta.x * orbitDegreesPerPixel, -dragDelta.y * orbitDegreesPerPixel);
+            else if (free == 1 && view == CameraView.Chase && dragDelta.sqrMagnitude > 0f)
+                Look(dragDelta.x * orbitDegreesPerPixel, -dragDelta.y * orbitDegreesPerPixel);   // look left / right / up / down
+            else if (free == 1 && view == CameraView.Chase)
+                lastLookTime = Time.unscaledTime;   // finger resting on the screen: hold the view
         }
 
         private bool OverUi(Vector2 screen)

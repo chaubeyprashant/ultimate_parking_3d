@@ -198,8 +198,8 @@ namespace UltimateCarParking.EditorTools
             PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
 
             PlayerSettings.colorSpace = ColorSpace.Linear;
-            PlayerSettings.bundleVersion = "1.0.1";
-            PlayerSettings.Android.bundleVersionCode = 2;
+            PlayerSettings.bundleVersion = "1.1.2";
+            PlayerSettings.Android.bundleVersionCode = 3;
 
             // Input System package only (the legacy Input Manager is not used anywhere).
             Object playerSettingsAsset = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/ProjectSettings.asset").FirstOrDefault();

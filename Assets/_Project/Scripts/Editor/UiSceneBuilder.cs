@@ -63,9 +63,13 @@ namespace UltimateCarParking.EditorTools
             RectTransform buttons = Group(safe, "ButtonGroup", new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(96f, 36f), new Vector2(700f, 650f));
             Label(buttons, "VehicleKicker", "SHOWROOM", false, 22f, UiPalette.TextSecondary, TextAlignmentOptions.BottomLeft, 6f);
             TMP_Text car = Label(buttons, "CarLabel", "SPORT", true, 40f, UiPalette.TextPrimary, TextAlignmentOptions.BottomLeft, 2.2f);
-            Place(car.rectTransform, Vector2.zero, Vector2.zero, new Vector2(0f, 578f), new Vector2(680f, 60f));
+            Place(car.rectTransform, Vector2.zero, Vector2.zero, new Vector2(0f, 624f), new Vector2(420f, 56f));
+            car.enableAutoSizing = true; car.fontSizeMin = 26f; car.fontSizeMax = 40f;
             var kickerRt = buttons.Find("VehicleKicker").GetComponent<RectTransform>();
-            Place(kickerRt, Vector2.zero, Vector2.zero, new Vector2(2f, 546f), new Vector2(680f, 32f));
+            Place(kickerRt, Vector2.zero, Vector2.zero, new Vector2(440f, 630f), new Vector2(260f, 32f));
+            kickerRt.GetComponent<TMP_Text>().alignment = TextAlignmentOptions.BottomRight;
+            // Difficulty for PLAY / World Tour / missions started from here (same setting as every other picker): a full-width row.
+            DifficultyPills(buttons, Vector2.zero, Vector2.zero, new Vector2(0f, 540f), new Vector2(700f, 76f), 30f);
 
             // World Tour is the headline feature: a large lime hero card with live progress. Play continues the next campaign level;
             // Garage, Missions and Settings sit in one row underneath.
@@ -201,6 +205,7 @@ namespace UltimateCarParking.EditorTools
 
             TMP_Text caption = Label(safe, "SectionCaption", "LEVELS 1-10", false, 24f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 6f);
             Place(caption.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, 0.5f), new Vector2(-681f, 196f), new Vector2(600f, 36f));
+            DifficultyPills(safe, new Vector2(0.5f, 0.5f), new Vector2(1f, 0.5f), new Vector2(681f, 206f), new Vector2(620f, 62f), 28f);
 
             RectTransform gridHolder = Group(safe, "GridHolder", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -48f), new Vector2(1362f, 448f));
             var gridGroup = gridHolder.gameObject.AddComponent<CanvasGroup>();
@@ -300,11 +305,11 @@ namespace UltimateCarParking.EditorTools
             fade.rectTransform.sizeDelta = new Vector2(1150f, 0f);
             RectTransform safe = SafeArea(root);
 
-            Button back = CircleButton(safe, "BackButton", "ChevronLeft", new Vector2(0f, 1f), new Vector2(110f, -100f));
-            TMP_Text kicker = Label(safe, "Kicker", "GARAGE", true, 34f, UiPalette.Lime, TextAlignmentOptions.MidlineLeft, 14f);
-            Place(kicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(190f, -82f), new Vector2(400f, 44f));
-            TMP_Text index = Label(safe, "Index", "01 / 05", false, 24f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 4f);
-            Place(index.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(190f, -120f), new Vector2(400f, 34f));
+            Button back = CircleButton(safe, "BackButton", "ChevronLeft", new Vector2(0f, 1f), new Vector2(110f, -100f), UiPalette.Lime, 110f);
+            TMP_Text kicker = Label(safe, "Kicker", "GARAGE", true, 36f, UiPalette.Lime, TextAlignmentOptions.MidlineLeft, 14f);
+            Place(kicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(200f, -82f), new Vector2(400f, 44f));
+            TMP_Text index = Label(safe, "Index", "01 / 05", false, 28f, UiPalette.TextSecondary, TextAlignmentOptions.MidlineLeft, 4f);
+            Place(index.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(200f, -120f), new Vector2(400f, 34f));
             CoinPill(safe);
 
             RectTransform info = Group(safe, "Info", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(120f, 10f), new Vector2(600f, 780f));
@@ -314,50 +319,50 @@ namespace UltimateCarParking.EditorTools
             TMP_Text tagline = Label(info, "Tagline", "Balanced", false, 28f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft);
             tagline.textWrappingMode = TextWrappingModes.Normal;
             Place(tagline.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(2f, -104f), new Vector2(580f, 80f));
-            StatBar speed = MakeStatBar(info, "TOP SPEED", -200f);
-            StatBar accel = MakeStatBar(info, "ACCELERATION", -276f);
-            StatBar handling = MakeStatBar(info, "HANDLING", -352f);
-            StatBar braking = MakeStatBar(info, "BRAKING", -428f);
-            TMP_Text status = Label(info, "Status", "OWNED", false, 26f, UiPalette.Lime, TextAlignmentOptions.BottomLeft, 6f);
-            Place(status.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(4f, 222f), new Vector2(560f, 36f));
+            StatBar speed = MakeStatBar(info, "TOP SPEED", -184f);
+            StatBar accel = MakeStatBar(info, "ACCELERATION", -252f);
+            StatBar handling = MakeStatBar(info, "HANDLING", -320f);
+            StatBar braking = MakeStatBar(info, "BRAKING", -388f);
+            TMP_Text status = Label(info, "Status", "OWNED", true, 30f, UiPalette.Lime, TextAlignmentOptions.BottomLeft, 6f);
+            Place(status.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(4f, 246f), new Vector2(580f, 40f));
             var upgradeButtons = new Button[3];
             var upgradeLabels = new TMP_Text[3];
             string[] upgradeNames = { "ENGINE", "BRAKES", "STEERING" };
             for (int i = 0; i < 3; i++)
             {
                 upgradeButtons[i] = PillButton(info, "Upgrade" + upgradeNames[i], upgradeNames[i] + "\nLV 0/3  250", filled: false,
-                    new Vector2(i * 190f, 118f), new Vector2(180f, 90f), 22f);
+                    new Vector2(i * 196f, 126f), new Vector2(188f, 104f), 28f);
                 upgradeLabels[i] = upgradeButtons[i].GetComponentInChildren<TMP_Text>();
-                upgradeLabels[i].lineSpacing = -10f;
+                upgradeLabels[i].lineSpacing = -2f;
             }
 
-            Button action = PillButton(info, "ActionButton", "SELECT", filled: true, new Vector2(0f, 0f), new Vector2(560f, 104f), 46f);
+            Button action = PillButton(info, "ActionButton", "SELECT", filled: true, new Vector2(0f, 0f), new Vector2(580f, 110f), 48f);
             Image lockIcon = Img(action.transform, "Lock", "Lock", UiPalette.TextOnLime, sliced: false);
-            Place(lockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(40f, 0f), new Vector2(40f, 40f));
+            Place(lockIcon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(44f, 0f), new Vector2(48f, 48f));
 
-            Button prev = CircleButton(safe, "PrevButton", "ChevronLeft", new Vector2(1f, 0f), new Vector2(-250f, 110f));
-            Button next = CircleButton(safe, "NextButton", "ChevronRight", new Vector2(1f, 0f), new Vector2(-110f, 110f));
-            RectTransform dots = Group(safe, "Dots", new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-640f, 110f), new Vector2(620f, 24f));
+            Button prev = CircleButton(safe, "PrevButton", "ChevronLeft", new Vector2(1f, 0f), new Vector2(-264f, 110f), UiPalette.Lime, 116f);
+            Button next = CircleButton(safe, "NextButton", "ChevronRight", new Vector2(1f, 0f), new Vector2(-110f, 110f), UiPalette.Lime, 116f);
+            RectTransform dots = Group(safe, "Dots", new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-650f, 110f), new Vector2(620f, 32f));
             var hl = dots.gameObject.AddComponent<HorizontalLayoutGroup>();
-            hl.spacing = 9f; hl.childAlignment = TextAnchor.MiddleCenter; hl.childForceExpandWidth = false; hl.childForceExpandHeight = false;
+            hl.spacing = 14f; hl.childAlignment = TextAnchor.MiddleCenter; hl.childForceExpandWidth = false; hl.childForceExpandHeight = false;
             Image dot = Img(dots, "DotTemplate", "Circle", UiPalette.Outline, sliced: false);
-            dot.rectTransform.sizeDelta = new Vector2(13f, 13f);
-            dot.gameObject.AddComponent<LayoutElement>().preferredWidth = 13f;
+            dot.rectTransform.sizeDelta = new Vector2(22f, 22f);
+            dot.gameObject.AddComponent<LayoutElement>().preferredWidth = 22f;
             // Spec sheet (top right): measured figures, parking difficulty, strength, COMPARE with the car in use.
             Image specBg = Img(safe, "Specs", "RoundRect", UiPalette.Surface.WithAlpha(0.78f));
-            Place(specBg.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-60f, -170f), new Vector2(500f, 430f));
+            Place(specBg.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-40f, -100f), new Vector2(660f, 560f));
             RectTransform spec = specBg.rectTransform;
-            TMP_Text specKicker = Label(spec, "Kicker", "MEASURED SPECS", true, 22f, UiPalette.Lime, TextAlignmentOptions.TopLeft, 8f);
-            Place(specKicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -20f), new Vector2(440f, 30f));
-            TMP_Text specValues = Label(spec, "Values", "", false, 23f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 1f);
-            specValues.lineSpacing = 6f;
-            Place(specValues.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -60f), new Vector2(450f, 230f));
-            TMP_Text specDiff = Label(spec, "Difficulty", "PARKING  EASY 1/5", true, 24f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 4f);
-            Place(specDiff.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -292f), new Vector2(450f, 32f));
-            TMP_Text specStrength = Label(spec, "Strength", "", false, 21f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 0f);
+            TMP_Text specKicker = Label(spec, "Kicker", "MEASURED SPECS", true, 28f, UiPalette.Lime, TextAlignmentOptions.TopLeft, 8f);
+            Place(specKicker.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(32f, -20f), new Vector2(596f, 34f));
+            TMP_Text specValues = Label(spec, "Values", "", false, 32f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 1f);
+            specValues.lineSpacing = 8f;
+            Place(specValues.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(32f, -62f), new Vector2(596f, 260f));
+            TMP_Text specDiff = Label(spec, "Difficulty", "PARKING  EASY 1/5", true, 32f, UiPalette.TextPrimary, TextAlignmentOptions.TopLeft, 4f);
+            Place(specDiff.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(32f, -332f), new Vector2(596f, 38f));
+            TMP_Text specStrength = Label(spec, "Strength", "", false, 26f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 0f);
             specStrength.textWrappingMode = TextWrappingModes.Normal;
-            Place(specStrength.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(28f, -326f), new Vector2(450f, 50f));
-            Button compare = PillButton(spec, "CompareButton", "COMPARE", false, new Vector2(28f, 16f), new Vector2(444f, 56f), 22f);
+            Place(specStrength.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(32f, -376f), new Vector2(596f, 56f));
+            Button compare = PillButton(spec, "CompareButton", "COMPARE", false, new Vector2(32f, 18f), new Vector2(596f, 82f), 32f);
             var specsPanel = spec.gameObject.AddComponent<GarageSpecsPanel>();
             Wire(specsPanel, "values", specValues);
             Wire(specsPanel, "difficulty", specDiff);
@@ -365,8 +370,8 @@ namespace UltimateCarParking.EditorTools
             Wire(specsPanel, "compareButton", compare);
             Wire(specsPanel, "compareLabel", compare.GetComponentInChildren<TMP_Text>());
 
-            TMP_Text dragHint = Label(safe, "DragHint", "DRAG TO ROTATE  ·  PINCH TO ZOOM", false, 20f, UiPalette.TextSecondary.WithAlpha(0.6f), TextAlignmentOptions.Center, 6f);
-            Place(dragHint.rectTransform, new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-560f, 60f), new Vector2(400f, 30f));
+            TMP_Text dragHint = Label(safe, "DragHint", "DRAG TO ROTATE  ·  PINCH TO ZOOM", false, 24f, UiPalette.TextSecondary.WithAlpha(0.7f), TextAlignmentOptions.Center, 6f);
+            Place(dragHint.rectTransform, new Vector2(1f, 0f), new Vector2(0.5f, 0.5f), new Vector2(-560f, 56f), new Vector2(440f, 32f));
             MakeEventSystem();
 
             var ctrl = garageGo.AddComponent<GarageController>();
@@ -396,8 +401,8 @@ namespace UltimateCarParking.EditorTools
             Wire(ctrl, "specsPanel", specsPanel);
 
             // Customisation (Phase 7): button under the spec sheet, panel on the right with a live preview on the turntable.
-            Button customize = PillButton(safe, "CustomizeButton", "CUSTOMIZE", true, Vector2.zero, new Vector2(500f, 72f), 30f);
-            Place((RectTransform)customize.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-60f, -616f), new Vector2(500f, 72f));
+            Button customize = PillButton(safe, "CustomizeButton", "CUSTOMIZE", true, Vector2.zero, new Vector2(660f, 96f), 36f);
+            Place((RectTransform)customize.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-40f, -680f), new Vector2(660f, 96f));
             CustomizePanel cp = BuildCustomizePanel(safe, ctrl, showroom);
             UnityEditor.Events.UnityEventTools.AddPersistentListener(customize.onClick, cp.Open);
             Wire(garageGo.AddComponent<BackNavigation>(), "targetScene", SceneNames.MainMenu);
@@ -408,15 +413,15 @@ namespace UltimateCarParking.EditorTools
         private static StatBar MakeStatBar(RectTransform parent, string label, float y)
         {
             RectTransform root = NewRect(parent, label.Replace(" ", "") + "Stat");
-            Place(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, y), new Vector2(560f, 58f));
-            TMP_Text name = Label(root, "Label", label, false, 22f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 5f);
-            Fill(name.rectTransform, 2, 120, 0, 24);
-            TMP_Text value = Label(root, "Value", "50", true, 30f, UiPalette.TextPrimary, TextAlignmentOptions.TopRight);
+            Place(root, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, y), new Vector2(580f, 60f));
+            TMP_Text name = Label(root, "Label", label, false, 24f, UiPalette.TextSecondary, TextAlignmentOptions.TopLeft, 5f);
+            Fill(name.rectTransform, 2, 140, 0, 24);
+            TMP_Text value = Label(root, "Value", "50", true, 32f, UiPalette.TextPrimary, TextAlignmentOptions.TopRight);
             Fill(value.rectTransform, 400, 0, -6, 24);
             Image track = Img(root, "Track", "Pill", UiPalette.Outline);
-            Place(track.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), Vector2.zero, new Vector2(560f, 12f));
+            Place(track.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 0f), Vector2.zero, new Vector2(580f, 14f));
             track.rectTransform.anchorMax = new Vector2(1f, 0f);
-            track.rectTransform.sizeDelta = new Vector2(0f, 12f);
+            track.rectTransform.sizeDelta = new Vector2(0f, 14f);
             Image fill = Img(track.rectTransform, "Fill", "Pill", UiPalette.Lime);
             fill.rectTransform.anchorMin = Vector2.zero;
             fill.rectTransform.anchorMax = new Vector2(0.5f, 1f);
@@ -588,6 +593,26 @@ namespace UltimateCarParking.EditorTools
             TMP_Text amount = Label(pill.rectTransform, "Amount", "0/90", true, 40f, UiPalette.TextPrimary, TextAlignmentOptions.MidlineRight);
             Fill(amount.rectTransform, 70, 28, 0, 0);
             return amount;
+        }
+
+        /// <summary>EASY / MEDIUM / HARD pills in a row filling <paramref name="size"/>; wired to a DifficultyPicker.</summary>
+        private static DifficultyPicker DifficultyPills(RectTransform parent, Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size, float fontSize)
+        {
+            RectTransform row = NewRect(parent, "DifficultyPicker");
+            Place(row, anchor, pivot, pos, size);
+            const float gap = 8f;
+            float w = (size.x - 2f * gap) / 3f;
+            string[] names = { "EASY", "MEDIUM", "HARD" };
+            var buttons = new Button[3];
+            for (int i = 0; i < 3; i++)
+            {
+                buttons[i] = PillButton(row, "Difficulty" + names[i], names[i], true, new Vector2(i * (w + gap), 0f), new Vector2(w, size.y), fontSize);
+                TMP_Text t = buttons[i].GetComponentInChildren<TMP_Text>();
+                t.enableAutoSizing = true; t.fontSizeMax = fontSize; t.fontSizeMin = Mathf.Max(20f, fontSize * 0.7f);
+            }
+            var picker = row.gameObject.AddComponent<DifficultyPicker>();
+            WireArray(picker, "buttons", buttons);
+            return picker;
         }
 
         private static Button PillButton(RectTransform parent, string name, string text, bool filled, Vector2 pos, Vector2 size, float fontSize)

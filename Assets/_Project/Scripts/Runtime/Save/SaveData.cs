@@ -105,7 +105,7 @@ namespace UltimateCarParking.Save
         public float QualityAt(Levels.Difficulty d) => d == Levels.Difficulty.Easy ? easyQuality : d == Levels.Difficulty.Hard ? hardQuality : bestQuality;
         public int BestOfAll => System.Math.Max(bestStars, System.Math.Max(easyStars, hardStars));
 
-        public bool Completed => bestStars > 0;
+        public bool Completed => BestOfAll > 0;   // cleared at any difficulty
     }
 
     /// <summary>Upgrade levels (0 = stock) of one car.</summary>

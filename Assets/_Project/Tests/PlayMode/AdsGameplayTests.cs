@@ -84,7 +84,7 @@ namespace UltimateCarParking.Tests
         private static UnityEngine.UI.Button Button(string path) => GameObject.Find(path).GetComponent<UnityEngine.UI.Button>();
 
         [UnityTest]
-        public IEnumerator Time_Up_Offers_One_Rewarded_Continue_That_Adds_Thirty_Seconds()
+        public IEnumerator Every_Time_Up_Offers_A_Rewarded_Continue_That_Adds_Thirty_Seconds()
         {
             Seed(5);
             yield return Load(ShortTime(1.5f));
@@ -103,10 +103,40 @@ namespace UltimateCarParking.Tests
             Assert.Greater(Manager.RemainingSeconds, 28f);
             Assert.IsTrue(Car.ControlsEnabled, "car is drivable again");
 
-            // Time runs out a second time: no second continue.
+            // Time runs out again: offered again.
             Manager.FailLevel(FailReason.TimeUp);
             yield return WaitFor(() => ui.FailShown, 6f, "second fail panel");
-            Assert.IsFalse(GameObject.Find("FailPanel/Body/Continue") != null && GameObject.Find("FailPanel/Body/Continue").activeSelf, "only once per attempt");
+            yield return new WaitForSecondsRealtime(0.4f);
+            Assert.IsTrue(GameObject.Find("FailPanel/Body/Continue") != null && GameObject.Find("FailPanel/Body/Continue").activeSelf, "offered again on every time-up");
+            Button("FailPanel/Body/Continue").onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(2, fake.RewardedShown, "a second +30 s");
+            Assert.AreEqual(LevelState.Playing, Manager.State);
+        }
+
+        [UnityTest]
+        public IEnumerator Time_Up_Shows_The_Continue_While_The_Ad_Loads_And_Enables_It_When_Ready()
+        {
+            Seed(0);
+            fake.RewardedLoaded = false;   // AdMob has not delivered an ad yet
+            yield return Load(ShortTime(1.5f));
+            var ui = Find<GameplayUiController>();
+            yield return WaitFor(() => ui.FailShown, 6f, "fail panel");
+            yield return new WaitForSecondsRealtime(0.4f);
+            GameObject go = GameObject.Find("FailPanel/Body/Continue");
+            Assert.IsTrue(go != null && go.activeSelf, "the +30 s option is visible even before the ad has loaded");
+            var b = go.GetComponent<UnityEngine.UI.Button>();
+            var label = go.GetComponentInChildren<TMPro.TMP_Text>();
+            Assert.IsFalse(b.interactable, "not tappable until the ad is ready");
+            Assert.AreEqual(GameplayUiController.ContinueLoadingText, label.text);
+            Assert.Greater(fake.RewardedRequests, 0, "asked the ad network for an ad");
+            fake.RewardedLoaded = true;    // the ad arrives
+            yield return new WaitForSecondsRealtime(0.4f);
+            Assert.IsTrue(b.interactable, "tappable once the ad is ready");
+            Assert.AreEqual(GameplayUiController.ContinueReadyText, label.text);
+            b.onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(LevelState.Playing, Manager.State, "continued with +30 s");
         }
 
         [UnityTest]
@@ -125,14 +155,14 @@ namespace UltimateCarParking.Tests
         }
 
         [UnityTest]
-        public IEnumerator New_Players_Are_Offered_No_Continue()
+        public IEnumerator New_Players_Are_Offered_The_Time_Continue_From_The_First_Mission()
         {
             Seed(0);
             yield return Load(ShortTime(1.5f));
             var ui = Find<GameplayUiController>();
             yield return WaitFor(() => ui.FailShown, 6f, "fail panel");
             GameObject go = GameObject.Find("FailPanel/Body/Continue");
-            Assert.IsTrue(go == null || !go.activeSelf, "no ads in the first levels");
+            Assert.IsTrue(go != null && go.activeSelf, "the opt-in +30 s offer shows from the first mission");
         }
 
         [UnityTest]

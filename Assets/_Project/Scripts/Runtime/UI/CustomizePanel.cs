@@ -51,7 +51,85 @@ namespace UltimateCarParking.UI
             if (resetButton != null) resetButton.onClick.AddListener(ResetLook);
             if (doneButton != null) doneButton.onClick.AddListener(Close);
             if (optionTemplate != null) optionTemplate.gameObject.SetActive(false);
+            Enlarge();
             gameObject.SetActive(false);
+        }
+
+        /// <summary>The customize sheet covers the right side at a size you can read on a phone.</summary>
+        private void Enlarge()
+        {
+            var rt = (RectTransform)transform;
+            rt.anchoredPosition = new Vector2(-28f, -20f);
+            rt.sizeDelta = new Vector2(900f, 1000f);
+            if (title != null)
+            {
+                title.fontSize = 40f;
+                title.enableAutoSizing = false;
+                var titleRect = title.rectTransform;
+                titleRect.anchoredPosition = new Vector2(28f, -22f);
+                titleRect.sizeDelta = new Vector2(844f, 52f);
+            }
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                if (tabs[i] == null) continue;
+                var tab = tabs[i].GetComponent<RectTransform>();
+                tab.sizeDelta = new Vector2(274f, 72f);
+                tab.anchoredPosition = new Vector2(28f + (i % 3) * 288f, -88f - (i / 3) * 84f);
+                var label = tabs[i].GetComponentInChildren<TMP_Text>();
+                if (label != null) { label.fontSize = 30f; label.enableAutoSizing = false; }
+            }
+            if (grid != null)
+            {
+                grid.anchoredPosition = new Vector2(28f, -268f);
+                grid.sizeDelta = new Vector2(844f, 480f);
+                var layout = grid.GetComponent<GridLayoutGroup>();
+                if (layout != null)
+                {
+                    layout.cellSize = new Vector2(272f, 88f);
+                    layout.spacing = new Vector2(14f, 14f);
+                }
+            }
+            if (optionTemplate != null)
+            {
+                var label = optionTemplate.GetComponentInChildren<TMP_Text>();
+                if (label != null)
+                {
+                    label.fontSize = 28f;
+                    label.enableAutoSizing = true;
+                    label.fontSizeMin = 22f;
+                    label.fontSizeMax = 28f;
+                }
+            }
+            if (plateInput != null)
+            {
+                var input = plateInput.GetComponent<RectTransform>();
+                input.anchoredPosition = new Vector2(28f, -268f);
+                input.sizeDelta = new Vector2(844f, 88f);
+                plateInput.pointSize = 36f;
+            }
+            if (status != null)
+            {
+                status.fontSize = 28f;
+                status.enableAutoSizing = false;
+                var statusRect = status.rectTransform;
+                statusRect.anchoredPosition = new Vector2(28f, 220f);
+                statusRect.sizeDelta = new Vector2(844f, 44f);
+            }
+            GrowButton(buyButton, new Vector2(28f, 118f), new Vector2(520f, 90f), 34f);
+            GrowButton(resetButton, new Vector2(564f, 118f), new Vector2(308f, 90f), 30f);
+            GrowButton(doneButton, new Vector2(28f, 16f), new Vector2(844f, 88f), 32f);
+        }
+
+        private static void GrowButton(Button button, Vector2 position, Vector2 size, float fontSize)
+        {
+            if (button == null) return;
+            var rect = button.GetComponent<RectTransform>();
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            var label = button.GetComponentInChildren<TMP_Text>();
+            if (label == null) return;
+            label.fontSize = fontSize;
+            label.enableAutoSizing = false;
         }
 
         public void Open()

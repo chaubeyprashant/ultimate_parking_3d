@@ -29,6 +29,47 @@ namespace UltimateCarParking.UI
         private void Awake()
         {
             if (compareButton != null) compareButton.onClick.AddListener(() => { Comparing = !Comparing; Render(); });
+            Enlarge();
+        }
+
+        /// <summary>The measured-spec card is a phone-readable size: clear spacing, a wider card, and the customize button moved clear of it.</summary>
+        private void Enlarge()
+        {
+            var rt = (RectTransform)transform;
+            rt.anchoredPosition = new Vector2(-40f, -100f);
+            rt.sizeDelta = new Vector2(660f, 560f);
+            Grow(values, 32f, new Vector2(32f, -62f), new Vector2(596f, 260f));
+            if (values != null) values.lineSpacing = 8f;
+            Grow(difficulty, 32f, new Vector2(32f, -332f), new Vector2(596f, 38f));
+            Grow(strength, 26f, new Vector2(32f, -376f), new Vector2(596f, 56f));
+            var kicker = transform.Find("Kicker");
+            if (kicker != null && kicker.TryGetComponent(out TMP_Text kickerText))
+                Grow(kickerText, 28f, new Vector2(32f, -20f), new Vector2(596f, 34f));
+            if (compareLabel != null) compareLabel.fontSize = 32f;
+            if (compareButton != null)
+            {
+                var button = compareButton.GetComponent<RectTransform>();
+                button.anchoredPosition = new Vector2(32f, 18f);
+                button.sizeDelta = new Vector2(596f, 82f);
+            }
+            var customize = transform.parent != null ? transform.parent.Find("CustomizeButton") as RectTransform : null;
+            if (customize != null)
+            {
+                customize.anchoredPosition = new Vector2(-40f, -680f);
+                customize.sizeDelta = new Vector2(660f, 96f);
+                var label = customize.GetComponentInChildren<TMP_Text>();
+                if (label != null) label.fontSize = 36f;
+            }
+        }
+
+        private static void Grow(TMP_Text text, float size, Vector2 position, Vector2 box)
+        {
+            if (text == null) return;
+            text.fontSize = size;
+            text.enableAutoSizing = false;
+            var rect = text.rectTransform;
+            rect.anchoredPosition = position;
+            rect.sizeDelta = box;
         }
 
         /// <summary>Shows a car; <paramref name="inUse"/> is the selected car used for COMPARE.</summary>

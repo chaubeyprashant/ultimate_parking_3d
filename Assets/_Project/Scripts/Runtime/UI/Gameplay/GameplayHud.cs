@@ -101,7 +101,29 @@ namespace UltimateCarParking.UI
             if (viewButton != null) viewButton.onClick.AddListener(ToggleView);
             if (zoomButton != null) zoomButton.onClick.AddListener(CycleZoom);
             if (objectiveToggle != null) objectiveToggle.onClick.AddListener(ToggleObjectives);
+            EnlargeTopRight();
             ApplyView();
+        }
+
+        /// <summary>Hits, camera and zoom chips are large enough to read and tap on a phone.</summary>
+        private void EnlargeTopRight()
+        {
+            GrowChip(collisionPill, new Vector2(-28f, -20f), new Vector2(320f, 104f), 28f, 56f);
+            GrowChip(viewButton != null ? viewButton.GetComponent<RectTransform>() : null, new Vector2(-220f, -140f), new Vector2(250f, 96f), 32f);
+            GrowChip(zoomButton != null ? zoomButton.GetComponent<RectTransform>() : null, new Vector2(-28f, -140f), new Vector2(180f, 96f), 32f);
+        }
+
+        private static void GrowChip(RectTransform rect, Vector2 position, Vector2 size, float labelSize, float countSize = 0f)
+        {
+            if (rect == null) return;
+            rect.anchoredPosition = position;
+            rect.sizeDelta = size;
+            foreach (var text in rect.GetComponentsInChildren<TMP_Text>(true))
+            {
+                bool count = text.gameObject.name == "Count";
+                text.fontSize = count && countSize > 0f ? countSize : labelSize;
+                text.enableAutoSizing = false;
+            }
         }
 
         /// <summary>VIEW button: Chase → Top → Bumper → Cockpit (cars with an interior) → Orbit → Chase. Remembered.</summary>
@@ -169,8 +191,23 @@ namespace UltimateCarParking.UI
 
         private UltimateCarParking.Vehicle.CollisionHandler hookedContacts;
 
+        private const string LookHintKey = "hint_look_around_v1";
+
+        /// <summary>First few missions: tells the player they can drag the screen to look around (shown 3 times in all).</summary>
+        private System.Collections.IEnumerator LookHint()
+        {
+            if (Application.isBatchMode) yield break;   // automated test runs
+            int shown = PlayerPrefs.GetInt(LookHintKey, 0);
+            if (shown >= 3) yield break;
+            yield return new WaitForSeconds(4f);
+            if (toastGroup == null || toastLabel == null || toastGroup.alpha > 0.05f) yield break;
+            PlayerPrefs.SetInt(LookHintKey, shown + 1);
+            ShowContactToast("DRAG THE SCREEN TO LOOK AROUND", UiPalette.TextPrimary);
+        }
+
         private void HookContacts(LevelData _)
         {
+            if (_ != null && isActiveAndEnabled) StartCoroutine(LookHint());
             var h = levelManager != null && levelManager.Vehicle != null ? levelManager.Vehicle.GetComponent<UltimateCarParking.Vehicle.CollisionHandler>() : null;
             if (h == hookedContacts) return;
             if (hookedContacts != null) hookedContacts.GentleContact -= OnGentle;
@@ -288,9 +325,11 @@ namespace UltimateCarParking.UI
         {
             if (levelLabel != null) levelLabel.text = $"LEVEL {level.LevelNumber:00}";
             string place = level.Theme != null ? level.Theme.DisplayName.ToUpperInvariant() : level.DisplayName.ToUpperInvariant();
+            Difficulty play = PlayDifficulty.Current;
+            string playColour = play == Difficulty.Easy ? "#B5FF2E" : play == Difficulty.Hard ? "#FF6B5E" : "#FFD23F";
             if (levelName != null) levelName.text = (level.HasObjectives ? MissionTypeInfo.Title(level.MissionType) : place)
-                + (level.Difficulty != ChallengeDifficulty.None ? "  ·  " + DifficultyProfile.Name(level.Difficulty) : "")
-                + "  ·  " + PlayDifficulty.Name(PlayDifficulty.Current);
+                + (level.Difficulty != ChallengeDifficulty.None ? " · " + DifficultyProfile.Name(level.Difficulty) : "")
+                + $" · <color={playColour}>{PlayDifficulty.Name(play)}</color>";
             RenderCollisions(levelManager.Collisions);
             OnStatus(validator != null ? validator.Status : ParkingStatus.Outside);
             shownTenths = -1;

@@ -134,8 +134,14 @@ namespace UltimateCarParking.UI
             }
         }
 
+        private void OnEnable() => PlayDifficulty.Changed += OnDifficulty;
+        private void OnDisable() => PlayDifficulty.Changed -= OnDifficulty;
+        private void OnDifficulty() { if (started) Refresh(); }
+        private bool started;
+
         private void Start()
         {
+            started = true;
             if (tour == null || mapView == null || markerPrefab == null || markerLayer == null)
             {
                 Debug.LogError("[WorldTour] Tour catalog, map view or marker prefab is not assigned.", this);

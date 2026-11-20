@@ -23,8 +23,8 @@ MonoBehaviour:
     at the stop line, follow the lane, then reverse into bay R4 and finish in P or
     with the handbrake on. More than two faults fails.'
   objectives:
-  - rid: 2518988191574261779
-  - rid: 2518988191574261780
+  - rid: 2518988198471008275
+  - rid: 2518988198471008276
   theme: {fileID: 0}
   props:
   - prefab: {fileID: 2953890994042640683, guid: 8f37b4c6bcfb040cba0b24ea34e530c1, type: 3}
@@ -74,7 +74,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988191574261779
+    - rid: 2518988198471008275
       type: {class: ExamRouteObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Follow the exam route
@@ -96,7 +96,7 @@ MonoBehaviour:
         stopSeconds: 1
         maxFaults: 2
         heightTolerance: 1.6
-    - rid: 2518988191574261780
+    - rid: 2518988198471008276
       type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse into bay R4

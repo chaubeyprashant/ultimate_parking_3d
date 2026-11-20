@@ -11,14 +11,12 @@ namespace UltimateCarParking.Ads
     /// </summary>
     public sealed class AdPolicy
     {
-        public const int RewardedFromLevels = 3;          // no ads of any kind until 3 levels are completed
-        public const int InterstitialFromLevels = 4;
-        public const int InterstitialLevelGap = 3;
-        public const double InterstitialMinutesGap = 4;
-        public const double RewardedBreathingMinutes = 3; // an interstitial never follows a rewarded view within this
-        public const int InterstitialsPerDay = 6;
-        public const int FailsBeforeRelief = 3;
-        public const double ReliefMinutes = 10;
+        public const int RewardedFromLevels = 0;          // opt-in rewarded offers (+30 s, double coins) from the first mission
+        public const int BannerFromLevels = 0;            // the small banner (missions screen) from the start
+        // Interstitials, kept to three simple rules: every 2nd win, never within 2 minutes of the last full-screen ad
+        // (interstitial or rewarded), and only at the break after a win (callers never ask after a fail or on Retry).
+        public const int InterstitialLevelGap = 2;
+        public const double FullScreenGapMinutes = 2;
         public const double FreeCoinsCooldownMinutes = 15;
         public const int FreeCoinsPerDay = 5;
         public const int FreeCoinsAmount = 100;
@@ -80,7 +78,7 @@ namespace UltimateCarParking.Ads
         }
 
         /// <summary>The banner is allowed once the player is past the first levels.</summary>
-        public bool CanShowBanner(int completedLevels) => completedLevels >= RewardedFromLevels;
+        public bool CanShowBanner(int completedLevels) => completedLevels >= BannerFromLevels;
 
         // ------------------------------------------------------------ interstitial
 
@@ -91,12 +89,9 @@ namespace UltimateCarParking.Ads
         public bool CanShowInterstitial(int completedLevels)
         {
             RollDay();
-            if (completedLevels < InterstitialFromLevels) return false;
-            if (state.levelsSinceInterstitial < InterstitialLevelGap) return false;
-            if (MinutesSince(state.lastInterstitialTicks) < InterstitialMinutesGap) return false;
-            if (MinutesSince(state.lastRewardedTicks) < RewardedBreathingMinutes) return false;
-            if (state.interstitialsToday >= InterstitialsPerDay) return false;
-            if (state.consecutiveFails >= FailsBeforeRelief && MinutesSince(state.lastFailTicks) < ReliefMinutes) return false;
+            if (state.levelsSinceInterstitial < InterstitialLevelGap) return false;   // every 2nd win
+            if (MinutesSince(state.lastInterstitialTicks) < FullScreenGapMinutes) return false;
+            if (MinutesSince(state.lastRewardedTicks) < FullScreenGapMinutes) return false;   // no ad straight after an ad
             return true;
         }
 

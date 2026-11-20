@@ -204,7 +204,7 @@ namespace UltimateCarParking.EditorTools
             arena.enableAutoSizing = true; arena.fontSizeMin = 14f; arena.fontSizeMax = 20f;
 
             Image preview = Img(body, "Preview", null, Color.white);
-            Place(preview.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -186f), new Vector2(576f, 324f));
+            Place(preview.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -186f), new Vector2(480f, 270f));   // 16:9, smaller to make room for the difficulty row
             preview.preserveAspect = false;
             Image previewFrame = Img(preview.rectTransform, "Frame", "RoundRectOutline", UiPalette.Outline);
             Fill(previewFrame.rectTransform, -2, -2, -2, -2);
@@ -213,7 +213,7 @@ namespace UltimateCarParking.EditorTools
             TMP_Text mission = Label(missionPill.rectTransform, "Label", "STANDARD PARKING", true, 19f, UiPalette.Lime, TextAlignmentOptions.Center, 3f);
             Fill(mission.rectTransform, 12, 12, 0, 0);
             Image bonusPill = Img(preview.rectTransform, "BonusChip", "Pill", new Color(0.04f, 0.05f, 0.06f, 0.86f));
-            Place(bonusPill.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(14f, -14f), new Vector2(548f, 40f));
+            Place(bonusPill.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(14f, -14f), new Vector2(452f, 40f));
             TMP_Text bonus = Label(bonusPill.rectTransform, "Label", "COUNTRY BONUS", true, 18f, UiPalette.TextPrimary, TextAlignmentOptions.Center, 2f);
             Fill(bonus.rectTransform, 12, 12, 0, 0);
             bonus.enableAutoSizing = true; bonus.fontSizeMin = 12f; bonus.fontSizeMax = 18f;
@@ -229,7 +229,9 @@ namespace UltimateCarParking.EditorTools
             desc.textWrappingMode = TextWrappingModes.Normal;
             desc.overflowMode = TextOverflowModes.Ellipsis;
             desc.lineSpacing = 4f;
-            Place(desc.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, -522f), new Vector2(576f, 62f));
+            Place(desc.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, -466f), new Vector2(576f, 60f));
+            // Difficulty row under the description, full card width.
+            DifficultyPills(body, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, -532f), new Vector2(576f, 54f), 24f);
             desc.lineSpacing = 0f;
 
             // Mission picker: one chip per mission (hidden for single-mission countries).

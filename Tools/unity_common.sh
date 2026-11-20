@@ -4,6 +4,8 @@ PROJECT="$(cd "$(dirname "$0")/.." && pwd)"
 UNITY=/Applications/Unity/Hub/Editor/6000.5.9f1/Unity.app/Contents/MacOS/Unity
 LOGS="$PROJECT/../UltimateCarParking3D_logs"; mkdir -p "$LOGS"
 STALL_SECONDS=${STALL_SECONDS:-480}
+export BEE_STEVEDORE_DEFAULT_CONFIG="$PROJECT/Stevedore.conf"
+mkdir -p /tmp/stevedore-cache
 
 # run_unity <logfile> <unity args...>  — no -nographics (it has deadlocked 6000.5 during project load)
 run_unity() {

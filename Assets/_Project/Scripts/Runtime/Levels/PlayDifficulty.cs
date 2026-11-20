@@ -18,11 +18,14 @@ namespace UltimateCarParking.Levels
         {
             // Only while playing: editor tools that read level data always see the mission as designed (Medium).
             get => Override ?? (Application.isPlaying ? (Difficulty)Mathf.Clamp(SettingsService.Current.playDifficulty, 0, 2) : Difficulty.Medium);
-            set => SettingsService.SetPlayDifficulty((int)value);
+            set { SettingsService.SetPlayDifficulty((int)value); Changed?.Invoke(); }
         }
 
         /// <summary>Tests only: forces a difficulty without touching the settings (null = normal behaviour).</summary>
         public static Difficulty? Override;
+
+        /// <summary>Raised after the player picks another difficulty (every picker repaints, screens refresh).</summary>
+        public static event System.Action Changed;
 
         public static float TimeFactor(Difficulty d) => d == Difficulty.Easy ? 1.4f : d == Difficulty.Hard ? 0.75f : 1f;
         public static float AngleFactor(Difficulty d) => d == Difficulty.Easy ? 1.4f : d == Difficulty.Hard ? 0.7f : 1f;
