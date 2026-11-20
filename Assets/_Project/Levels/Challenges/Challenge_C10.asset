@@ -22,9 +22,9 @@ MonoBehaviour:
   briefing: 'Challenge 10, Expert. Three manoeuvres in a row: nose into bay 2, reverse
     into bay R5, then parallel park at the kerb. No sensors or guides.'
   objectives:
-  - rid: 2518988184230559759
-  - rid: 2518988184230559760
-  - rid: 2518988184230559761
+  - rid: 2518988184527044623
+  - rid: 2518988184527044624
+  - rid: 2518988184527044625
   theme: {fileID: 0}
   props:
   - prefab: {fileID: 6016950864663556760, guid: 781a2061277fa42509cc487ec96c1e1c, type: 3}
@@ -89,7 +89,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2518988184230559759
+    - rid: 2518988184527044623
       type: {class: ParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Nose into bay 2
@@ -105,7 +105,7 @@ MonoBehaviour:
           maxSpeedKmh: 1.5
           holdDuration: 1.5
           requireParkingBrake: 0
-    - rid: 2518988184230559760
+    - rid: 2518988184527044624
       type: {class: ReverseParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Reverse into bay R5
@@ -122,7 +122,7 @@ MonoBehaviour:
           holdDuration: 1.5
           requireParkingBrake: 0
         maxRearGap: 0.6
-    - rid: 2518988184230559761
+    - rid: 2518988184527044625
       type: {class: ParallelParkObjective, ns: UltimateCarParking.Missions, asm: UltimateCarParking.Runtime}
       data:
         title: Parallel park at the kerb
